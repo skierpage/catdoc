@@ -33,8 +33,8 @@ char number_format[8]=MK_FORMAT(DBL_DIG);
 void CleanUpFormatIdxUsed(void);
 
 void do_table(FILE *input,char *filename) {    
-	long rectype;
-	long reclen,build_year=0,build_rel=0,offset=0;
+	uint16_t rectype, reclen;
+	uint16_t build_year=0,build_rel=0,offset=0;
 	int eof_flag=0;
 	int itemsread=1;
 	date_shift=25569.0; /* Windows 1900 date system */
@@ -134,7 +134,7 @@ int prev_rectype=0;
  */
 unsigned char **saved_reference = NULL;
 
-void process_item (int rectype, int reclen, unsigned char *rec) {
+void process_item (uint16_t rectype, uint16_t reclen, unsigned char *rec) {
 	if (rectype != CONTINUE && prev_rectype == SST) {
 		/* we have accumulated  unparsed SST, and now encountered
 		 * another record, which indicates that SST is ended */

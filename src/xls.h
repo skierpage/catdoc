@@ -9,6 +9,7 @@
 #define XLS_H
 
 #include <stdio.h>
+#include <stdint.h>
 #include <math.h>
 /* types of quoting */
 #define QUOTE_NEVER 0
@@ -34,7 +35,7 @@ char *format_int(int value,int format_code);
 char *format_rk(unsigned char *rec,short int format_code);
 char *gettypename(long rectype);
 void parse_sst(unsigned char *sstbuf,int bufsize);
-void process_item (int rectype, int reclen, unsigned char *rec); 
+void process_item (uint16_t rectype, uint16_t reclen, unsigned char *rec);
 unsigned char **allocate(int row,int col);
 unsigned char *copy_unicode_string(unsigned char **src);
 char convert8to8(char *src,int count);
