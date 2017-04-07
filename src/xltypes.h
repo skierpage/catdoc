@@ -20,7 +20,7 @@
 #define AUTOFILTERINFO 		 0x9D
 #define BACKUP 		         0x40
 #define BLANK 		         0x201
-#define BOF 		         0x809
+#define BOF8 		         0x809
 #define BOOKBOOL 		 0xDA
 #define BOOLERR 		 0x205
 #define BOTTOMMARGIN 		 0x29
@@ -149,11 +149,21 @@
 #define WRITEPROT 		 0x86
 #define WSBOOL 		         0x81
 #define XCT 		         0x59
-#define XF 		         0xE0
+#define XF_4P 		         0xE0
 #define SST			 0xFC
 #define CONSTANT_STRING	         0xFD
 #define REFRESHALL		 0x1B7
 #define USESELFS		 0x160
 #define EXTSST		         0xFF
 /* Vitus additions */
-#define INTEGER_CELL 	 0x202
+#define INTEGER_CELL 	         0x202
+/* Tincho addtions */
+#define BOF2 		         0x09
+#define BOF3 		         0x209
+#define BOF4 		         0x409
+#define INVALID_03               0x03
+#define INVALID_303              0x303
+#define MSODRAWING               0xEC
+#define SXFORMULA                0x103
+#define XF                       0x43
+#define XF_4                     0x443

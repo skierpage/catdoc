@@ -107,12 +107,13 @@ void do_table(FILE *input,char *filename) {
 			itemsread = catdoc_read(rec, 1, reclen, input);
 			rec[reclen] = '\0';
 		}
+                /*
+		fprintf(stderr,"Rectype 0x%04X reclen=%d\n",rectype, reclen);
 		if(eof_flag) {
-			if (rectype != BOF) {
+			if (rectype != BOF8) {
 				break;
 			}    
-		}
-/* 		fprintf(stderr,"Rectype 0x%04X reclen=%d\n",rectype, reclen); */
+		}*/
 		process_item(rectype,reclen,rec);
 		if (rectype == MSEOF) {
 			eof_flag=1;
@@ -150,7 +151,7 @@ void process_item (uint16_t rectype, uint16_t reclen, unsigned char *rec) {
 	case WRITEPROT: 
 		/* File is write protected, but we only read it */
 		break;
-	case 0x42: {
+	case CODEPAGE: {
 		if (source_charset) break;
 		codepage=getshort(rec,0);
 		/*fprintf(stderr,"CODEPAGE %d\n",codepage); */
@@ -274,9 +275,10 @@ void process_item (uint16_t rectype, uint16_t reclen, unsigned char *rec) {
 		}	
 		break;
 	}
-	case 0x03:
-	case 0x103:
-	case 0x303:
+	/* These 3 don't seem to make any sense. */
+	case INVALID_03:
+	case SXFORMULA:
+	case INVALID_303:
 	case NUMBER: {
 		int row,col;
 		unsigned char **pcell;
@@ -363,22 +365,31 @@ void process_item (uint16_t rectype, uint16_t reclen, unsigned char *rec) {
 		*saved_reference=copy_unicode_string(&src);
 		break;
 	}	    
-	case BOF: {
+	case BOF2:
+	case BOF3:
+	case BOF4:
+	case BOF8: {
 		if (rowptr) {
 			fprintf(stderr,"BOF when current sheet is not flushed\n");
+                        print_sheet();
 			free_sheet();
 		}
 		break;
 	}	  
-	case XF:
-	case 0x43: /*from perl module Spreadsheet::ParseExecel */		  
+	case XF_4P:
+	case XF_4:
+	case XF: /*from perl module Spreadsheet::ParseExecel */
 		{
-			short int formatIndex = getshort(rec,2);
+			short int formatIndex;
+                        if (biff_version == 4)
+                            formatIndex = (short int)rec[1];
+                        else
+                            formatIndex = getshort(rec, 2);
 			/* we are interested only in format index here */ 
 			if (formatTableIndex >= formatTableSize) {
 				formatTable=realloc(formatTable,
-														(formatTableSize+=16)*sizeof(short int));
-					  	  
+                                        (formatTableSize+=16)*sizeof(short int));
+
 				if (!formatTable) {
 					fprintf(stderr,"Out of memory for format table");
 					exit (1);
