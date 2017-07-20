@@ -106,6 +106,11 @@ FILE* ole_init(FILE *f, void *buffer, size_t bufSize)  {
 		return NULL;
 	}
  	sectorSize = 1<<getshort(oleBuf,0x1e);
+	/* CVE-2017-11110 */
+	if (sectorSize < 4) {
+		fprintf(stderr, "sectorSize < 4 not supported\n");
+		return NULL;
+	}
 	shortSectorSize=1<<getshort(oleBuf,0x20);
 
 /* Read BBD into memory */
@@ -147,7 +152,7 @@ FILE* ole_init(FILE *f, void *buffer, size_t bufSize)  {
 		}
 
 		fseek(newfile, 512+mblock*sectorSize, SEEK_SET);
-		if(fread(tmpBuf+MSAT_ORIG_SIZE+(sectorSize-4)*i,
+		if(fread(tmpBuf+MSAT_ORIG_SIZE+(sectorSize-4)*i, /* >=4 for CVE-2017-11110 */
 						 1, sectorSize, newfile) != sectorSize) {
 			fprintf(stderr, "Error read MSAT!\n");
 			ole_finish();
