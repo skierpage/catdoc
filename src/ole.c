@@ -342,7 +342,7 @@ FILE *ole_readdir(FILE *f) {
 	e->blocks=NULL;
 
 	nLen=getshort(oleBuf,0x40);
-	if (nLen > OLENAMELENGTH) {
+	if (nLen > OLENAMELENGTH * 2) {
 		free(e);
 		return NULL;
 	}
