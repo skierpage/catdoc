@@ -6,19 +6,23 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 tardir=${PACKAGE_TARNAME}-${PACKAGE_VERSION}
 
 all:
+	set -e;\
 	for i in src doc charsets; do\
 	   (cd $$i; $(MAKE) all);\
 	done
 
 install:
+	set -e;\
 	for i in src doc charsets; do\
 	   (cd $$i; $(MAKE) install);\
 	done
 clean:	
+	set -e;\
 	for i in src doc charsets; do\
 	   (cd $$i; $(MAKE) clean);\
 	done
 distclean:	
+	set -e;\
 	for i in src doc charsets; do\
 	   (cd $$i; $(MAKE) distclean);\
 	done

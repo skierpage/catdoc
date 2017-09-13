@@ -30,12 +30,12 @@ clean:
             wordview.txt wordview.ps build
 install: @installtargets@
 install-catdoc: catdoc.1 xls2csv.1 catppt.1
-	../mkinstalldirs $(installroot)$(mandir)
+	../mkinstalldirs $(installroot)$(mandir)/man1
 	$(INSTALL) -m 644 catdoc.1 $(installroot)$(mandir)/man1/catdoc.1
 	$(INSTALL) -m 644 xls2csv.1 $(installroot)$(mandir)/man1/xls2csv.1
 	$(INSTALL) -m 644 catppt.1 $(installroot)$(mandir)/man1/catppt.1
 install-wordview:	
-	../mkinstalldirs $(installroot)$(mandir)
+	../mkinstalldirs $(installroot)$(mandir)/man1
 	$(INSTALL) -m 644 wordview.1 $(installroot)$(mandir)/man1/wordview.1
 distclean: clean
 	$(RM)  Makefile catdoc.1 xls2csv.1 catppt.1 wordview.1
