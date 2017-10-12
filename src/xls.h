@@ -37,7 +37,9 @@ char *gettypename(long rectype);
 void parse_sst(unsigned char *sstbuf,int bufsize);
 void process_item (uint16_t rectype, uint16_t reclen, unsigned char *rec);
 unsigned char **allocate(int row,int col);
-unsigned char *copy_unicode_string(unsigned char **src);
+unsigned char *copy_unicode_string(unsigned char **src, int fromSst,
+									const unsigned char * const sourceStart,
+									const unsigned char * const sourceEnd);
 char convert8to8(char *src,int count);
 char *convert16to8(char *src,int count);
 void do_table(FILE *input,char *filename);

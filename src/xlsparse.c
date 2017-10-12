@@ -128,12 +128,43 @@ unsigned char **sst=NULL;/* Shared string table parsed into array of strings in
 int sstsize = 0; /*Number of strings in SST*/
 unsigned char *sstBuffer=NULL; /*Unparsed sst to accumulate all its parts*/
 int sstBytes = 0; /*Size of SST Data, already accumulated in the buffer */
+int *sstPartBoundaries = NULL; /* offsets in the sstBuffer where the SST record
+								  was interrupted by continuation records, the
+								  array is terminated by a 0 */
 int codepage=1251; /*default*/
 int prev_rectype=0;
 /* holds a pointer to formula value, becouse value itself would be in
  * next biff record
  */
 unsigned char **saved_reference = NULL;
+
+/* return 0 on error and 1 on success */
+static int saveSstBoundary(int boundary) {
+	int *p;
+	size_t count;
+
+	if (sstPartBoundaries) {
+		p = sstPartBoundaries;
+		while (*p) {
+			p++;
+		}
+		count = (size_t) (p - sstPartBoundaries) + 2;
+	} else {
+		count = 2;
+	}
+
+	p = (int*) realloc(sstPartBoundaries,
+				count * sizeof(sstPartBoundaries[0]));
+	if (!p) {
+		// allocation failure, leave boundary list as it is
+		return 0;
+	}
+
+	sstPartBoundaries = p;
+	sstPartBoundaries[count - 2] = boundary;
+	sstPartBoundaries[count - 1] = 0;
+	return 1;
+}
 
 void process_item (uint16_t rectype, uint16_t reclen, unsigned char *rec) {
 	if (rectype != CONTINUE && prev_rectype == SST) {
@@ -193,7 +224,10 @@ void process_item (uint16_t rectype, uint16_t reclen, unsigned char *rec) {
 			free(sstBuffer);
 		if (sst != NULL)
 			free(sst);
-		
+		if (sstPartBoundaries != NULL) {
+			free(sstPartBoundaries);
+			sstPartBoundaries = NULL;
+		}
 		sstBuffer=(unsigned char*)malloc(reclen);
 		sstBytes = reclen;
 		if (sstBuffer == NULL ) {
@@ -211,7 +245,11 @@ void process_item (uint16_t rectype, uint16_t reclen, unsigned char *rec) {
 		if (sstBuffer == NULL ) {
 			perror("SSTptr realloc error! ");
 			exit(1);
-		}	  
+		}
+		/* add current SST buffer offset as a boundary in the SST boundaries
+		   list so that we know to use the extra byte that is inserted at each
+		   boundary between SST parts */
+		saveSstBoundary(sstBytes);
 		memcpy(sstBuffer+sstBytes,rec,reclen);
 		sstBytes+=reclen;
 		return;
@@ -226,7 +264,7 @@ void process_item (uint16_t rectype, uint16_t reclen, unsigned char *rec) {
 		col = getshort(rec,2);
 		/* 		fprintf(stderr,"LABEL!\n"); */
 		pcell=allocate(row,col);
-		*pcell=copy_unicode_string(&src);
+		*pcell=copy_unicode_string(&src, 0, rec, rec + reclen);
 		break;
 	}     
 	case BLANK: { int row,col;unsigned char **pcell;
@@ -362,7 +400,7 @@ void process_item (uint16_t rectype, uint16_t reclen, unsigned char *rec) {
 			fprintf(stderr,"String record without preceeding string formula\n");
 			break;
 		}
-		*saved_reference=copy_unicode_string(&src);
+		*saved_reference=copy_unicode_string(&src, 0, rec, rec + reclen);
 		break;
 	}	    
 	case BOF2:
@@ -429,7 +467,9 @@ void process_item (uint16_t rectype, uint16_t reclen, unsigned char *rec) {
 /*
  * Extracts string from sst and returns mallocked copy of it
  */
-unsigned char *copy_unicode_string (unsigned char **src) {
+unsigned char *copy_unicode_string (unsigned char **src, int fromSst,
+									const unsigned char * const sourceStart,
+									const unsigned char * const sourceEnd) {
 	int count=0;
 	int flags = 0;
 	int start_offset=0;
@@ -501,15 +541,29 @@ unsigned char *copy_unicode_string (unsigned char **src) {
 	*dest=0;l=0;
 	for (s=*src,d=dest,i=0;i<count;i++,s+=charsize) {
 		/* 		fprintf(stderr,"l=%d len=%d count=%d charsize=%d\n",l,len,count,charsize); */
-		if ( (charsize == 1 && (*s == 1 || *s == 0)) ||
-				 (charsize == 2 && (*s == 1 || *s == 0) && *(s+1) != 4)) {
-			/* 			fprintf(stderr,"extchar (unicode)=%02x %02x\n",*s, *(s+1)); */
-			charsize=(*s &0x01) ? 2 : 1;
-			if (charsize == 2)
-				s-=1;
-			count++;
-			continue;
+		if (fromSst && (*s == 1 || *s == 0)) {
+			int sstOffset = (int) (s - sourceStart);
+			int flagFound = 0;
+			int *k;
+			for (k = sstPartBoundaries; k && *k; k++) {
+				if (*k == sstOffset) {
+					/* we passed a CONTINUE record boundary, check the charsize
+					   (a.k.a. compression) flag */
+					charsize = (*s == 0 ? 1 : 2);
+					flagFound = 1;
+					break;
+				}
+			}
+
+			if (flagFound) {
+				if (charsize == 2) {
+					s -= 1; /* will be incremented by 2 */
+				}
+				count++;
+				continue;
+			}
 		}
+
 		if ( charsize == 2 ){
 			u=(unsigned short)getshort(s,0);
 			c=(unsigned char *)convert_char(u);
@@ -783,7 +837,7 @@ void parse_sst(unsigned char *sstbuf,int bufsize) {
 	for (i=0,parsedString=sst,curString=sstbuf+8;
 			 i<sstsize && curString<barrier; i++,parsedString++) {
 		/* 		fprintf(stderr,"copying %d string\n",i); */
-		*parsedString = copy_unicode_string(&curString);
+		*parsedString = copy_unicode_string(&curString, 1, sstbuf, barrier);
 	}       
 	/* 	fprintf(stderr,"end sst i=%d sstsize=%d\n",i,sstsize); */
 
