@@ -573,8 +573,14 @@ unsigned char *copy_unicode_string (unsigned char **src, int fromSst,
 				check_charset(&source_csname,source_csname);	
 				/* fprintf(stderr,"charset=%s\n",source_csname);*/
 				source_charset=read_charset(source_csname);
-			}	
-			u=(unsigned short)to_unicode(source_charset,(unsigned char)*s);
+			}
+			if (codepage != 1200) {
+				u=(unsigned short)to_unicode(source_charset,(unsigned char)*s);
+			} else {
+				/* if charsize == 1 and codepage == 1200, then compression is used */
+				u = *s;
+			}
+
 			c=(unsigned char *)convert_char(u);
 		}
 		if (c != NULL) {
