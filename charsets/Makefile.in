@@ -30,15 +30,15 @@ all: @charsetcheck@
 clean:
 install: install-dirs install-spc install-charsets
 install-spc: tex.spc ascii.spc tex.rpl ascii.rpl
-	    $(INSTALL) -m 644 ascii.spc $(installroot)$(LIB_DIR)/ascii$(SPEC_EXT) 
-	    $(INSTALL) -m 644 tex.spc $(installroot)$(LIB_DIR)/tex$(SPEC_EXT) 
-	    $(INSTALL) -m 644 ascii.rpl $(installroot)$(LIB_DIR)/ascii$(REPL_EXT)
-	    $(INSTALL) -m 644 tex.rpl $(installroot)$(LIB_DIR)/tex$(REPL_EXT)
+	    $(INSTALL) -p -m 644 ascii.spc $(DESTDIR)$(installroot)$(LIB_DIR)/ascii$(SPEC_EXT) 
+	    $(INSTALL) -p -m 644 tex.spc $(DESTDIR)$(installroot)$(LIB_DIR)/tex$(SPEC_EXT) 
+	    $(INSTALL) -p -m 644 ascii.rpl $(DESTDIR)$(installroot)$(LIB_DIR)/ascii$(REPL_EXT)
+	    $(INSTALL) -p -m 644 tex.rpl $(DESTDIR)$(installroot)$(LIB_DIR)/tex$(REPL_EXT)
 install-charsets:
 	for i in *.txt; do\
-	   $(INSTALL) -m 0644 $$i $(installroot)$(LIB_DIR);\
+	   $(INSTALL) -p -m 0644 $$i $(DESTDIR)$(installroot)$(LIB_DIR);\
 	done
 install-dirs:
-	../mkinstalldirs $(installroot)$(LIB_DIR)
+	../mkinstalldirs $(DESTDIR)$(installroot)$(LIB_DIR)
 distclean:
 	rm Makefile
