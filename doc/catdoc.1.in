@@ -1,5 +1,6 @@
 .TH catdoc 1  "Version @catdoc_version@" "MS-Word reader"
 .SH NAME
+
 catdoc \- reads MS-Word file and puts its content as plain text on standard output
 .SH SYNOPSIS
 
@@ -82,12 +83,13 @@ as filter for viewing all files with
 extension.
 .TP 8
 .BI -d charset
-- specifies destination charset name. Charset file has format described in
-CHARACTER SETS below and should have 
+- specifies destination charset name. A charset file has the format described in
+CHARACTER SETS below and should have a
 .B .txt
-extension  and reside in 
-.B catdoc library directory ( @libdir@/catdoc). By default, current
-locale charset is used if langinfo support compiled in.
+extension and reside in \fBcatdoc\fR's data directory.
+.\" Issue #3: autoconf/configure doesn't correctly replace the actual location, @datadir@/catdoc
+By default, the current
+locale charset is used if langinfo support was compiled in.
 .TP 8
 .BI -f format
 - specifies output format as described in CHARACTER SUBSTITUTION below.
@@ -156,9 +158,9 @@ outputs catdoc version
 When processing MS-Word file 
 .B catdoc
 uses information about two character sets, typically different
- -  input and output. They are stored in plain text files in 
+ -  input and output. They are stored in plain text files in the
 .B catdoc
-library directory. Character set files should contain two whitespace-separated
+data directory. Character set files should contain two whitespace-separated
 hexadecimal numbers - 8-bit code in character set and 16-bit Unicode code.
 Anything from hash mark to end of line is ignored, as well as blank lines.
 
@@ -218,29 +220,28 @@ existence in target character set  (usually, they are parts of US-ASCII, and
 therefore exist in any character set) and replacement list is searched only
 for those characters, which are not found in target character set.
 .PP
-These lists are stored in
+These lists are stored in the
 .B catdoc 
-library directory in files with prefix of format name. These files have
-following format:
+data directory in files named after the character set. The files have
+the following format:
 .PP
 Each line can be either comment (starting with hash mark) or contain
 hexadecimal UNICODE value, separated by whitespace from string, which
-would be substituted instead of it. If string contain no whitespace it 
+would be substituted instead of it. If the string contains no whitespace it 
 can be used as is, otherwise it should be enclosed in single or double
 quotes. Usual backslash sequences like 
 .IR '\en' , '\et'
-can be used in these string.
+can be used in the string.
 
 
 .SH RUNTIME CONFIGURATION
 Upon startup catdoc reads its system-wide configuration file (
-.B catdocrc in 
-.B catdoc
-library directory) and then
+.B catdocrc
+in the system-wide configuration directory) and then
 user-specific configuration file
 .BR ${HOME}/.catdocrc.
 .PP
-These files can contain following directives:
+These files can contain the following directives:
 .TP 8
 .BI "source_charset = " charset-name
 Sets default source charset, which would be used if no 
