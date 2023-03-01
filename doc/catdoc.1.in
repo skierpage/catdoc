@@ -1,4 +1,4 @@
-.TH catdoc 1  "Version @catdoc_version@" "MS-Word reader"
+.TH catdoc 1  "Version @PACKAGE_VERSION@" "MS-Word reader"
 .SH NAME
 
 catdoc \- reads MS-Word file and puts its content as plain text on standard output

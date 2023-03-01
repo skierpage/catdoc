@@ -1,4 +1,4 @@
-.TH ppt2text 1  "Version @catdoc_version@" "MS-PowerPoint reader"
+.TH ppt2text 1  "Version @PACKAGE_VERSION@" "MS-PowerPoint reader"
 .SH NAME
 catppt \- reads MS-PowerPoint file and puts its content on standard output
 .SH SYNOPSIS
