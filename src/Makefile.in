@@ -99,6 +99,25 @@ wordview: wordview.tcl
 strftime.o: ../compat/strftime.c
 	$(CC) -c $(FLAGS) -o $@ $*
 clean:
-	rm -f *.o catdoc wordview xls2csv catppt
+	rm -f *.o catdoc wordview xls2csv catppt *.testout
 distclean: clean
 	rm Makefile
+
+test: basic
+
+test_broken: test_lo_doc test_xls_intl
+
+basic: install ../tests/basic.doc
+	$(installroot)$(bindir)/catdoc ../tests/basic.doc > basic.testout
+	diff -q basic.testout ../tests/basic.expected
+
+test_xls_intl: install ../tests/unicode_MS.xls
+	$(installroot)$(bindir)/xls2csv ../tests/unicode_MS.xls > unicode_MS.testout
+	diff -q unicode_MS.testout ../tests/unicode_MS.expected
+test_lo_doc: install ../tests/test_LO_file.doc
+	$(installroot)$(bindir)/catdoc ../tests/test_LO_file.doc > test_LO_doc.testout
+	diff -q test_LO_doc.testout ../tests/test_LO_doc.expected
+
+test_xls_intl: install ../tests/unicode_MS.xls
+	$(installroot)$(bindir)/xls2csv ../tests/unicode_MS.xls > unicode_MS.testout
+	diff -q unicode_MS.testout ../tests/unicode_MS.expected

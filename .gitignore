@@ -14,7 +14,6 @@ tags
 *.o
 rtf-parser.txt
 semantic.cache
-tests
 doc/build
 doc/*.1
 {arch}
@@ -22,3 +21,4 @@ src/catdoc
 src/catppt
 src/xls2csv
 src/wordview
+*.testout

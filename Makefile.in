@@ -37,4 +37,6 @@ dist:
 	gzip -c $(tardir).tar > $(tardir).tar.gz
 	rm -rf $(tardir)
 
-	
+test:
+	set -e;\
+	(cd src; $(MAKE) test);
