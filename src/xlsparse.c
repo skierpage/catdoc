@@ -10,6 +10,8 @@
 #endif
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
+#include <errno.h>
 #include "xls.h"
 #include "catdoc.h"
 #include "xltypes.h"
@@ -832,13 +834,21 @@ void parse_sst(unsigned char *sstbuf,int bufsize) {
 	unsigned char *barrier=(unsigned char *)sstbuf+bufsize; /*pointer to end of buffer*/
 	unsigned char **parsedString;/*pointer into parsed array*/ 
 			
-	sstsize = getlong(sstbuf+4,0);
+	sstsize = getlong(sstbuf+4,0);	// int
+
+	// Guard the next allocation against a product overflow.
+	if (!(sstsize < INT_MAX / sizeof(unsigned char*))) {
+		errno = EOVERFLOW;
+		perror("SST size error");
+		exit(1);
+	}
+
 	sst=(unsigned char **)malloc(sstsize*sizeof(unsigned char *));
-	
 	if (sst == NULL) {
 		perror("SST allocation error");
 		exit(1);
 	}
+
 	memset(sst,0,sstsize*sizeof(char *));
 	for (i=0,parsedString=sst,curString=sstbuf+8;
 			 i<sstsize && curString<barrier; i++,parsedString++) {
