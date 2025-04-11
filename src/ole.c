@@ -19,11 +19,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <limits.h>
 
 #include "catdoc.h"
 
 #define min(a,b) ((a) < (b) ? (a) : (b))
 
+int sectorShift, shortSectorShift;
 long int sectorSize, shortSectorSize;
 /* BBD Info */
 long int  bbdNumBlocks;
@@ -105,18 +107,40 @@ FILE* ole_init(FILE *f, void *buffer, size_t bufSize)  {
 	} else if (strncmp((char *)&oleBuf,ole_sign,8) != 0) {
 		return NULL;
 	}
- 	sectorSize = 1<<getshort(oleBuf,0x1e);
-	/* CVE-2017-11110 */
-	if (sectorSize < 4) {
-		fprintf(stderr, "sectorSize < 4 not supported\n");
+
+/*
+ * If the sector shifts don't conform to the [MS-CFB] specification, then treat
+ * the file as being corrupt. It's worth noting that the sector size should be
+ * matched according to the major version in the header, but since we don't read
+ * the version anyways, we just limit the sector sizes to all possible values.
+ */
+	sectorShift = getshort(oleBuf, 0x1e);
+	shortSectorShift = getshort(oleBuf, 0x20);
+
+	if ((sectorShift != 9) && (sectorShift != 10)) {
 		return NULL;
 	}
-	shortSectorSize=1<<getshort(oleBuf,0x20);
 
-/* Read BBD into memory */
-	bbdNumBlocks = getulong(oleBuf,0x2c);
+	if (shortSectorShift != 6) {
+		return NULL;
+	}
+
+	sectorSize = 1 << sectorShift;
+	shortSectorSize = 1 << shortSectorShift;
+
+/*
+ * Read BBD into memory, and clamp the result using the sector size to prevent
+ * the following product from overflowing. This is the number of sectors that
+ * compose the file allocation table for the document.
+ */
+	bbdNumBlocks = getulong(oleBuf,0x2c);	// long int
+
+	if (!(bbdNumBlocks < LONG_MAX / sectorSize)) {
+		return NULL;
+	}
+
 	bbdSize = bbdNumBlocks * sectorSize;
-	if (bbdSize > fileLength) {
+	if ((bbdSize < 0) || (bbdSize > fileLength)) {
 		/* broken file, BBD size greater than entire file*/
 		return NULL;
 	}
@@ -129,15 +153,34 @@ FILE* ole_init(FILE *f, void *buffer, size_t bufSize)  {
 		return NULL;
 	}
 	memcpy(tmpBuf,oleBuf+0x4c,MSAT_ORIG_SIZE);
-	mblock=getlong(oleBuf,0x44);
-	msat_size=getlong(oleBuf,0x48);
-	if (msat_size * sectorSize > fileLength) {
+
+	/*
+	 * Read the indirect fat (master sector allocation table). This is to allow
+	 * modifying the fat without having to keep the whole thing in memory. This
+	 * gets clamped similarly.
+	 */
+	mblock=getlong(oleBuf,0x44);		// long int
+	msat_size=getlong(oleBuf,0x48);		// long int
+
+	if (!(msat_size < LONG_MAX / sectorSize)) {
+		free(tmpBuf);
+		return NULL;
+	}
+
+	if ((msat_size < 0) || (msat_size * sectorSize > fileLength)) {
 		free(tmpBuf);
 		return NULL;
 	}
 		
 /* 	fprintf(stderr, "msat_size=%ld\n", msat_size); */
 
+	/*
+	 * This next loop is reading the entire indirect fat into "tmpBuf". Each
+	 * time if there's another sector to be added, "tmpBuf" will be resized in
+	 * order to read the sector indices that compose it. The sector size should
+	 * be 2⁹ or 2⁹⁺¹, which should guarantee that there's always a uint32_t (4)
+	 * sector index at the end of the sector.
+	 */
 	i=0;
 	while((mblock >= 0) && (i < msat_size)) {
 		unsigned char *newbuf;
@@ -163,6 +206,11 @@ FILE* ole_init(FILE *f, void *buffer, size_t bufSize)  {
 		mblock=getlong(tmpBuf, MSAT_ORIG_SIZE+(sectorSize-4)*i);
 	}
 
+	/*
+	 * Now the indirect fat, containing the indices for the regular fat, is used
+	 * to read the actual file allocation table.
+	 */
+
 /* 	fprintf(stderr, "bbdNumBlocks=%ld\n", bbdNumBlocks); */
 	for(i=0; i< bbdNumBlocks; i++) {
 		long int bbdSector=getlong(tmpBuf,4*i);
@@ -182,23 +230,44 @@ FILE* ole_init(FILE *f, void *buffer, size_t bufSize)  {
 	}
 	free(tmpBuf);
 
-/* Read SBD into memory */
+	/*
+	 * Read SBD into memory. This is the fat for the minisectors in the file
+	 * and is done by slowly growing "sbdMaxLen" which is used to contain the
+	 * relevant sector indices. This could probably be simplified...
+	 */
 	sbdLen=0;
 	sbdMaxLen=10;
 	sbdCurrent = sbdStart = getlong(oleBuf,0x3c);
 	if (sbdStart > 0) {
+		// No need to check this since "sbdMaxLen" is a constant 10.
 		if((SBD=malloc(sectorSize*sbdMaxLen)) == NULL ) {
 			ole_finish();
 			return NULL;
 		}
 		while(1) {
-			fseek(newfile, 512+sbdCurrent*sectorSize, SEEK_SET);
-			fread(SBD+sbdLen*sectorSize, 1, sectorSize, newfile);
+
+			// If we're unable to seek to sector "sbdCurrent", then abort.
+			if (fseek(newfile, 512+sbdCurrent*sectorSize, SEEK_SET) < 0) {
+				ole_finish();
+				return NULL;
+
+			// If we couldn't read the full sector, then also abort.
+			} else if (fread(SBD+sbdLen*sectorSize, 1, sectorSize, newfile) != sectorSize) {
+				ole_finish();
+				return NULL;
+			}
+
 			sbdLen++;
 			if (sbdLen >= sbdMaxLen) {
 				unsigned char *newSBD;
 
-				sbdMaxLen+=5;
+				sbdMaxLen+=5;	// long int
+
+				if (!(sbdMaxLen < LONG_MAX / sectorSize)) {
+					ole_finish();
+					return NULL;
+				}
+
 				if ((newSBD=realloc(SBD, sectorSize*sbdMaxLen)) != NULL) {
 					SBD=newSBD;
 				} else {
@@ -226,13 +295,19 @@ FILE* ole_init(FILE *f, void *buffer, size_t bufSize)  {
 	propMaxLen = 5;
 	propCurrent = propStart = getlong(oleBuf,0x30);
 	if (propStart >= 0) {
+		// No need to guard here since "propMaxLen" is a constant 5.
 		if((properties=malloc(propMaxLen*sectorSize)) == NULL ) {
 			ole_finish();
 			return NULL;
 		}
 		while(1) {
 /*  			fprintf(stderr, "propCurrent=%ld\n",propCurrent); */
-			fseek(newfile, 512+propCurrent*sectorSize, SEEK_SET);
+			if (fseek(newfile, 512+propCurrent*sectorSize, SEEK_SET) < 0) {
+				perror("reading properties catalog");
+				ole_finish();
+				return NULL;
+			}
+
 			errno=0;
 			if (fread(properties+propLen*sectorSize,
 				  1, sectorSize, newfile)!=sectorSize) {
@@ -246,7 +321,12 @@ FILE* ole_init(FILE *f, void *buffer, size_t bufSize)  {
 			if (propLen >= propMaxLen) {
 				unsigned char *newProp;
 
-				propMaxLen+=5;
+				propMaxLen+=5;	// long int
+				if (!(propMaxLen < LONG_MAX / sectorSize)) {
+					ole_finish();
+					return NULL;
+				}
+
 				if ((newProp=realloc(properties, propMaxLen*sectorSize)) != NULL)
 					properties=newProp;
 				else {
@@ -388,7 +468,16 @@ FILE *ole_readdir(FILE *f) {
 			e->blocks[e->numOfBlocks++] = chainCurrent;
 			if (e->numOfBlocks >= chainMaxLen) {
 				long int *newChain;
-				chainMaxLen+=25;
+				chainMaxLen+=25;	// long int
+
+				if (!(chainMaxLen < LONG_MAX / sizeof(long int))) {
+					errno = EOVERFLOW;
+					perror("Properties chain length error");
+					free(e->blocks);
+					e->blocks=NULL;
+					return NULL;
+				}
+
 				if ((newChain=realloc(e->blocks,
 									  chainMaxLen*sizeof(long int))) != NULL) {
 					e->blocks=newChain;
