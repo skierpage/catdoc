@@ -96,7 +96,7 @@ int analyze_format(FILE *f) {
  ********************************************************************/
 int parse_word_header(unsigned char * buffer,FILE *f,int offset,long curpos) {
 	int flags,charset, ret_code=0;
-	long textstart,textlen,i;
+	long textstart,textstop,textlen,i;
 	char buf[2];
 	
 	if (verbose) {
@@ -161,7 +161,9 @@ int parse_word_header(unsigned char * buffer,FILE *f,int offset,long curpos) {
 	}
 	/* skipping to textstart and computing textend */
 	textstart=getlong(buffer,24);
-	textlen=getlong(buffer,28)-textstart;
+	textstop=getlong(buffer,28);
+	textlen=(textstart < textstop)? textstop - textstart : 0;
+
 	textstart+=offset;
 	if (verbose) {
 		printf ("Textstart = %ld (hex %lx)\n",textstart+curpos,textstart+curpos);

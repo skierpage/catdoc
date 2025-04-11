@@ -96,8 +96,11 @@ int process_file(FILE *f,long stop) {
 	long offset=0;
 	int hyperlink_mode = 0;
 	unsigned short c;
-	/* Now we are starting to read with get_unicode_char */
-	while (!catdoc_eof(f) && offset<stop) {
+	/*
+	 * Now we are starting to read with get_unicode_char. We guard against the
+	 * caller giving us a signed "stop" value which would be invalid.
+	 */
+	while (!catdoc_eof(f) && stop >= 0 && offset<stop) {
 		bufptr = -1;
 		do {
 			c=get_unicode_char(f,&offset,stop);
@@ -173,7 +176,7 @@ int process_file(FILE *f,long stop) {
 		} while (bufptr<=PARAGRAPH_BUFFER-2 &&
 				 !catdoc_eof(f) &&
 				 buffer[bufptr]!=0x000a);
-		if (bufptr>0) {
+		if ((bufptr>0) && (bufptr < sizeof(buffer) / sizeof(buffer[0]) - 1)) {
 			buffer[++bufptr]=0;
 			output_paragraph(buffer);
 		}
