@@ -15,11 +15,11 @@ install:
 	   (cd $$i; $(MAKE) install);\
 	done
 clean:	
-	for i in src doc charsets; do\
+	for i in src doc charsets tests; do\
 	   (cd $$i; $(MAKE) clean);\
 	done
 distclean:	
-	for i in src doc charsets; do\
+	for i in src doc charsets tests; do\
 	   (cd $$i; $(MAKE) distclean);\
 	done
 	rm -f Makefile config.*
@@ -37,6 +37,6 @@ dist:
 	gzip -c $(tardir).tar > $(tardir).tar.gz
 	rm -rf $(tardir)
 
-test:
+check:
 	set -e;\
-	(cd src; $(MAKE) test);
+	(cd tests; $(MAKE) check);

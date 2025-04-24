@@ -1,0 +1,163 @@
+# Makefile for catdoc testing framework
+#
+# This file handles automated testing for catdoc, catppt, and xls2csv
+
+# These variables will be set by configure
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+VPATH = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+installroot = @installroot@
+bindir = @bindir@
+
+# Set shell to bash to ensure consistent behavior
+SHELL = /bin/sh
+
+# Directory for test outputs
+TEST_OUTPUT_DIR = test-output
+
+# Tools configuration - reference the installed binaries
+DOC_TOOL = $(installroot)$(bindir)/catdoc
+PPT_TOOL = $(installroot)$(bindir)/catppt
+XLS_TOOL = $(installroot)$(bindir)/xls2csv
+
+# Discover test files
+DOC_TESTS = $(wildcard *.doc)
+PPT_TESTS = $(wildcard *.ppt)
+XLS_TESTS = $(wildcard *.xls)
+
+# Generate output filenames
+DOC_OUTPUTS = $(patsubst %.doc,$(TEST_OUTPUT_DIR)/%.doc.out,$(DOC_TESTS))
+PPT_OUTPUTS = $(patsubst %.ppt,$(TEST_OUTPUT_DIR)/%.ppt.out,$(PPT_TESTS))
+XLS_OUTPUTS = $(patsubst %.xls,$(TEST_OUTPUT_DIR)/%.xls.out,$(XLS_TESTS))
+
+# Expected failure lists (to be defined in the tests directory)
+# Each file should contain a list of test files that are expected to fail
+XFAIL_FILE = xfail.list
+XFAIL_TESTS = $(shell if [ -f $(XFAIL_FILE) ]; then cat $(XFAIL_FILE); fi)
+
+# Create test output directory if it doesn't exist
+$(TEST_OUTPUT_DIR):
+	mkdir -p $(TEST_OUTPUT_DIR)
+
+# Default target
+all:
+
+# Run all tests
+check: $(TEST_OUTPUT_DIR) check-doc check-ppt check-xls
+	@echo "=== Test Summary ==="
+	@echo "Passed: $$(grep -l 'PASS' $(TEST_OUTPUT_DIR)/*.result 2>/dev/null | wc -l)"
+	@echo "Failed: $$(grep -l 'FAIL' $(TEST_OUTPUT_DIR)/*.result 2>/dev/null | grep -v $(XFAIL_TESTS) | wc -l)"
+	@echo "Expected failures: $$(grep -l 'XFAIL' $(TEST_OUTPUT_DIR)/*.result 2>/dev/null | wc -l)"
+	@if grep -l 'FAIL' $(TEST_OUTPUT_DIR)/*.result 2>/dev/null | grep -v $(XFAIL_TESTS) > /dev/null; then \
+		echo "=== Some tests failed unexpectedly ==="; \
+		grep -l 'FAIL' $(TEST_OUTPUT_DIR)/*.result | grep -v $(XFAIL_TESTS); \
+		exit 1; \
+	else \
+		echo "=== All tests passed or failed as expected ==="; \
+	fi
+
+# Test rules for each file type
+check-doc: $(DOC_OUTPUTS:.out=.result)
+check-ppt: $(PPT_OUTPUTS:.out=.result)
+check-xls: $(XLS_OUTPUTS:.out=.result)
+
+# Generic test rule for DOC files
+## TODO: make a generic output rule over the three programs.
+$(TEST_OUTPUT_DIR)/%.doc.out: %.doc | $(TEST_OUTPUT_DIR)
+	@echo "Running $(DOC_TOOL) on $<"
+	@{ \
+		$(DOC_TOOL) "$<" > "$@" 2> "$@.err"; \
+		status=$$?; \
+		if [ $$status -ne 0 ]; then \
+			echo "FAIL: $<: $(DOC_TOOL) exited with error status $$status" >> "$@"; \
+			echo "warning: $<: $(DOC_TOOL) exited with error status $$status"; \
+			echo "	(see $@.err for stderr)"; \
+		fi; \
+	}
+
+$(TEST_OUTPUT_DIR)/%.doc.result: $(TEST_OUTPUT_DIR)/%.doc.out %.doc.expected
+	@if [ -f $*.doc.expected ]; then \
+		diff -u $*.doc.expected $< > $@.diff 2>&1; \
+		if [ $$? -eq 0 ]; then \
+			echo "PASS: $*.doc" > $@; \
+			rm $@.diff; \
+		else \
+			if echo "$(XFAIL_TESTS)" | grep -q "$*.doc"; then \
+				echo "XFAIL: $*.doc (expected failure)" > $@; \
+			else \
+				echo "FAIL: $*.doc" > $@; \
+				echo "See $@.diff for details"; \
+			fi; \
+		fi; \
+	else \
+		echo "SKIP: $*.doc (no expected output file)" > $@; \
+	fi
+	@cat $@
+
+# Generic test rule for PPT files
+$(TEST_OUTPUT_DIR)/%.ppt.out: %.ppt $(TEST_OUTPUT_DIR)
+	$(PPT_TOOL) $< > $@
+
+$(TEST_OUTPUT_DIR)/%.ppt.result: $(TEST_OUTPUT_DIR)/%.ppt.out %.ppt.expected
+	@if [ -f $*.ppt.expected ]; then \
+		diff -u $*.ppt.expected $< > $@.diff 2>&1; \
+		if [ $$? -eq 0 ]; then \
+			echo "PASS: $*.ppt" > $@; \
+			rm $@.diff; \
+		else \
+			if echo "$(XFAIL_TESTS)" | grep -q "$*.ppt"; then \
+				echo "XFAIL: $*.ppt (expected failure)" > $@; \
+			else \
+				echo "FAIL: $*.ppt" > $@; \
+				echo "See $@.diff for details"; \
+			fi; \
+		fi; \
+	else \
+		echo "SKIP: $*.ppt (no expected output file)" > $@; \
+	fi
+	@cat $@
+
+# Generic test rule for XLS files
+$(TEST_OUTPUT_DIR)/%.xls.out: %.xls $(TEST_OUTPUT_DIR)
+	$(XLS_TOOL) $< > $@
+
+$(TEST_OUTPUT_DIR)/%.xls.result: $(TEST_OUTPUT_DIR)/%.xls.out %.xls.expected
+	@if [ -f $*.xls.expected ]; then \
+		diff -u $*.xls.expected $< > $@.diff 2>&1; \
+		if [ $$? -eq 0 ]; then \
+			echo "PASS: $*.xls" > $@; \
+			rm $@.diff; \
+		else \
+			if echo "$(XFAIL_TESTS)" | grep -q "$*.xls"; then \
+				echo "XFAIL: $*.xls (expected failure)" > $@; \
+			else \
+				echo "FAIL: $*.xls" > $@; \
+				echo "See $@.diff for details"; \
+			fi; \
+		fi; \
+	else \
+		echo "SKIP: $*.xls (no expected output file)" > $@; \
+	fi
+	@cat $@
+
+# Individual check targets
+check-doc-only: clean-tests $(TEST_OUTPUT_DIR) $(DOC_OUTPUTS:.out=.result)
+check-ppt-only: clean-tests $(TEST_OUTPUT_DIR) $(PPT_OUTPUTS:.out=.result)
+check-xls-only: clean-tests $(TEST_OUTPUT_DIR) $(XLS_OUTPUTS:.out=.result)
+
+# Clean test outputs
+clean-tests:
+	rm -f $(TEST_OUTPUT_DIR)/*.*
+	-rmdir $(TEST_OUTPUT_DIR)
+
+# Include tests in the clean target
+clean: clean-tests
+
+distclean: clean
+	rm -f Makefile
+
+# Handle the standard targets required by autoconf
+# This allows "make check" to work properly
+.PHONY: all check clean distclean check-doc check-ppt check-xls clean-tests
