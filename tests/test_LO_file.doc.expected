@@ -1,0 +1,21 @@
+This is a simple word processing file with text saved in LibreOffice as
+Word 97-2003 .doc file
+
+But KDE baloo doesn’t index it, becaues KfileMetadata does not find
+any words in the file (KDE bug 438455
+https://bugs.kde.org/show_bug.cgi?id=438455), because it invokes
+`catdoc` which does not find any output in the file.
+
+RedHat bug 2150140 ,   HYPERLINK
+"https://bugzilla.redhat.com/show_bug.cgi?id=2150140"
+https://bugzilla.redhat.com/show_bug.cgi?id=2150140 
+
+Debian bug 874048,   HYPERLINK
+"https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=874048"
+https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=874048   which I think
+is fixed with simple patch   HYPERLINK
+"https://salsa.debian.org/debian/catdoc/-/blob/debian/sid/debian/patches
+/06-Fix_OLENAMELENGTH.patch"
+https://salsa.debian.org/debian/catdoc/-/blob/debian/sid/debian/patches/
+06-Fix_OLENAMELENGTH.patch  
+

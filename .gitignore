@@ -14,7 +14,6 @@ tags
 *.o
 rtf-parser.txt
 semantic.cache
-tests
 doc/build
 doc/*.1
 {arch}

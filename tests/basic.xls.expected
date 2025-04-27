@@ -1,0 +1,12 @@
+"ID","Name","Age","City","Occupation","Salary","Start Date","Status"
+"1","John","30","New York","Engineer","80","44576","Active"
+"2","Mary","28","Los Angeles","Teacher","55","44593","Active"
+"3","Alex","35","Chicago","Doctor","120","44510","Inactive"
+"4","Emily","25","Houston","Programmer","70","44640","Active"
+"5","Michael","32","Miami","Artist","45","44656","Active"
+"6","Olivia","29","Seattle","Marketing","65","44693","Inactive"
+"7","Daniel","40","San Diego","Lawyer","95","44469","Active"
+"8","Sophia","27","Atlanta","Nurse","60","44730","Inactive"
+"9","Ethan","33","Dallas","Scientist","110","44535","Active"
+"10","Ava","26","Boston","Chef","75","44765","Active"
+
