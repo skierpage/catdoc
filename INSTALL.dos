@@ -36,9 +36,9 @@ If you've fetched BINARY DISTRIBUTION, note following:
    use_locale = no in the configuration file.
 
 If you are insisting on COMPILING catdoc YOURSELF.
-Please note that catdoc was compiled under DOS using Turbo C 2.01,
-downloaded from http://community.borland.com/museum. You can get the
-same one. 
+Please note that catdoc was compiled under DOS using Borland Turbo C
+2.01. You can download it from the Internet Archive at
+https://archive.org/details/msdos_borland_turbo_c_2.01
 
 I've made some attempts to compile catdoc with Watcom C (16-bit),
 but haven't completely succeeded. If you do, let me know.   
