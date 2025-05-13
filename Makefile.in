@@ -1,4 +1,3 @@
-
 # Your C compilier and flags
 SHELL = /bin/sh
 PACKAGE_VERSION = @PACKAGE_VERSION@
@@ -30,8 +29,8 @@ distclean:
 dist:
 	$(MAKE) clean
 	mkdir $(tardir)
-	cp -rp src doc compat charsets $(tardir)
-	cp -rp install-sh missing mkinstalldirs CODING.STD COPYING $(tardir)
+	cp -rp src doc compat charsets tests $(tardir)
+	cp -rp install-sh missing mkinstalldirs CODING.STD COPYING CREDITS $(tardir)
 	cp -rp INSTALL INSTALL.dos Makefile Makefile.in NEWS README TODO $(tardir)
 	cp -rp acconfig.h configure configure.in $(tardir)
 	$(MAKE) -C $(tardir) distclean
