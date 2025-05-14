@@ -17,7 +17,7 @@ SHELL = /bin/sh
 # Directory for test outputs
 TEST_OUTPUT_DIR = test-output
 
-# Tools configuration - reference the installed binaries
+# Use installed binaries since they need access to charset files in @datadir@
 DOC_TOOL = $(installroot)$(bindir)/catdoc
 PPT_TOOL = $(installroot)$(bindir)/catppt
 XLS_TOOL = $(installroot)$(bindir)/xls2csv

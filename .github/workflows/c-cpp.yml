@@ -13,9 +13,12 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: configure
-      run: ./configure
+      # The catdoc programs read charset info from @data-dir@/catdoc, so we must install
+      run: ./configure --prefix=${{ runner.temp }}
     - name: make
       run: make
+    - name: make install
+      run: make install
     - name: make check
       run: make check
     - name: make distcheck
