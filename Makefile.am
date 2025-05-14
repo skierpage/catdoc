@@ -1,45 +1,17 @@
-# Your C compilier and flags
-SHELL = /bin/sh
-PACKAGE_VERSION = @PACKAGE_VERSION@
-PACKAGE_TARNAME = @PACKAGE_TARNAME@
-tardir=${PACKAGE_TARNAME}-${PACKAGE_VERSION}
+AUTOMAKE_OPTIONS = foreign
 
-all:
-	set -e;\
-	for i in src doc charsets; do\
-	   (cd $$i; $(MAKE) all);\
-	done
+SUBDIRS = src doc charsets tests
 
-install:
-	set -e;\
-	for i in src doc charsets; do\
-	   (cd $$i; $(MAKE) install);\
-	done
-clean:	
-	set -e;\
-	for i in src doc charsets tests; do\
-	   (cd $$i; $(MAKE) clean);\
-	done
-distclean:	
-	set -e;\
-	for i in src doc charsets tests; do\
-	   (cd $$i; $(MAKE) distclean);\
-	done
-	rm -f Makefile config.*
-dist:
-	$(MAKE) clean
-	mkdir $(tardir)
-	cp -rp src doc compat charsets tests $(tardir)
-	cp -rp install-sh missing mkinstalldirs CODING.STD COPYING CREDITS $(tardir)
-	cp -rp INSTALL INSTALL.dos Makefile Makefile.in NEWS README TODO $(tardir)
-	cp -rp acconfig.h configure configure.in $(tardir)
-	$(MAKE) -C $(tardir) distclean
+EXTRA_DIST = CODING.STD CREDITS INSTALL.dos \
+             acconfig.h \
+             compat \
+             doc/*.txt doc/*.ps
+
+# Custom doc target that is referenced in the dist target
+docdist:
 	$(MAKE) -C doc dosdoc
-	cp -rp doc/*.txt doc/*.ps $(tardir)/doc
-	tar cf $(tardir).tar $(tardir)
-	gzip -c $(tardir).tar > $(tardir).tar.gz
-	rm -rf $(tardir)
 
-check:
-	set -e;\
-	(cd tests; $(MAKE) check);
+# Use automake's dist-hook to handle any custom distribution steps
+dist-hook:
+	$(MAKE) docdist
+	cp -p doc/*.txt doc/*.ps $(distdir)/doc/

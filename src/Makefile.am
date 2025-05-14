@@ -1,104 +1,23 @@
-# Your C compilier and flags
-SHELL = /bin/sh
+# Programs to build
+bin_PROGRAMS = catdoc xls2csv catppt wordview
 
-srcdir = @srcdir@
-top_srcdir = @top_srcdir@
-VPATH = @srcdir@
-prefix = @prefix@
-exec_prefix = @exec_prefix@
-installroot = @installroot@
+# Source files for catdoc
+catdoc_SOURCES = catdoc.c charsets.c substmap.c fileutil.c numutils.c ole.c \
+                unicode.c rtf.c writer.c read_config.c analyze.c
 
-bindir = @bindir@
-libdir = @libdir@
-confdir = @sysconfdir@
-datadir = @datadir@
-datarootdir = @datarootdir@
-mandir = @mandir@
-INSTALL = @INSTALL@
-WISH = @WISH@
-CC = @CC@
-COMPAT_OBJ=@LIBOBJS@
-build_targets = @buildtargets@
-install_targets = @installtargets@
-CHARSETPATH=${datadir}/catdoc
-# Flags to pass to your C compilier
-# remove -O2 on HP/UX 9. It is known to cause problems
-FLAGS=-I. @CFLAGS@  @DEFS@ -DCATDOC_VERSION=\"@PACKAGE_VERSION@\" -DCHARSETPATH=\"${CHARSETPATH}\"
+# Source files for xls2csv
+xls2csv_SOURCES = xls2csv.c charsets.c substmap.c fileutil.c numutils.c ole.c \
+                 unicode.c sheet.c xls.c
 
-#Compile-time configuration of catdoc itself. Edit according to taste
+# Source files for catppt
+catppt_SOURCES = catppt.c charsets.c substmap.c fileutil.c numutils.c ole.c \
+                unicode.c ppt.c
 
-#Directory, where all system-wide stuff resides
-DATA_DIR=$(datadir)/catdoc
-#directory, where catdoc binary would be placed
-#directory where to put man page
+# Source files for wordview
+wordview_SOURCES = wordview.c
 
-#System-wide configuration file
-SYSTEMRC=$(confdir)/catdocrc
+# Common header files
+noinst_HEADERS = catdoc.h ole.h rtf.h unicode.h xls.h
 
-#Per-user configration file (in user's home directory
-USERRC=.catdocrc
-
-# path where to search for charsets. may be colon-separated list of dirs
-
-# Extension for map of special character
-SPEC_EXT=@specsuffix@
-
-# Extension for map of substitutes (chars which are missing from target
-# charset)
-REPL_EXT=@replsuffix@
-
-# Target charset - one used on your system console or xterm
-TARGET_CHARSET=@targetcharset@
-
-# Source charset - one which your Word files are usially in unless they
-# are UNICODE
-SOURCE_CHARSET=@sourcecharset@
-
-# Character which would be printed instead of ones, not found in charset
-# or replacement map
-UNKNOWN_CHAR=?
-
-# END OF COMPILE-TIME CONFIGURATION
-
-DEFINES=-DSYSTEMRC=\"$(SYSTEMRC)\" -DUSERRC=\"$(USERRC)\"
-
-CFLAGS=$(FLAGS) $(DEFINES) @DEFS@
-
-COMMONOBJ=charsets.o substmap.o fileutil.o confutil.o numutils.o ole.o 
-
-OBJ=catdoc.o reader.o writer.o analyze.o rtfread.o $(COMMONOBJ)
-
-OBJXLS=xls2csv.o sheet.o xlsparse.o $(COMMONOBJ)
-
-OBJPPT=catppt.o pptparse.o $(COMMONOBJ)
-#.c.o:
-#	$(CC) -c $(CFLAGS) $*
-all: @buildtargets@
-catdoc: $(OBJ)
-	$(CC)  -o catdoc  $(OBJ) $(LDFLAGS)
-xls2csv: $(OBJXLS)
-	$(CC) -o xls2csv $(OBJXLS) -lm $(LDFLAGS)
-
-catppt: $(OBJPPT)
-	$(CC) -o catppt $(OBJPPT) -lm $(LDFLAGS)
-
-install: @installtargets@
-install-catdoc:catdoc xls2csv catppt 
-	../mkinstalldirs $(DESTDIR)$(installroot)$(bindir)
-	$(INSTALL) -p -m 755 catdoc $(DESTDIR)$(installroot)$(bindir)/catdoc
-	$(INSTALL) -p -m 755 xls2csv $(DESTDIR)$(installroot)$(bindir)/xls2csv
-	$(INSTALL) -p -m 755 catppt $(DESTDIR)$(installroot)$(bindir)/catppt
-install-wordview: wordview 
-	../mkinstalldirs $(installroot)$(bindir)
-	$(INSTALL) -p -m 755 wordview $(DESTDIR)$(installroot)$(bindir)/wordview
-wordview: wordview.tcl
-	echo "#! $(WISH)" >wordview
-	echo set charset_lib "\"$(CHARSETPATH)\"">>wordview
-	cat wordview.tcl >>wordview
-	chmod 0755 wordview
-strftime.o: ../compat/strftime.c
-	$(CC) -c $(FLAGS) -o $@ $*
-clean:
-	rm -f *.o catdoc wordview xls2csv catppt
-distclean: clean
-	rm Makefile
+# Make sure we compile with our configuration
+AM_CPPFLAGS = -I$(top_srcdir)/src

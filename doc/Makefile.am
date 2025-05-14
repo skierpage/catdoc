@@ -1,42 +1,11 @@
+# Man pages to install
+man_MANS = catdoc.1 xls2csv.1 catppt.1 wordview.1
 
-# Your C compiler and flags
-SHELL = /bin/sh
-installroot=@installroot@
-srcdir = @srcdir@
-top_srcdir = @top_srcdir@
-INSTALL = @INSTALL@
-VPATH = @srcdir@
-prefix = @prefix@
-exec_prefix = @exec_prefix@
-bindir = @bindir@
-libdir = @libdir@
-mandir = @mandir@
-manext = @manext@ 
-datadir = @datadir@
-datarootdir = @datarootdir@
-%.txt: %.1
-	nroff -mandoc $< |col -bx >$@
-%.ps: %.1
-	groff -Tps -mandoc $< >$@	
+# Documentation files to distribute but not install
+EXTRA_DIST = $(man_MANS) *.txt *.ps
 
-all:
-	touch build
-
-dosdoc: catdoc.txt catdoc.ps xls2csv.txt xls2csv.ps catppt.txt catppt.ps
-clean:
-	$(RM) catppt.txt catppt.ps  \
-            catdoc.txt catdoc.ps \
-            xls2csv.txt xls2csv.ps \
-            wordview.txt wordview.ps build
-install: @installtargets@
-install-catdoc: catdoc.1 xls2csv.1 catppt.1
-	../mkinstalldirs $(DESTDIR)$(installroot)$(mandir)/man1
-	$(INSTALL) -m 644 catdoc.1 $(DESTDIR)$(installroot)$(mandir)/man1/catdoc.1
-	$(INSTALL) -m 644 xls2csv.1 $(DESTDIR)$(installroot)$(mandir)/man1/xls2csv.1
-	$(INSTALL) -m 644 catppt.1 $(DESTDIR)$(installroot)$(mandir)/man1/catppt.1
-install-wordview:	
-	../mkinstalldirs $(DESTDIR)$(installroot)$(mandir)/man1
-	$(INSTALL) -m 644 wordview.1 $(DESTDIR)$(installroot)$(mandir)/man1/wordview.1
-distclean: clean
-	$(RM)  Makefile catdoc.1 xls2csv.1 catppt.1 wordview.1
-
+# Target for DOS documentation (referenced in top-level Makefile.am)
+dosdoc:
+	# Add commands here to generate DOS documentation
+	# This likely involves converting man pages to text format
+	# Example: groff -man -Tascii catdoc.1 > catdoc.txt

@@ -1,5 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([catdoc],[0.95])
+AM_INIT_AUTOMAKE
+
 dnl Checks for programs.
 AC_PROG_CC
 case ${CC} in
@@ -77,7 +79,7 @@ m4_warn([obsolete],
   Except in unusual embedded environments, you can safely include all
   C89 headers unconditionally.])dnl
 # Autoupdate added the next two lines to ensure that your configure
-# script's behavior did not change.  They are probably safe to remove.
+# script's behavior did not change.
 AC_CHECK_INCLUDES_DEFAULT
 AC_PROG_EGREP
 
@@ -132,11 +134,11 @@ AC_SUBST(CFLAGS)
 AC_SUBST(WORDS_BIGENDIAN)
 AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_FILES([
+	Makefile
 	doc/Makefile
 	charsets/Makefile
 	src/Makefile
 	tests/Makefile
-	Makefile
 	doc/catdoc.1
 	doc/xls2csv.1
 	doc/wordview.1
