@@ -21,3 +21,10 @@ reproduces  Debian bug 878334 - wrong charset conversion in xls2csv
 ## Expected failing files
 xfail.list lists test files that are expected to not succesfully be converted
 due to known bugs:
+
+## Command-line tests
+Some command lines demonstrate failures, e.g. [petewarden issue #10](https://github.com/petewarden/catdoc/issues/10) - global-buffer-overflow on reader.c:177:20
+
+    % catdoc / /-v -wbawdd
+
+(the buffer overflow is only detected if you compile with AddressSanitizer).
