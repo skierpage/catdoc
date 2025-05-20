@@ -3,9 +3,9 @@ AUTOMAKE_OPTIONS = foreign
 SUBDIRS = src doc charsets tests
 
 EXTRA_DIST = CODING.STD CREDITS INSTALL.dos \
+	     configure.ac configure.am
              acconfig.h \
-             compat \
-             doc/*.txt doc/*.ps
+             compat
 
 # Custom doc target that is referenced in the dist target
 docdist:

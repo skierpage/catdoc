@@ -1,6 +1,11 @@
 # Programs to build
 bin_PROGRAMS = catdoc xls2csv catppt wordview
 
+# Conditionally add wordview if enabled
+if INSTALL_WORDVIEW
+bin_PROGRAMS += wordview
+endif
+
 # Source files for catdoc
 catdoc_SOURCES = catdoc.c charsets.c substmap.c fileutil.c numutils.c ole.c \
                 unicode.c rtf.c writer.c read_config.c analyze.c
@@ -20,4 +25,5 @@ wordview_SOURCES = wordview.c
 noinst_HEADERS = catdoc.h ole.h rtf.h unicode.h xls.h
 
 # Make sure we compile with our configuration
-AM_CPPFLAGS = -I$(top_srcdir)/src
+# Substitute variables from configure.ac
+AM_CPPFLAGS = -I$(top_srcdir)/src -DSOURCE_CHARSET=\"@sourcecharset@\" -DTARGET_CHARSET=\"@targetcharset@\"
