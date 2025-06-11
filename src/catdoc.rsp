@@ -1,3 +1,4 @@
 +-charsets.obj +-substmap.obj +-reader.obj +-writer.obj +-fileutil.obj &
 +-langinfo.obj +-analyze.obj +-confutil.obj +-rtfread.obj +-numutils.obj &
-+-sheet.obj +-xlsparse.obj +-ole.obj  +-strftime.obj +-pptparse.obj
++-sheet.obj +-xlsparse.obj +-ole.obj  +-strftime.obj +-pptparse.obj &
++-getopt.obj
