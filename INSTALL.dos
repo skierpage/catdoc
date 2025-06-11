@@ -36,9 +36,9 @@ If you've fetched BINARY DISTRIBUTION, note following:
    use_locale = no in the configuration file.
 
 If you are insisting on COMPILING catdoc YOURSELF.
-Please note that catdoc was compiled under DOS using Turbo C 2.01,
-downloaded from http://community.borland.com/museum. You can get the
-same one. 
+Please note that catdoc was compiled under DOS using Borland Turbo C
+2.01. You can download it from the Internet Archive at
+https://archive.org/details/msdos_borland_turbo_c_2.01
 
 I've made some attempts to compile catdoc with Watcom C (16-bit),
 but haven't completely succeeded. If you do, let me know.   
@@ -62,12 +62,12 @@ but haven't completely succeeded. If you do, let me know.
   dependent defines from DOS, you should probably achieve good
   results.
 
-4. With Turbo C you'll need file getopt.c which comes with Turbo C
-   and unistd.h which is provided in compat directory.
-   Compile getopt.c and add it to cc.lib and put unistd.h in
-   your include directory. Later it might help you to port other
-   unix software. With other compiler you can also make use
-   of getopt.c in compat directory (which is from GNU), but I was
+4. With Turbo C you'll need the file getopt.c which comes with Turbo C
+   and unistd.h which is provided in compat directory; copy Turbo C's
+   getopt.c to the compat directory. The makefile.tc for Borland Turbo
+   C adds ../compat to the include search path. Later it might help you
+   to port other unix software. With other compiler you can also make
+   use of getopt.c in compat directory (which is from GNU), but I was
    unable to make it work with Watcom 10.0
 
 5. It is probably good idea to link wildargs.obj (or wildargv.obj)
