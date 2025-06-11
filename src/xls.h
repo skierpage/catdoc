@@ -10,7 +10,6 @@
 
 #include <stdio.h>
 #include <stdint.h>
-
 #include <math.h>
 /* types of quoting */
 #define QUOTE_NEVER 0
