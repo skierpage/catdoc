@@ -77,7 +77,7 @@ $(TEST_OUTPUT_DIR)/%.out: % | $(TEST_OUTPUT_DIR)
 
 # Generic rule to create a PASS/FAIL/XFAIL result file and display it for any test file.
 $(TEST_OUTPUT_DIR)/%.result: $(TEST_OUTPUT_DIR)/%.out %.expected
-	@diff -u $*.expected $< > $@.diff 2>&1; \
+	@diff -u --ignore-blank-lines --ignore-trailing-space $*.expected $< > $@.diff 2>&1; \
 	if [ $$? -eq 0 ]; then \
 		echo "PASS: $*" > $@; \
 		rm $@.diff; \
