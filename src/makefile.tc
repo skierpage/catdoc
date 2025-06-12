@@ -3,9 +3,7 @@ CC=$(TCDIR)\tcc
 LIB=$(TCDIR)\lib
 TLIB=$(TCDIR)\tlib
 CFLAGS=-v -w -mc -DHAVE_LANGINFO -DHAVE_STRDUP -DCATDOC_VERSION="0.95"
-# TODO: xlsparse fails to compile in Borland C: "expression syntax in function saveSstBoundary"
-# OBJ=charsets.obj substmap.obj reader.obj writer.obj fileutil.obj langinfo.obj analyze.obj confutil.obj rtfread.obj numutils.obj sheet.obj xlsparse.obj ole.obj strftime.obj pptparse.obj getopt.obj
-OBJ=charsets.obj substmap.obj reader.obj writer.obj fileutil.obj langinfo.obj analyze.obj confutil.obj rtfread.obj numutils.obj sheet.obj ole.obj strftime.obj pptparse.obj getopt.obj
+OBJ=charsets.obj substmap.obj reader.obj writer.obj fileutil.obj langinfo.obj analyze.obj confutil.obj rtfread.obj numutils.obj sheet.obj xlsparse.obj ole.obj strftime.obj pptparse.obj getopt.obj
 .c.obj:
 	$(CC) -v -c -mc -I../compat  $(CFLAGS) $*
 all: catdoc.exe xls2csv.exe catppt.exe

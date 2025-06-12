@@ -156,7 +156,7 @@ static int saveSstBoundary(int boundary) {
 	p = (int*) realloc(sstPartBoundaries,
 				count * sizeof(sstPartBoundaries[0]));
 	if (!p) {
-		// allocation failure, leave boundary list as it is
+		/* allocation failure, leave boundary list as it is */
 		return 0;
 	}
 
