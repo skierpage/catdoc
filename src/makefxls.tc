@@ -2,8 +2,8 @@ TCDIR=c:\tc
 CC=$(TCDIR)\tcc
 LIB=$(TCDIR)\lib
 TLIB=$(TCDIR)\tlib
-# Using compact memory model
-MDL=c
+# Using large memory model, xslparse.c use of floating point seems to need it.
+MDL=l
 # TODO: build this file from .in to define -D\"@PACKAGE_VERSION@\"
 CFLAGS=-v -w -m$(MDL) -DHAVE_LANGINFO -DHAVE_STRDUP -DCATDOC_VERSION="0.95"
 OBJ=charsets.obj substmap.obj reader.obj writer.obj fileutil.obj langinfo.obj analyze.obj confutil.obj rtfread.obj numutils.obj sheet.obj xlsparse.obj ole.obj strftime.obj pptparse.obj getopt.obj
@@ -11,15 +11,13 @@ OBJ=charsets.obj substmap.obj reader.obj writer.obj fileutil.obj langinfo.obj an
 .c.obj:
 	$(CC) -c $(CFLAGS) -I../compat $*
 
-# To build xls2csv.exe, use makefxls.tc (and delete existing *.OBJ and *.LIB first!)
-all: catdoc.exe catppt.exe
+# NOTE: If you built the other .exe programs, you must run `make -fmakefxls.tc clean` first.
+all: xls2csv.exe
 
-catdoc.exe: catdoc.obj catdoc.lib
-	$(CC) -v -w -m$(MDL) catdoc.obj catdoc.lib
-catppt.exe: catppt.obj catdoc.lib
-	$(CC) -v -w -m$(MDL) catppt.obj catdoc.lib
+# xls2csv calls fscanf and strtod, needs floating point.
+xls2csv.exe: xls2csv.obj catdoc.lib force_fp.obj
+	$(CC) -v -w -m$(MDL) xls2csv.obj catdoc.lib force_fp.obj
 
-# xls2csv calls fscanf and strtod, needs floating point, co link in a dummy floating point function.
 # NOTE: Copy getopt.c from Borland Turbo C's \TC into ..\compat
 getopt.obj: ..\compat\getopt.c
 	$(CC) -c $(CFLAGS) -I../compat ../compat/getopt.c
@@ -28,10 +26,14 @@ langinfo.obj: ..\compat\langinfo.c
 strftime.obj: ..\compat\strftime.c
 	$(CC) -c $(CFLAGS) -I../compat ../compat/strftime.c
 
+force_fp.obj: ..\compat\force_fp.c
+	$(CC) -c $(CFLAGS) -I../compat ../compat/force_fp.c
+
 catdoc.lib: $(OBJ) catdoc.rsp
 	$(TLIB) /E catdoc @catdoc.rsp
 
 clean:
 	del *.obj
-	del *.exe
-	del *.lib
+	# Don't delete the other .exe programs.
+	del xls2csv.exe
+	del catdoc.lib
