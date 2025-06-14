@@ -1,4 +1,21 @@
 Note: people listed in this file are listed in arbitrary order.
+
+Victor Wagner <vitus@wagner.pp.ru>
+   Maintained catdoc project from at least 2006 to 2016.
+   Released versions up to 0.95.
+
+Martina Ferrari <tina@tina.pm>
+   Organized and maintained Debian patches fixing bugs
+Bjarni Ingi Gislason <bjarniig@rhi.hi.is>
+   Formatting and language fixes to the man pages
+Robert Zavalczki <robert.zavalczki@gmail.com>
+   Fixed wrong charset conversion, memory read, and bad output in
+   xls2csv
+Nick Bane <nick@enomem.co.uk>
+   amd64 fixes
+
+Earlier contributors prior to 2006 or so:
+
 Kawai Takanori (Hippo2000) kwitknr@cpan.org
    Author of perl module Spreadsheet::ParseExcel, which I use as
    reference manual for Excel format	

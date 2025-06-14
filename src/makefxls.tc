@@ -5,7 +5,7 @@ TLIB=$(TCDIR)\tlib
 # Using large memory model, xslparse.c use of floating point seems to need it.
 MDL=l
 # TODO: build this file from .in to define -D\"@PACKAGE_VERSION@\"
-CFLAGS=-v -w -m$(MDL) -DHAVE_LANGINFO -DHAVE_STRDUP -DCATDOC_VERSION="0.95"
+CFLAGS=-v -w -m$(MDL) -DHAVE_LANGINFO -DHAVE_STRDUP -DCATDOC_VERSION="0.96"
 OBJ=charsets.obj substmap.obj reader.obj writer.obj fileutil.obj langinfo.obj analyze.obj confutil.obj rtfread.obj numutils.obj sheet.obj xlsparse.obj ole.obj strftime.obj pptparse.obj getopt.obj
 
 .c.obj:

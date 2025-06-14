@@ -1,9 +1,35 @@
+   0.96 July 7 2025
+	This incorporates several patches to catdoc that have
+	accumulated, many from Debian.
+	- Fixed wrong charset conversion in xls2csv (Debian bug #878334)
+	- Fixed memory read and bad output from int'l xls file (Debian
+	  bug #878330)
+	- Fixed some LibreOffice documents saved in Word 97-2003 format,
+	  patch from Debian (Debian bug #874048, RedHat bug #1472876)
+	- Improved XLS parsing, patch from Debian (Debian bug XXX)
+	- Fixed types for some on-disk structures, patch from Debian
+	  (Debian bug XXX)
+	- CVE-2017-11110: fixed heap buffer overflow in ole_init, patch
+	  from Debian (Debian bug XXX)
+	- Makefile fixes, patch from Debian
+	- amd_64 fixes, patch from Debian (Debian bug XXX)
+	- Add DESTDIR prefix to Makefile.in (Fedora patch)
+	- man page fixes
+
+	Update COPYING with latest gpl-2.0.txt
+	Added test files, a simple test framework, and GitHub workflow
+	automation to run `make check` on updates.
+	Fixed xsl2csv compiling and running in DOS, updated INSTALL.dos
+	instructions.
+	Converted README to markdown, added information about vulnerabilities
+	and future plans.
+
    0.95 May 25 2016
 	Replaced charset tables with new ones, published by Unicode Consortium with
-    more permissive license.
+	more permissive license.
 	Fixed some incompatibilities with CLang
-    Fixed lot of segfaults on incorrect or corrupted data
-    Use stdint int types throughout the code, add configure check for stdint.h
+	Fixed lot of segfaults on incorrect or corrupted data
+	Use stdint int types throughout the code, add configure check for stdint.h
 
    0.94.2 Feb 25 2005
 	Now ole Root Entry is searched by entry type rather than by
@@ -53,7 +79,7 @@
 	Word versions, which was accidently lost in 0.93 
 
    0.93 July 29 2003
-    Added proper handling of OLE structure (by Alex Ott). 
+	Added proper handling of OLE structure (by Alex Ott). 
 
    0.92 June 16 2003
 	Added RTF parser at last (contributed by Alex Ott). MS-DOS
@@ -180,7 +206,7 @@
           _specs_ is searched by _strchr_ fynction
           
    0.32 - August 1997
-          First mayor public release, uploaded to CTAN. Tk interface
+          First major public release, uploaded to CTAN. Tk interface
           appeared, manual page was written. Unfortunately, this release
           was buggy.
 
