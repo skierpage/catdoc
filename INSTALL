@@ -1,19 +1,20 @@
-INSTALLING catdoc 0.91.x
+INSTALLING catdoc
 
-Starting with patchlevel alpha 3 catdoc version 0.90 have autoconf
-configuration. Thanks for Stephen Farell to convince me.
+Starting with patchlevel alpha 3 version 0.90, catdoc uses Unix
+autotools. Thanks for Stephen Farell to convince Victor Wagner.
 
 So typically you should run
-./configure
-make
-make install
+    ./configure
+    make
+    make install
 
-to compile and install catdoc.
+to compile and install catdoc.  (See INSTALL.dos for instructions to
+compile catdoc for DOS.)
 
 NOTE for HPUX users. If you want to compile catdoc with aCC,
 use CC="aCC -Ae" ./configure
 
-Configure script for catdoc recognizes following options (apart from
+The configure script for catdoc recognizes following options (beyond the
 standard --prefix,  --exec-prefix and so on)
 
 --disable-wordview - disables building of Tcl/Tk viewer wordview,
@@ -67,5 +68,4 @@ to me.
 
 It was known problem with version 0.35 on HP/UX 9, and I scarcely changed
 my style of writing since.
-
 
