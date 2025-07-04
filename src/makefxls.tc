@@ -14,7 +14,8 @@ OBJ=charsets.obj substmap.obj reader.obj writer.obj fileutil.obj langinfo.obj an
 # NOTE: If you built the other .exe programs, you must run `make -fmakefxls.tc clean` first.
 all: xls2csv.exe
 
-# xls2csv calls fscanf and strtod, needs floating point.
+# xls2csv calls fscanf and strtod, so needs floating point, so link in
+# a dummy floating point function.
 xls2csv.exe: xls2csv.obj catdoc.lib force_fp.obj
 	$(CC) -v -w -m$(MDL) xls2csv.obj catdoc.lib force_fp.obj
 

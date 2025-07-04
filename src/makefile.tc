@@ -19,7 +19,6 @@ catdoc.exe: catdoc.obj catdoc.lib
 catppt.exe: catppt.obj catdoc.lib
 	$(CC) -v -w -m$(MDL) catppt.obj catdoc.lib
 
-# xls2csv calls fscanf and strtod, needs floating point, co link in a dummy floating point function.
 # NOTE: Copy getopt.c from Borland Turbo C's \TC into ..\compat
 getopt.obj: ..\compat\getopt.c
 	$(CC) -c $(CFLAGS) -I../compat ../compat/getopt.c
