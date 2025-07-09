@@ -1,3 +1,6 @@
+   0.97 development pre-release ?? 2025
+	Incorporated Debian patches for the three 2024 CVEs identified and
+	addressed by the Cisco Talos team.
    0.96 July 7 2025
 	This incorporates several patches to catdoc that have
 	accumulated, many from Debian.

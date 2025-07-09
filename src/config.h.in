@@ -3,14 +3,6 @@
 /* Define to empty if the keyword does not work.  */
 #undef const
 
-/* Define if the setvbuf function takes the buffering type as its second
-   argument and the buffer pointer as the third, as on System V
-   before release 3.  */
-#undef SETVBUF_REVERSED
-
-/* Define if you have the ANSI C header files.  */
-#undef STDC_HEADERS
-
 /* Define if your processor stores words with the most significant
    byte first (like Motorola and SPARC, unlike Intel and VAX).  */
 #undef WORDS_BIGENDIAN

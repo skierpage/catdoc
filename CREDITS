@@ -6,6 +6,10 @@ Victor Wagner <vitus@wagner.pp.ru>
 
 Martina Ferrari <tina@tina.pm>
    Organized and maintained Debian patches fixing bugs
+Ali Rizvi-Santiago from the Cisco Talos team
+   Found and fixed the three CVE-2024 vulnerabilities
+Salvatore Bonaccorso from the Debian Security Team
+   Help with the three CVE-2024 vulnerabilities
 Bjarni Ingi Gislason <bjarniig@rhi.hi.is>
    Formatting and language fixes to the man pages
 Robert Zavalczki <robert.zavalczki@gmail.com>
