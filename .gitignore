@@ -21,3 +21,4 @@ src/catdoc
 src/catppt
 src/xls2csv
 src/wordview
+**/test-output/
