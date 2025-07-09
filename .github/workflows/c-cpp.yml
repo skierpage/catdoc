@@ -21,6 +21,11 @@ jobs:
       run: make install
     - name: make check
       run: make check
-    # TODO: make distcheck not working yet, but `make dist` should work.
+    # TODO: no `make distcheck` rule yet but `make dist` should work.
     - name: make dist
       run: make dist
+    - name: Upload distribution .tar.gz as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: dist-archive
+        path: catdoc-*.tar.gz
