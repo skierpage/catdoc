@@ -2,14 +2,14 @@ Drop DOS support. This will simplify the build process.
 
 Investigate additional CVEs:
 
-* CVE-2018-20451
-* CVE-2018-20453
-* CVE-2023-41633
-* CVE-2023-31979
+- CVE-2018-20451
+- CVE-2018-20453
+- CVE-2023-41633
+- CVE-2023-31979
 
-Use full autoconf to create Makefiles. This will make it easier to build with
-ASAN to reproduce CVE-2023-31979 (catdoc: buffer overflow in process_file() in
-src/reader.c)
+Use full GNU autoconf to create Makefiles. This will make it easier to build
+with ASAN to reproduce CVE-2023-31979 (catdoc: buffer overflow in
+process_file() in src/reader.c)
 
 Victor Wagner's original TODO:
 
