@@ -101,4 +101,4 @@ strftime.o: ../compat/strftime.c
 clean:
 	rm -f *.o catdoc wordview xls2csv catppt
 distclean: clean
-	rm Makefile
+	rm -f Makefile config.h
