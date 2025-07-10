@@ -125,7 +125,6 @@ AC_SUBST(CFLAGS)
 AC_SUBST(WORDS_BIGENDIAN)
 AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_FILES([
-	doc/Makefile
 	charsets/Makefile
 	src/Makefile
 	tests/Makefile

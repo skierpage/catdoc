@@ -1,28 +1,40 @@
 # Your C compilier and flags
 SHELL = /bin/sh
+INSTALL = @INSTALL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
+installroot=@installroot@
+prefix = @prefix@
+mandir = @mandir@
 tardir=${PACKAGE_TARNAME}-${PACKAGE_VERSION}
 
 all:
 	set -e;\
-	for i in src doc charsets; do\
+	for i in src charsets; do\
 	   (cd $$i; $(MAKE) all);\
 	done
 
-install:
+# TODO: shold I use $(INSTALL) -d here or ../mkinstalldirs ?
+install-man:
+	$(INSTALL) -d $(DESTDIR)$(installroot)$(mandir)/man1
+	$(INSTALL) -m 644 doc/*.1 $(DESTDIR)$(installroot)$(mandir)/man1
+
+distclean-man:
+	$(RM) doc/*.1
+
+install: install-man
 	set -e;\
-	for i in src doc charsets; do\
+	for i in src charsets; do\
 	   (cd $$i; $(MAKE) install);\
 	done
-clean:	
+clean:
 	set -e;\
-	for i in src doc charsets tests; do\
+	for i in src charsets tests; do\
 	   (cd $$i; $(MAKE) clean);\
 	done
-distclean:	
+distclean: distclean-man
 	set -e;\
-	for i in src doc charsets tests; do\
+	for i in src charsets tests; do\
 	   (cd $$i; $(MAKE) distclean);\
 	done
 	rm -f Makefile config.*
