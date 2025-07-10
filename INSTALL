@@ -8,8 +8,7 @@ So typically you should run
     make
     make install
 
-to compile and install catdoc.  (See INSTALL.dos for instructions to
-compile catdoc for DOS.)
+to compile and install catdoc.
 
 NOTE for HPUX users. If you want to compile catdoc with aCC,
 use CC="aCC -Ae" ./configure

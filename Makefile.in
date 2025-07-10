@@ -29,13 +29,11 @@ distclean:
 dist:
 	$(MAKE) clean
 	mkdir $(tardir)
-	cp -rp src doc compat charsets tests $(tardir)
+	cp -rp src doc charsets tests $(tardir)
 	cp -rp install-sh missing mkinstalldirs CODING.STD COPYING CREDITS $(tardir)
-	cp -rp INSTALL INSTALL.dos Makefile Makefile.in NEWS README.md TODO.md $(tardir)
+	cp -rp INSTALL Makefile Makefile.in NEWS README.md TODO.md $(tardir)
 	cp -rp acconfig.h configure configure.in $(tardir)
 	$(MAKE) -C $(tardir) distclean
-	$(MAKE) -C doc dosdoc
-	cp -rp doc/*.txt doc/*.ps $(tardir)/doc
 	tar cf $(tardir).tar $(tardir)
 	gzip -c $(tardir).tar > $(tardir).tar.gz
 	rm -rf $(tardir)

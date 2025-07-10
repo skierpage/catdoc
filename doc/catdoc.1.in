@@ -264,9 +264,8 @@ This allows you to install additional charsets in your home directory.
 If first directory component of path is ~ it is replaced by contents of
 .B HOME
 environment variable.
-On MS-DOS platform, if directory name starts with %s, it is replaced
-with directory of executable file.  Empty element in list (i.e. two
-consecutive colons) is considered current directory.
+Empty element in list (i.e. two consecutive colons) is considered current
+directory.
 .TP 8
 .BI "map_path = " directory-list
 colon-separated list of directories, which are searched for special character

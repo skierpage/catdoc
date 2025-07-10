@@ -24,12 +24,7 @@ int wrap_margin = WRAP_MARGIN;
 int (*get_unicode_char)(FILE *f,long *offset,long fileend) =NULL;
 
 char *input_buffer, *output_buffer;
-#ifdef __WATCOMC__
-/* watcom doesn't provide way to access program args via global variable */
-/* so we would hack it ourselves in Borland-compatible way*/
-char **_argv;
-int _argc;
-#endif
+
 /**************************************************************/
 /*       Main program                                         */
 /*  Processes options, reads charsets  files and substitution */
@@ -41,10 +36,6 @@ int main(int argc, char **argv) {
 	char *tempname;
 	short int *tmp_charset;
 	int stdin_processed=0;
-#ifdef __WATCOMC__
-	_argv=argv;
-	_argc=argc;
-#endif
 	read_config_file(SYSTEMRC);
 #ifdef USERRC
 	tempname=find_file(strdup(USERRC),getenv("HOME"));

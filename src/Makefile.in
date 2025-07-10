@@ -17,7 +17,6 @@ mandir = @mandir@
 INSTALL = @INSTALL@
 WISH = @WISH@
 CC = @CC@
-COMPAT_OBJ=@LIBOBJS@
 build_targets = @buildtargets@
 install_targets = @installtargets@
 CHARSETPATH=${datadir}/catdoc
@@ -96,8 +95,6 @@ wordview: wordview.tcl
 	echo set charset_lib "\"$(CHARSETPATH)\"">>wordview
 	cat wordview.tcl >>wordview
 	chmod 0755 wordview
-strftime.o: ../compat/strftime.c
-	$(CC) -c $(FLAGS) -o $@ $*
 clean:
 	rm -f *.o catdoc wordview xls2csv catppt
 distclean: clean

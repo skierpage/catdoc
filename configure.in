@@ -110,7 +110,6 @@ AC_DEFINE_UNQUOTED([SPEC_EXT],"$specsuffix",[Suffix for files with special symbo
 AC_DEFINE_UNQUOTED([REPL_EXT],"$replsuffix",[Suffix for symbols replacement map (what to do with symbols, which are not available in the target encoding)])
 AC_DEFINE_UNQUOTED([UNKNOWN_CHAR],"?",[Symbol to represent character which is not available either in target encoding or in replacement map])
 AC_CHECK_FUNCS(strdup strtol)
-AC_REPLACE_FUNCS(strftime)
 AC_SUBST(specsuffix)
 AC_SUBST(replsuffix)
 AC_SUBST(buildtargets)

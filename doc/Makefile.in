@@ -14,6 +14,7 @@ mandir = @mandir@
 manext = @manext@ 
 datadir = @datadir@
 datarootdir = @datarootdir@
+# Useful rules if you want to build man pages as text files or PostScript
 %.txt: %.1
 	nroff -mandoc $< |col -bx >$@
 %.ps: %.1
@@ -22,7 +23,6 @@ datarootdir = @datarootdir@
 all:
 	touch build
 
-dosdoc: catdoc.txt catdoc.ps xls2csv.txt xls2csv.ps catppt.txt catppt.ps
 clean:
 	$(RM) catppt.txt catppt.ps  \
             catdoc.txt catdoc.ps \

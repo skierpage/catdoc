@@ -18,9 +18,6 @@
 #include "float.h"
 #include <math.h>
 #include <time.h>
-#ifndef HAVE_STRFTIME
-#include "../compat/strftime.h"
-#endif
 static unsigned char rec[MAX_MS_RECSIZE];
 int biff_version=0;
 short int *formatTable=NULL;

@@ -32,12 +32,12 @@
  */
 
 
-#if defined(__MSDOS__) || defined(_WIN32)
-/* MS-DOS doesn't like dot at first char and thinks that suffix 
+#if defined(_WIN32)
+/* Some Windows doesn't like dot at first char and thinks that suffix 
  * should be separated by dot. So we'd call personal config catdoc.rc
  */
 # define USERRC "catdoc.rc"
-/* In DOS, %s in path gets replaced with full path to executable including
+/* In Windows, %s in path gets replaced with full path to executable including
    trailing backslash.
  */
 # ifndef SYSTEMRC
@@ -86,7 +86,7 @@ char *add_exe_path(const char* name);
 
 /* Default charsets */
 #ifndef TARGET_CHARSET
-#if defined(__MSDOS__) || defined(_WIN32)
+#if defined(_WIN32)
 #define TARGET_CHARSET "cp866"
 #else
 #define TARGET_CHARSET "koi8-r"
@@ -100,35 +100,14 @@ char *add_exe_path(const char* name);
 #ifndef UNKNOWN_CHAR
 #define UNKNOWN_CHAR "?"
 #endif
-/* On MS-DOS and WIN32 files have to have 3-char extension */
-#if defined(__MSDOS__) || defined(_WIN32)
-# ifndef SPEC_EXT
-#  define SPEC_EXT ".spc"
-# endif
-# ifndef REPL_EXT 
-#  define REPL_EXT ".rpl"
-# endif
-#else
 
-/* On other system we'll rename them to something more readable */
-# ifndef SPEC_EXT
-#  define SPEC_EXT ".specchars"
-# endif
-# ifndef REPL_EXT
-#  define REPL_EXT ".replchars"
-# endif
-#endif
-#if defined(__MSDOS__) && !defined(__DJGPP__)
-/* Buffer sizes for 16-bit DOS progran */
-#define PARAGRAPH_BUFFER 16384
-#define FILE_BUFFER  32256
-#define PATH_BUF_SIZE 80 
-#else
+#define SPEC_EXT ".specchars"
+#define REPL_EXT ".replchars"
+
 /* Buffers for 32-bit and more program */
 #define PARAGRAPH_BUFFER 262144
 #define FILE_BUFFER 262144
 #define PATH_BUF_SIZE 1024
-#endif
 
 /* Buffer for single line. Should be greater than wrap margin +
   longest substitution sequence */

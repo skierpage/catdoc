@@ -66,11 +66,7 @@ SUBSTMAP read_substmap(char* filename) {
 		/* skip leading space */
 		for(p=line;*p && isspace(*p);p++);
 		/* if #, it is comment */
-		if (!*p ||
-#ifdef  __MSDOS__
-				*p==0x1A || /* DOS have strange habit of using ^Z as eof */
-#endif
-				*p=='#') continue;
+		if (!*p || *p=='#') continue;
 		/* read hexadecimal code */
 		uc = strtol(p,&p,16);
 		if (!isspace(*p)|| uc<0 || uc>0xfffd) {

@@ -639,6 +639,7 @@ ac_includes_default="\
 
 ac_header_c_list=
 ac_subst_vars='LTLIBOBJS
+LIBOBJS
 WORDS_BIGENDIAN
 installroot
 charsetcheck
@@ -650,7 +651,6 @@ installtargets
 buildtargets
 replsuffix
 specsuffix
-LIBOBJS
 EGREP
 GREP
 WISH
@@ -4363,21 +4363,6 @@ if test "x$ac_cv_func_strtol" = xyes
 then :
   printf "%s\n" "#define HAVE_STRTOL 1" >>confdefs.h
 
-fi
-
-ac_fn_c_check_func "$LINENO" "strftime" "ac_cv_func_strftime"
-if test "x$ac_cv_func_strftime" = xyes
-then :
-  printf "%s\n" "#define HAVE_STRFTIME 1" >>confdefs.h
-
-else case e in #(
-  e) case " $LIBOBJS " in
-  *" strftime.$ac_objext "* ) ;;
-  *) LIBOBJS="$LIBOBJS strftime.$ac_objext"
- ;;
-esac
- ;;
-esac
 fi
 
 

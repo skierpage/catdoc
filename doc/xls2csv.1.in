@@ -86,12 +86,6 @@ the spreadsheet, is used.
 On POSIX system any format, allowed by
 .BR strftime (3)
 can be used as value of this option.
-Under MS-DOS
-.B xls2csv
-implements limited set of
-.B strftime
-formats, namely
-.BR m ", " d ", " y ", " Y ", " b ", " l ", " p ", " H ", " M ", " S .
 
 .TP 8
 .B \-V
