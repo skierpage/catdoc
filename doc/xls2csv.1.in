@@ -1,4 +1,4 @@
-.TH xls2csv 1  "Version @PACKAGE_VERSION@" "MS-Word reader"
+.TH xls2csv 1  "Version @PACKAGE_VERSION@" "MS-Excel reader"
 .SH NAME
 xls2csv \- reads MS-Excel file and puts its content as comma-separated \
 data on standard output

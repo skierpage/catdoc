@@ -1,4 +1,4 @@
-.TH wordview 1  "Version @PACKAGE_VERSION@" "MS-Word reader"
+.TH wordview 1  "Version @PACKAGE_VERSION@" "MS-Word viewer"
 .SH NAME
 wordview \- displays text contained in MS-Word file in X window
 
