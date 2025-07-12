@@ -1,10 +1,10 @@
 Name: catdoc
-Version: 0.95
+Version: 0.96
 Release: %autorelease
 Summary: A program which converts Microsoft office files to plain text
 License: GPL-2.0-or-later
-URL: https://www.wagner.pp.ru/~vitus/software/catdoc/
-Source0: http://ftp.wagner.pp.ru/pub/catdoc/%{name}-%{version}.tar.gz
+URL: https://github.com/skierpage/catdoc
+Source0: https://github.com/skierpage/catdoc/archive/refs/tags/v%{version}.tar.gz
 Patch0: makefilefix.patch
 BuildRequires: gcc
 BuildRequires: make
