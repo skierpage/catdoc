@@ -25,6 +25,11 @@ This will simplify the build process.
 - [ ] [CVE-2023-41633](https://nvd.nist.gov/vuln/detail/CVE-2023-41633), "Catdoc v0.95 was discovered to contain a NULL pointer dereference via the component xls2csv at src/fileutil.c."
   - [ ] Contact rycbar77 and ask for their POC.
 
+## MISC
+- [ ] Build, or trigger, Fedora package builds.
+- [ ] Incorporate Victor Wagner's notes at https://www.wagner.pp.ru/~vitus/software/catdoc/ into README.md
+
+
 ## Recreate autotools build with autoconf
 - [ ] Use full GNU autoconf to create Makefiles.
 

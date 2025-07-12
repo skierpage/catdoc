@@ -1,0 +1,21 @@
+# See the documentation for more information:
+# https://packit.dev/docs/configuration/
+
+specfile_path: catdoc.spec
+
+# add or remove files that should be synced
+files_to_sync:
+    - catdoc.spec
+    - .packit.yaml
+
+# name in upstream package repository/registry (e.g. in PyPI)
+upstream_package_name: catdoc
+upstream_tag_template: v{%version}
+# downstream (Fedora) RPM package name
+downstream_package_name: catdoc
+
+jobs:
+- job: copr_build
+  trigger: pull_request
+  targets: [fedora-stable]
+
