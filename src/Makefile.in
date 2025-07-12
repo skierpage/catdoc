@@ -83,12 +83,12 @@ catppt: $(OBJPPT)
 
 install: @installtargets@
 install-catdoc:catdoc xls2csv catppt 
-	../mkinstalldirs $(DESTDIR)$(installroot)$(bindir)
+	$(INSTALL) -d $(DESTDIR)$(installroot)$(bindir)
 	$(INSTALL) -p -m 755 catdoc $(DESTDIR)$(installroot)$(bindir)/catdoc
 	$(INSTALL) -p -m 755 xls2csv $(DESTDIR)$(installroot)$(bindir)/xls2csv
 	$(INSTALL) -p -m 755 catppt $(DESTDIR)$(installroot)$(bindir)/catppt
 install-wordview: wordview 
-	../mkinstalldirs $(installroot)$(bindir)
+	$(INSTALL) -d $(DESTDIR)$(installroot)$(bindir)
 	$(INSTALL) -p -m 755 wordview $(DESTDIR)$(installroot)$(bindir)/wordview
 wordview: wordview.tcl
 	echo "#! $(WISH)" >wordview

@@ -2,10 +2,13 @@
 
 ## Drop DOS support.
 This will simplify the build process.
-- [ ] Remove DOS files
-- [ ] Rename `.rpl` and `.spc` files in `charsets` to full length
-- [ ] Remove special `make install` handling
+- [x] Remove DOS files
+- [x] Rename `.rpl` and `.spc` files in `charsets` to full length
+- [x] Remove special `make install` handling
 - [ ] So `make check` tests don't need `make install`
+
+    But binaries in src directory still need to find charsets at CHARSETPATH.
+
 - [ ] .github/workflows/c-cpp.yml can be simplified and may not need `make install
 
 ## Investigate additional CVEs:

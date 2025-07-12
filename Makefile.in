@@ -1,42 +1,36 @@
-# Your C compilier and flags
 SHELL = /bin/sh
 INSTALL = @INSTALL@
+INSTALL_DATA = @INSTALL_DATA@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
-installroot=@installroot@
+installroot = @installroot@
 prefix = @prefix@
+charsetdir = @datadir@/catdoc
 mandir = @mandir@
 tardir=${PACKAGE_TARNAME}-${PACKAGE_VERSION}
 
 all:
-	set -e;\
-	for i in src charsets; do\
-	   (cd $$i; $(MAKE) all);\
-	done
+	$(MAKE) -C src all
 
-# TODO: shold I use $(INSTALL) -d here or ../mkinstalldirs ?
+install-charsets:
+	$(INSTALL) -d $(DESTDIR)$(charsetdir)
+	$(INSTALL_DATA) charsets/* $(DESTDIR)$(charsetdir)
+
 install-man:
 	$(INSTALL) -d $(DESTDIR)$(installroot)$(mandir)/man1
-	$(INSTALL) -m 644 doc/*.1 $(DESTDIR)$(installroot)$(mandir)/man1
+	$(INSTALL_DATA) doc/*.1 $(DESTDIR)$(installroot)$(mandir)/man1
 
 distclean-man:
 	$(RM) doc/*.1
 
-install: install-man
-	set -e;\
-	for i in src charsets; do\
-	   (cd $$i; $(MAKE) install);\
-	done
+install: install-charsets install-man
+	$(MAKE) -C src install
+
 clean:
-	set -e;\
-	for i in src charsets tests; do\
-	   (cd $$i; $(MAKE) clean);\
-	done
+	$(MAKE) -C src clean
+
 distclean: distclean-man
-	set -e;\
-	for i in src charsets tests; do\
-	   (cd $$i; $(MAKE) distclean);\
-	done
+	$(MAKE) -C src distclean
 	rm -f Makefile config.*
 dist:
 	$(MAKE) clean
