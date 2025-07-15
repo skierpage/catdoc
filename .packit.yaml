@@ -10,7 +10,7 @@ files_to_sync:
 
 # name in upstream package repository/registry (e.g. in PyPI)
 upstream_package_name: catdoc
-upstream_tag_template: v{%version}
+# doesn't work: upstream_tag_template: v{%version}
 # downstream (Fedora) RPM package name
 downstream_package_name: catdoc
 

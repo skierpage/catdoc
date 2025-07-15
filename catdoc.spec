@@ -1,34 +1,36 @@
 Name: catdoc
-Version: 0.96
+Version: v0.97_devel
 Release: %autorelease
-Summary: A program which converts Microsoft office files to plain text
+Summary: programs which extract text from Microsoft Office 97-2004 files
 License: GPL-2.0-or-later
 URL: https://github.com/skierpage/catdoc
-Source0: https://github.com/skierpage/catdoc/archive/refs/tags/v%{version}.tar.gz
-Patch0: makefilefix.patch
+Source0: https://github.com/skierpage/%{name}/archive/refs/tags/v%{version}.tar.gz
 BuildRequires: gcc
 BuildRequires: make
 BuildRequires: tk
 Recommends: %{name}-wordview
 
 %description
-catdoc is program which reads one or more Microsoft word files
-and outputs text, contained insinde them to standard output.
-Therefore it does same work for.doc files, as unix cat
-command for plain ASCII files.
-It is now accompanied by xls2csv - program which converts
-Excel spreadsheet into comma-separated value file,
-and catppt - utility to extract textual information
-from Powerpoint files
+catdoc is a program which reads MS-Office 1997-2004 Word .doc files and prints
+their content as readable text to stdout. It supports multiple character sets
+for input and output.
+
+The catdoc package also includes
+- `catppt`, which reads MS PowerPoint `.ppt` files and prints their
+  content.
+- `xls2csv`, which reads MS Excel `.xls` files and prints their content as
+  rows of comma-separated values.
+- `wordview`, which displays `catdoc` output in a window.
 
 %package wordview
-Summary: Display Microsoft Word files in a graphical window
+Summary: Display Microsoft Word .doc files in a graphical window
+Requires: catdoc
 Requires: tk
 %if 0%{?fedora} > 41
-Conflicts: %{name} <= 0.95-25
+Conflicts: %{name} <= 0.95-26
 %endif
 %if 0%{?fedora} == 41
-Conflicts: %{name} <= 0.95-19
+Conflicts: %{name} <= 0.95-26
 %endif
 
 %description wordview
@@ -45,6 +47,17 @@ via Tk.
 %install
 %make_install
 
+# Struggling to get this to work
+#       %check
+#       %{make} check
+# fails when I invoke `packit build locally` with
+#        /var/tmp/rpm-tmp.5GB8PL: line 47: fg: no job control
+#        error: Bad exit status from /var/tmp/rpm-tmp.5GB8PL (%check)
+#       %{__make} check
+# works, but fails because it runs /usr/bin/catdoc, not the just-built BUILDROOT/usr/bin/
+# %check
+# %{__make} check
+
 %files
 %license COPYING
 %{_bindir}/catdoc
@@ -54,7 +67,7 @@ via Tk.
 %{_mandir}/man1/catppt.1.*
 %{_mandir}/man1/xls2csv.1.*
 %{_datadir}/catdoc
-%doc README NEWS
+%doc README.md NEWS
 
 %files wordview
 %{_bindir}/wordview
