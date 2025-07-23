@@ -3,7 +3,8 @@ INSTALLING catdoc
 Starting with patchlevel alpha 3 version 0.90, catdoc uses Unix
 autotools. Thanks for Stephen Farell to convince Victor Wagner.
 
-So typically you should run
+Typically you should run
+    autoreconf -fiv
     ./configure
     make
     make install
@@ -67,4 +68,3 @@ to me.
 
 It was known problem with version 0.35 on HP/UX 9, and I scarcely changed
 my style of writing since.
-

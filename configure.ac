@@ -1,5 +1,8 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([catdoc],[0.97_devel])
+AC_CONFIG_AUX_DIR([build-aux])
+AM_INIT_AUTOMAKE([-Wall foreign])
+
 dnl Checks for programs.
 AC_PROG_CC
 case ${CC} in
@@ -56,8 +59,6 @@ AC_ARG_ENABLE(charset-check,[  --disable-charset-check  allow make in charsets d
 then
  charsetcheck=""
 fi]) 
-test -z "$manext" && manext=.1
-test -z "$man1dir" && man1dir=\${prefix}/man/man1
 if test -n "$WISH"; then
 AC_ARG_ENABLE(wordview,[  --disable-wordview	   Do not install tcl-tk
 						wrapper],[:],)
@@ -110,24 +111,26 @@ AC_DEFINE_UNQUOTED([SPEC_EXT],"$specsuffix",[Suffix for files with special symbo
 AC_DEFINE_UNQUOTED([REPL_EXT],"$replsuffix",[Suffix for symbols replacement map (what to do with symbols, which are not available in the target encoding)])
 AC_DEFINE_UNQUOTED([UNKNOWN_CHAR],"?",[Symbol to represent character which is not available either in target encoding or in replacement map])
 AC_CHECK_FUNCS(strdup strtol)
+
+dnl Conditional for wordview
+AM_CONDITIONAL([BUILD_WORDVIEW], [test "$enable_wordview" != "no"])
+
+dnl Substitute variables
 AC_SUBST(specsuffix)
 AC_SUBST(replsuffix)
 AC_SUBST(buildtargets)
 AC_SUBST(installtargets)
 AC_SUBST(targetcharset)
 AC_SUBST(sourcecharset)
-AC_SUBST(man1dir)
-AC_SUBST(manext)
 AC_SUBST(charsetcheck)
 AC_SUBST(installroot)
-AC_SUBST(PACKAGE_VERSION)
-AC_SUBST(CFLAGS)
-AC_SUBST(WORDS_BIGENDIAN)
+AC_SUBST(WISH)
+
 AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_FILES([
+	Makefile
 	src/Makefile
 	tests/Makefile
-	Makefile
 	doc/catdoc.1
 	doc/xls2csv.1
 	doc/wordview.1

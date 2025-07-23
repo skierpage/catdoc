@@ -22,3 +22,13 @@ src/catppt
 src/xls2csv
 src/wordview
 **/test-output/
+
+# Autotools generated files
+aclocal.m4
+build-aux/
+Makefile.in
+src/Makefile.in
+tests/Makefile.in
+src/.deps
+src/stamp-h1
+src/config.h.in
