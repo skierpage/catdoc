@@ -20,8 +20,8 @@ standard output
 .B catdoc
 behaves much like
 .BR cat (1)
-but it reads MS-Word file and produces human-readable text on standard output.
-Optionally it can use
+but it reads an MS-Word file and produces human-readable text on standard
+output.  Optionally it can use
 .BR latex (1)
 escape sequences for characters which have special meaning for LaTeX.
 It also makes some effort to recognize MS-Word tables, although it never
@@ -32,22 +32,22 @@ output formats such as HTML can be easily defined.
 doesn't attempt to extract formatting information other than tables from
 MS-Word document, so different output modes means mainly that different
 characters should be escaped and different ways used to represent characters,
-missing from output charset.  See CHARACTER SUBSTITUTION below
+missing from output charset.  See CHARACTER SUBSTITUTION below.
 
 .PP
 .B catdoc
-uses internal
+represents text as
 .BR unicode (4)
-representation of text, so it is able to convert texts when charset in
-source document doesn't match charset on target system.
+internally, so it is able to convert texts when the charset of
+the source document doesn't match the charset on target system.
 See CHARACTER SETS below.
 .PP
-If no file names supplied,
+If no file name is supplied,
 .B catdoc
 processes its standard input unless it is terminal.  It is unlikely that
 somebody could type Word document from keyboard, so if
 .B catdoc
-invoked without arguments and stdin is not redirected, it prints brief
+invoked without arguments and stdin is not redirected, it prints a brief
 usage message and exits.
 Processing of standard input (even among other files) can be forced using
 dash '-' as file name.
@@ -60,7 +60,8 @@ blank lines.  This behavior can be turned of by
 switch.  In
 .I wide
 mode
-.B catdoc prints each paragraph as one long line, suitable for import into
+.B catdoc
+prints each paragraph as one long line, suitable for import into
 word processors that perform word wrapping.
 
 
@@ -81,13 +82,14 @@ as filter for viewing all files with
 extension.
 .TP 8
 .BI \-d charset
-\(en specifies destination charset name.  A charset file has the format described in
-CHARACTER SETS below and should have a
-.B .txt
-extension and reside in \fBcatdoc\fR's data directory.
-.\" Issue #3: autoconf/configure doesn't correctly replace the actual location, @datadir@/catdoc
-By default, the current locale charset is used if langinfo support was
-compiled in.
+\(en specifies destination charset name.
+.\" Issue #3: autoconf/configure doesn't correctly replace @datadir@/catdoc
+\fBcatdoc\fR searches for charset files in its data directory,
+but you can override this to search other directories containing additional
+charset files as described in CHARACTER SETS below.
+By default,
+.B catdoc
+uses the current locale's charset if langinfo support was compiled in.
 .TP 8
 .BI \-f format
 \(en specifies output format as described in CHARACTER SUBSTITUTION below.
@@ -153,23 +155,38 @@ structure to stdout before actual start of text.
 outputs catdoc version
 
 .SH CHARACTER SETS
-When processing MS-Word file
 .B catdoc
-uses information about two character sets, typically different
-\(en input and output.  They are stored in plain text files in the
+uses information about two character sets, typically different;
+one for the input MS-Word file and another for its output.
+They are stored in plain text files with
+.B .txt
+extension, which shouldn't be specified in command-line or configuration
+files.
 .B catdoc
-data directory.  Character set files should contain two whitespace-separated
+searches for charset files in its data directory,
+but you can override this to load character sets in other directories by
+specifying a colon-separated list of directories as
+.B charset_path
+in its configuration file (see RUNTIME CONFIGURATION)
+or in the environment variable
+.B CHARSETPATH .
+If the first directory component of path is ~ it is replaced by the
+contents of the
+.B HOME
+environment variable.
+An empty element in the list (i.e. two consecutive colons) is considered the
+current directory.
+.PP
+A character set file should contain two whitespace-separated
 hexadecimal numbers \(en 8-bit code in character set and 16-bit Unicode code.
-Anything from hash mark to end of line is ignored, as well as blank lines.
-
+Anything from hash mark '#' to end of line is ignored, as well as blank lines.
+.PP
+The
 .B catdoc
 distribution includes some of these character sets.  Additional character set
 definitions, directly usable by
 .B catdoc
-can be obtained from ftp.unicode.org.  Charset files have
-.B .txt
-suffix, which shouldn't be specified in command-line or configuration
-files.
+can be obtained from ftp.unicode.org.
 .PP
 Note that
 .B catdoc
@@ -260,12 +277,7 @@ Sets default output charset.  You probably know which one you use.
 .TP 8
 .BI "charset_path = " directory-list
 colon-separated list of directories, which are searched for charset files.
-This allows you to install additional charsets in your home directory.
-If first directory component of path is ~ it is replaced by contents of
-.B HOME
-environment variable.
-Empty element in list (i.e. two consecutive colons) is considered current
-directory.
+See "CHARACTER SETS".
 .TP 8
 .BI "map_path = " directory-list
 colon-separated list of directories, which are searched for special character

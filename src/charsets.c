@@ -13,6 +13,23 @@
 #include "catdoc.h"
 
 char *charset_path=CHARSETPATH;
+
+/************************************************************************/
+/* Returns the effective charset path, checking environment variable    */
+/* Environment variable takes precedence over config file               */
+/************************************************************************/
+const char* get_charset_path(void) {
+	char *env_charset_path;
+	
+	/* Environment variable takes precedence */
+	env_charset_path = getenv("CHARSETPATH");
+	if (env_charset_path) {
+		return env_charset_path;
+	}
+	
+	/* Fall back to config file setting or compiled-in default */
+	return charset_path;
+}
 char *source_csname=SOURCE_CHARSET, *dest_csname=TARGET_CHARSET;
 uint16_t * source_charset;
 int unknown_as_hex=0;
@@ -76,7 +93,7 @@ uint16_t * read_charset(const char *filename) {
 	uint16_t *new;
 	int c;
 	long int uc;
-	path= find_file(stradd(filename,CHARSET_EXT),charset_path);
+	path= find_file(stradd(filename,CHARSET_EXT), get_charset_path());
 	if (!path) {
 		fprintf(stderr,"Cannot load charset %s - file not found\n",filename);
 		return NULL;

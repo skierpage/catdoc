@@ -98,7 +98,7 @@ int check_charset(char **filename,const char *charset) {
 		*filename=strdup("utf-8");
 		return 1;
 	}   
-	tmppath=find_file(stradd(charset,CHARSET_EXT),charset_path);
+	tmppath=find_file(stradd(charset,CHARSET_EXT),get_charset_path());
 	if (tmppath && *tmppath) {
 			*filename=strdup(charset);
 			free(tmppath);
@@ -140,7 +140,7 @@ void list_charsets(void) {
 
 	memset(&glob_buf,0,sizeof(glob_t));
 
-	for (p=charset_path;p;p=(q?(q+1):NULL)) {
+	for (p=get_charset_path();p;p=(q?(q+1):NULL)) {
 		q=strchr(p,LIST_SEP);
 		if (q) {
 			if (q-p>=PATH_BUF_SIZE) {

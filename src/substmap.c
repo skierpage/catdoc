@@ -40,7 +40,7 @@ SUBSTMAP read_substmap(char* filename) {
 	char stopchar;
 	int escaped, lineno=0, i;
     int32_t uc;
-	path=find_file(filename,add_exe_path(map_path));
+	path=find_file(filename,get_charset_path());
 	if (!path) {
 		free(map);
 		return(NULL);

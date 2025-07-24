@@ -26,7 +26,7 @@ static int runtime_locale_check=1;
 /*                                                                  */
 /********************************************************************/
 void read_config_file(const char* filename) { 
-	FILE *f=fopen(add_exe_path(filename),"rb");
+	FILE *f=fopen(filename,"rb");
 	char *name,*value,line[1024],*c;
 	int lineno=0;
 	if (!f) return;

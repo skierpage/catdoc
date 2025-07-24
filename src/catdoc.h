@@ -46,16 +46,11 @@
 # ifndef CHARSETPATH
 #  define CHARSETPATH "%s\\charsets"
 # endif
-/* Function to add executable directory in place of %s in path.
-   Not usable in Unix, where executable can have more then one
-   link and configuration files are usially kept separately   from executables
- */
-char *add_exe_path(const char* name);
 /* Separator of directories in list, such as PATH env var. */
 # define LIST_SEP ';'
 /* Separator of levels inside path */
 # define DIR_SEP '\\'
-#else
+#else /* _WIN32 */
 /* On POSIX systems personal configuration files should start with dot*/
 # ifndef USERRC
 #  define USERRC ".catdocrc"
@@ -68,16 +63,11 @@ char *add_exe_path(const char* name);
 # ifndef CHARSETPATH
 #  define CHARSETPATH "/usr/local/lib/catdoc"
 # endif
-/* Macro to add executable directory in place of %s in path.
-   Not usable in Unix, where executable can have more then one
-   link and configuration files are usially kept separately   from executables
- */
-# define add_exe_path(name) name
 /* Separator of directories in list, such as PATH env var. */
 # define LIST_SEP ':'
 /* Separator of levels inside path */
 #define DIR_SEP '/'
-#endif
+#endif /* _WIN32 */
 
 /* Charset files distributed with catdoc always have .txt extension*/
 #ifndef CHARSET_EXT
@@ -169,6 +159,7 @@ extern int get_8bit_char (FILE *f,long *offset,long fileend);
 extern int get_word8_char (FILE *f,long *offset,long fileend);
 
 extern const char *charset_from_codepage(unsigned int codepage);
+extern const char *get_charset_path(void);
 extern  uint16_t *read_charset(const char *filename);
 extern CHARSET make_reverse_map (short int *charset);
 

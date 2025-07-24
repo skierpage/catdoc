@@ -1,6 +1,7 @@
 #!/bin/bash
 # Test script for catdoc tools
-# This runs the actual catdoc, catppt, and xls2csv tools on test files
+# This runs the catdoc, catppt, and xls2csv tools on test files and
+# runs other tests.
 
 set -e
 
@@ -46,52 +47,49 @@ fi
 
 echo "Running catdoc test suite..."
 
-# Function to run a single test
+# Function to run a single test with custom tool command and file
+# Parameters:
+#   $1 - tool_cmd: Command to execute (will be eval'd). May set environment
+#        variables and pass command-line options.
+#   $2 - testfile: Input file (unused if empty)
+#   $3 - testname: Name for the test (used for output files and expected file)
 run_test() {
-    local testfile="$1"
-    local basename="${testfile%.*}"
-    local extension="${testfile##*.}"
-    local outfile="$TEST_OUTPUT_DIR/${testfile}.out"
-    local resultfile="$TEST_OUTPUT_DIR/${testfile}.result"
-    local expectedfile="${testfile}.expected"
+    local tool_cmd="$1"
+    local testfile="$2"
+    local testname="$3"
+    local expectedfile="${testname}.expected"
+    local outfile="$TEST_OUTPUT_DIR/${testname}.out"
+    local resultfile="$TEST_OUTPUT_DIR/${testname}.result"
     
-    # Choose the right tool
-    case "$extension" in
-        doc) TOOL="$DOC_TOOL" ;;
-        ppt) TOOL="$PPT_TOOL" ;;
-        xls) TOOL="$XLS_TOOL" ;;
-        *) echo "Unknown file type: $testfile"; return 1 ;;
-    esac
+    echo "Testing $testname..."
     
-    echo "Testing $testfile..."
-    
-    # Run the tool and capture output
-    if "$TOOL" "$testfile" > "$outfile" 2> "$outfile.err"; then
+    # Run the tool_cmd and capture output
+    if eval "$tool_cmd" > "$outfile" 2> "$outfile.err"; then
         # Tool succeeded
         if [ -f "$expectedfile" ]; then
             # Compare with expected output
             if diff -u --ignore-blank-lines --ignore-trailing-space "$expectedfile" "$outfile" > "$resultfile.diff" 2>&1; then
-                echo "PASS: $basename" > "$resultfile"
+                echo "PASS: $testname" > "$resultfile"
                 rm -f "$resultfile.diff"
             else
                 # Check if this is an expected failure
-                if echo "$XFAIL_TESTS" | grep -q "$basename"; then
-                    echo "XFAIL: $basename (expected failure)" > "$resultfile"
+                if echo "$XFAIL_TESTS" | grep -q "$testname"; then
+                    echo "XFAIL: $testname (expected failure)" > "$resultfile"
                 else
-                    echo "FAIL: $basename" > "$resultfile"
+                    echo "FAIL: $testname" > "$resultfile"
                     echo "See $resultfile.diff for details"
                 fi
             fi
         else
-            echo "SKIP: $basename (no expected file)" > "$resultfile"
+            echo "SKIP: $testname (no expected file)" > "$resultfile"
         fi
     else
         # Tool failed
         status=$?
-        if echo "$XFAIL_TESTS" | grep -q "$basename"; then
-            echo "XFAIL: $basename (expected failure - exit status $status)" > "$resultfile"
+        if echo "$XFAIL_TESTS" | grep -q "$testname"; then
+            echo "XFAIL: $testname (expected failure - exit status $status)" > "$resultfile"
         else
-            echo "FAIL: $basename (exit status $status)" > "$resultfile"
+            echo "FAIL: $testname (exit status $status)" > "$resultfile"
             echo "See $outfile.err for details"
         fi
     fi
@@ -100,12 +98,43 @@ run_test() {
     cat "$resultfile"
 }
 
-# Run all tests
+# Function to run file-based tests (standard .doc/.ppt/.xls files)
+# Parameters:
+#   $1 - testfile: Test file to process (e.g., "basic.doc")
+run_test_file() {
+    local testfile="$1"
+	# Note: the testname includes the extension because there's both
+	# basic.doc and basic.ppt
+    local testname="$testfile"
+    local extension="${testfile##*.}"
+    
+    # Choose the right tool
+    case "$extension" in
+        doc) TOOL_CMD="CHARSETPATH=\"../charsets\" \"$DOC_TOOL\" \"$testfile\"" ;;
+        ppt) TOOL_CMD="CHARSETPATH=\"../charsets\" \"$PPT_TOOL\" \"$testfile\"" ;;
+        xls) TOOL_CMD="CHARSETPATH=\"../charsets\" \"$XLS_TOOL\" \"$testfile\"" ;;
+        *) echo "Unknown file type: $testfile"; return 1 ;;
+    esac
+    
+    run_test "$TOOL_CMD" "$testfile" "$testname"
+}
+
+# Function to run custom tests that don't fit the standard file-based pattern
+# No parameters
+run_other_tests() {
+    # Test CHARSETPATH environment variable functionality
+    run_test "CHARSETPATH=test_charsets ../src/catdoc -l" "" "test_charsetpath"
+}
+
+# Run all file-based tests
 for testfile in $ALL_TESTS; do
     if [ -f "$testfile" ]; then
-        run_test "$testfile"
+        run_test_file "$testfile"
     fi
 done
+
+# Run other custom tests
+run_other_tests
 
 # Generate summary
 echo ""
