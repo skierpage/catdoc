@@ -1,15 +1,13 @@
-# Simplified tests - just use basic autotools check framework
+# Real test framework that runs catdoc tools on test files
 TESTS = run-tests.sh
 check_SCRIPTS = run-tests.sh
 
-run-tests.sh:
-	echo '#!/bin/sh' > $@
-	echo 'echo "Testing catdoc tools..."' >> $@
-	echo 'if [ ! -x ../src/catdoc ]; then echo "catdoc not built"; exit 1; fi' >> $@
-	echo 'if [ ! -x ../src/xls2csv ]; then echo "xls2csv not built"; exit 1; fi' >> $@
-	echo 'if [ ! -x ../src/catppt ]; then echo "catppt not built"; exit 1; fi' >> $@
-	echo 'echo "All tools built successfully"' >> $@
-	echo 'exit 0' >> $@
-	chmod +x $@
+# Include the test script and test data files in distribution
+# (wildcard is a GNU make extension but simplifies adding tests).
+EXTRA_DIST = run-tests.sh $(wildcard *.doc) $(wildcard *.ppt) $(wildcard *.xls) $(wildcard *.expected) xfail.list
 
-CLEANFILES = run-tests.sh
+# Clean up test output
+clean-local:
+	rm -rf test-output
+
+.PHONY: check-local clean-local
