@@ -94,7 +94,7 @@ int check_charset(char **filename,const char *charset) {
 	if (charset == NULL ) {
 		return 0;
 	}
-	if (!strncmp(charset,"utf-8",6)) {
+	if (!strcmp(charset,"utf-8")) {
 		*filename=strdup("utf-8");
 		return 1;
 	}   

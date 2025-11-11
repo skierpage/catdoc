@@ -102,7 +102,7 @@ int main(int argc, char **argv) {
 	}
 	source_charset = read_charset(source_csname);
 	if (!source_charset) exit(1);
-	if (strncmp(dest_csname,"utf-8",6)) {
+	if (strcmp(dest_csname,"utf-8")) {
 		tmp_charset = read_charset(dest_csname);
 		if (!tmp_charset) exit(1);
 		target_charset= make_reverse_map(tmp_charset);
