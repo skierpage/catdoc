@@ -32,3 +32,8 @@ tests/Makefile.in
 src/.deps
 src/stamp-h1
 src/config.h.in
+
+# Automake test generated files
+tests/*.log
+tests/*.trs
+tests/test-suite.log
