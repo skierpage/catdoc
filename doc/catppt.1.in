@@ -3,13 +3,13 @@
 catppt \- reads MS-PowerPoint file and puts its content on standard output
 .SH SYNOPSIS
 
-.BR "catppt " [ \-lV ]
+.BR catppt " [" \-lV "] ["
 .RB [ \-b
 .IR string " ]"
 .RB [ \-s
-.IR charset " ]"
+.IR charset ]
 .RB [ \-d
-.IR charset " ]"
+.IR charset ]
 .I files
 
 .SH DESCRIPTION
@@ -28,24 +28,23 @@ at the end of each slide page.
 
 .TP 8
 .BI \-d charset
-\(en specifies destination charset name.
-Charset file has format described in
-CHARACTER SETS section of
+\(en specifies destination charset name.  A charset file has the format described in
+the CHARACTER SETS section of the
 .BR catdoc (1)
 manual page.
-By default, current locale
-charset would be used if langinfo support was enabled at the compile time.
+By default, the current locale charset is used if langinfo support was
+compiled in.
 
 .TP 8
 .BI \-s charset
-\(en specifies source charset.
+Specifies source charset.
 Typically, PowerPoint files use UNICODE
 strings with known charsets, but for some reason you may wish to
 override it.
 
 .TP 8
 .B \-V
-outputs version number
+outputs catppt version
 
 .SH "SEE ALSO"
 
@@ -59,4 +58,3 @@ outputs version number
 .SH AUTHOR
 
 Alex Ott <alexott@gmail.com>
-
