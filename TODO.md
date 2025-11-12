@@ -1,15 +1,9 @@
 # TODO
 
-## Drop DOS support.
-This will simplify the build process.
-- [x] Remove DOS files
-- [x] Rename `.rpl` and `.spc` files in `charsets` to full length
-- [x] Remove special `make install` handling
-- [ ] So `make check` tests don't need `make install`
-
-    But binaries in src directory still need to find charsets at CHARSETPATH.
-
+- [x] Use full GNU autoconf to create Makefiles.
+     This will make it easier to build with Address Sanitizer (`-{f,l}asan`) to reproduce some of the above CVEs.
 - [ ] .github/workflows/c-cpp.yml can be simplified and may not need `make install
+- [ ] Check if copr build (using.packit.yaml) of Fedora RPM works.
 
 ## Investigate additional CVEs:
 
@@ -28,15 +22,13 @@ This will simplify the build process.
 - [ ] [CVE-2023-41633](https://nvd.nist.gov/vuln/detail/CVE-2023-41633), "Catdoc v0.95 was discovered to contain a NULL pointer dereference via the component xls2csv at src/fileutil.c."
   - [ ] Contact rycbar77 and ask for their POC.
 
+## Investigate @yangzao's overflow and access violation issues
+- [ ] Investigate all issues @yangzao reported at https://github.com/vbwagner/catdoc/issues
+
 ## MISC
 - [ ] Build, or trigger, Fedora package builds.
 - [ ] Incorporate Victor Wagner's notes at https://www.wagner.pp.ru/~vitus/software/catdoc/ into README.md
 
-
-## Recreate autotools build with autoconf
-- [ ] Use full GNU autoconf to create Makefiles.
-
-     This will make it easier to build with Address Sanitizer (`-{f,l}asan`) to reproduce some of the above CVEs.
 
 # BACKLOG
 

@@ -1,6 +1,19 @@
    0.97 development pre-release ?? 2025
+	Remove 16-bit DOS support. Use version 0.96 if you're still building and
+	running the catdoc programs in DOS.
 	Incorporated Debian patches for the three 2024 CVEs identified and
 	addressed by the Cisco Talos team.
+	- TALOS-2024-2128 "Catdoc xls2csv utility Shared String Table Record
+	  Parser memory corruption vulnerability"
+	- CVE-2024-48877 xls2csv memory corruption vulnerability
+	- CVE-2024-52035 OLE Document Parser vulnerability
+	- CVE-2024-54028 OLE Document DIFAT Parser vulnerability
+	Use GNU autoconf to generate Makefiles and present and manage test
+	results. Add `autoconf -fiv` to INSTALL steps.
+	Users can set a CHARSETPATH environment variable to point to one or
+	more non-standard charsets directory locations (as an alternative
+	to charset_path in .catdocrc).
+
    0.96 July 7 2025
 	This incorporates several patches to catdoc that have
 	accumulated, many from Debian.
