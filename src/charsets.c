@@ -68,7 +68,7 @@ CHARSET make_reverse_map(short int *charset) {
 	}	
 	for (i=0;i<256;i++) {
 		k= charset[i];
-		j=  (unsigned)k>>8;
+		j=  (unsigned short int)k>>8;
 		if (!newmap[j]) {
 			newmap[j] = (short int *)malloc(sizeof(short int)*256);
 			if (!newmap[j]) {

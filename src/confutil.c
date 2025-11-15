@@ -110,10 +110,9 @@ void get_locale_charset() {
 		if (!strncmp(codeset,"646",3)) {
 			/* ISO 646 is another name for us=ascii */
 			check_charset(&dest_csname,"us-ascii") ;
-		}	else {	 
-			if (check_charset(&dest_csname,codeset)) {
-				locale_charset = dest_csname;
-			}
+		} else {	 
+			check_charset(&dest_csname,codeset);
+			locale_charset = dest_csname;
 		}
 	} else if (!strcmp(codeset,"ANSI_X3.4-1968")) {
 		check_charset(&dest_csname,"us-ascii");
@@ -125,9 +124,8 @@ void get_locale_charset() {
 		newstr	= malloc(strlen(codeset)-4+2+1);
 		strcpy(newstr,"cp");
 		strcpy(newstr+2,codeset+4);
-		if (check_charset(&dest_csname,newstr)) {
-			locale_charset = dest_csname;
-		}
+		check_charset(&dest_csname,newstr);
+		locale_charset = dest_csname;
 		free(newstr);
 	} else if (!strncmp(codeset,"IBM",3)) {
 		char *newstr;
@@ -136,18 +134,17 @@ void get_locale_charset() {
 		newstr=malloc(strlen(codeset)+2+1);
 		strcpy(newstr,"cp");
 		strcpy(newstr+2,codeset);
-		if (check_charset(&dest_csname, newstr)) {
-			locale_charset=dest_csname;
-		}
+		check_charset(&dest_csname, newstr);
+		locale_charset=dest_csname;
 		free(newstr);
 	} else {
 		char *i,*newstr = strdup(codeset);
 		for (i=newstr;*i;i++) {
 			*i=tolower(*i);
 		}	
-		if (check_charset(&dest_csname,newstr)) {
-			locale_charset = dest_csname;
-		}	
+		check_charset(&dest_csname,newstr);
+		locale_charset = dest_csname;
+		
 	}	
 
 }	

@@ -87,24 +87,25 @@ char *find_file(char *name, const char *path)
 /************************************************************************/
 /* Searches for charset with given name and put pointer to malloced copy*/
 /* of its name into first arg if found. Otherwise leaves first arg      */
-/*  unchanged. Returns non-zero on success                              */ 
+/*  unchanged. Terminatnes program if charset not  found */ 
 /************************************************************************/
-int check_charset(char **filename,const char *charset) {
+void check_charset(char **filename,const char *charset) {
 	char *tmppath;
 	if (charset == NULL ) {
-		return 0;
+		exit(1);
 	}
 	if (!strcmp(charset,"utf-8")) {
 		*filename=strdup("utf-8");
-		return 1;
+		return;
 	}   
 	tmppath=find_file(stradd(charset,CHARSET_EXT),get_charset_path());
 	if (tmppath && *tmppath) {
 			*filename=strdup(charset);
 			free(tmppath);
-			return 1;
+			return;
 	} 
-	return 0;
+	fprintf(stderr, "charset %s not found\n", charset);
+	exit(1);
 }
 
 /**********************************************************************/
