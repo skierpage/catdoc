@@ -12,16 +12,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Update generated configuration files
+      run: autoreconf -fiv
     - name: configure
-      # The catdoc programs read charset info from @data-dir@/catdoc, so we must install
-      run: ./configure --prefix=${{ runner.temp }}
+      run: ./configure
     - name: make
       run: make
-    - name: make install
-      run: make install
     - name: make check
       run: make check
-    # TODO: no `make distcheck` rule yet but `make dist` should work.
+    # TODO: `make distcheck` fails locally.
     - name: make dist
       run: make dist
     - name: Upload distribution .tar.gz as artifact
