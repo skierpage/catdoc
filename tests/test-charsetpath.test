@@ -4,8 +4,11 @@
 
 set -e
 
+# Support automake's separate build directories (srcdir is set by automake)
+: ${srcdir=.}
+
 TOOL="../src/catdoc"
-EXPECTEDFILE="test_charsetpath.expected"
+EXPECTEDFILE="${srcdir}/test_charsetpath.expected"
 
 # Check if tool exists
 if [ ! -x "$TOOL" ]; then
@@ -22,10 +25,10 @@ fi
 
 # Run catdoc -l with CHARSETPATH pointing to test_charsets directory
 # This should list only the charset files in that directory plus built-in utf-8
-if CHARSETPATH=test_charsets "$TOOL" -l | diff -u --ignore-blank-lines --ignore-trailing-space "$EXPECTEDFILE" - >/dev/null 2>&1; then
+if CHARSETPATH="${srcdir}/test_charsets" "$TOOL" -l | diff -u --ignore-blank-lines --ignore-trailing-space "$EXPECTEDFILE" - >/dev/null 2>&1; then
     exit 0
 else
     echo "FAIL: test_charsetpath (output differs from expected)" >&2
-    CHARSETPATH=test_charsets "$TOOL" -l | diff -u --ignore-blank-lines --ignore-trailing-space "$EXPECTEDFILE" - >&2 || true
+    CHARSETPATH="${srcdir}/test_charsets" "$TOOL" -l | diff -u --ignore-blank-lines --ignore-trailing-space "$EXPECTEDFILE" - >&2 || true
     exit 1
 fi

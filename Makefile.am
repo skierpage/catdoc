@@ -11,5 +11,11 @@ install-data-local:
 	$(MKDIR_P) $(DESTDIR)$(charsetdir)
 	$(INSTALL_DATA) $(srcdir)/charsets/* $(DESTDIR)$(charsetdir)
 
+uninstall-local:
+	for file in $(srcdir)/charsets/*; do \
+		rm -f $(DESTDIR)$(charsetdir)/`basename $$file`; \
+	done
+	-rmdir $(DESTDIR)$(charsetdir)
+
 
 EXTRA_DIST += CODING.STD CREDITS NEWS README.md TODO.md
