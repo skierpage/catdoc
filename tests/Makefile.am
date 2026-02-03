@@ -12,7 +12,10 @@ FILE_TESTS = \
 	unicode_MS.xls.expected
 
 # Custom tests (scripts that don't follow the file pattern)
-CUSTOM_TESTS = test-charsetpath.test
+CUSTOM_TESTS = test-charsetpath.test \
+	cve-2023-31979.test \
+	cve-2018-20451.test \
+	cve-2018-20453.test
 
 # All tests
 TESTS = $(FILE_TESTS) $(CUSTOM_TESTS)
@@ -31,15 +34,26 @@ EXPECTED_LOG_COMPILER = $(srcdir)/run-single-test.sh
 TEST_LOG_COMPILER =
 
 # Expected failures (from xfail.list)
-XFAIL_TESTS = test_LO_file.ppt.expected
+# CVE tests are expected to fail until vulnerabilities are fixed
+XFAIL_TESTS = test_LO_file.ppt.expected \
+	cve-2023-31979.test \
+	cve-2018-20451.test \
+	cve-2018-20453.test
 
 # Scripts needed for testing
-check_SCRIPTS = run-single-test.sh test-charsetpath.test
+check_SCRIPTS = run-single-test.sh test-charsetpath.test \
+	cve-2023-31979.test cve-2018-20451.test cve-2018-20453.test
 
 # Include test scripts and test data files in distribution
 EXTRA_DIST = \
 	run-single-test.sh \
 	test-charsetpath.test \
+	cve-2023-31979.test \
+	cve-2018-20451.test \
+	cve-2018-20453.test \
+	global-buffer-overflow \
+	libdoc_reader_process_file_203.overflow \
+	libdoc_numutils_getlong_22.overflow \
 	test_charsets \
 	$(wildcard *.doc) \
 	$(wildcard *.ppt) \
