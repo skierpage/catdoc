@@ -1,0 +1,44 @@
+#!/bin/bash
+# Test for memory leaks detected by AddressSanitizer
+# Currently checks for the leak in get_locale_charset in confutil.c
+
+set -e
+
+CATDOC="../src/catdoc"
+TEST_FILE="basic.doc"
+
+# Check if files exist
+if [ ! -x "$CATDOC" ]; then
+    echo "ERROR: catdoc not found: $CATDOC" >&2
+    echo "Did you run 'make' first?" >&2
+    exit 1
+fi
+
+if [ ! -f "$TEST_FILE" ]; then
+    echo "ERROR: Test file not found: $TEST_FILE" >&2
+    exit 1
+fi
+
+# Check if built with Address Sanitizer
+if ! ldd "$CATDOC" 2>/dev/null | grep -q libasan; then
+    echo "SKIP: Test requires Address Sanitizer (configure with --enable-asan)"
+    exit 77
+fi
+
+# Set CHARSETPATH if not already set
+: ${CHARSETPATH:=$(dirname "$0")/../charsets}
+
+# Run catdoc and capture stderr
+STDERR_FILE=$(mktemp)
+trap "rm -f $STDERR_FILE" EXIT
+
+CHARSETPATH="$CHARSETPATH" "$CATDOC" "$TEST_FILE" >/dev/null 2>"$STDERR_FILE"
+
+# Check if LeakSanitizer detected memory leaks
+if grep -q "LeakSanitizer: detected memory leaks" "$STDERR_FILE"; then
+    echo "FAIL: Memory leaks detected in catdoc" >&2
+    exit 1
+else
+    # No leaks detected
+    exit 0
+fi
