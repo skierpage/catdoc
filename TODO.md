@@ -18,23 +18,16 @@ With the fix, it outputs something very close to tests/hungarian.xls.expected, e
 
 The trick is how to have a test that reuses .expected but I can specify "-d mac-roman"
 
-
 ## Investigate additional CVEs:
-
-- [ ] [CVE-2018-20451](https://nvd.nist.gov/vuln/detail/CVE-2018-20451), "The process_file function in reader.c in libdoc through 2017-10-23 has a heap-based buffer over-read"
-
-    This is in the libdoc library based on catdoc, [libdoc issue #2](/uvoteam/libdoc/issues/2) I think fixed in [commit 83e4bd51fa4](/uvoteam/libdoc/commit/83e4bd51fa4). `catdoc` does not report a buffer overflow and has a different check for `nLen` overflow.
-
-- [ ] [CVE-2018-20453](https://nvd.nist.gov/vuln/detail/CVE-2018-20453), "The getlong function in numutils.c in libdoc through 2017-10-23 has a heap-based buffer over-read"
-
-     This is also in the libdoc library based on catdoc, [libdoc issue #1](/uvoteam/libdoc/issues/1). The failure seems to require reading the garbled POC file with a version of `catdoc` built with address sanitizer. I think it's fixed by the same [commit 83e4bd51fa4](/uvoteam/libdoc/commit/83e4bd51fa4)
-
-- [ ] [CVE-2023-31979](https://nvd.nist.gov/vuln/detail/CVE-2023-31979), "Catdoc v0.95 was discovered to contain a global buffer overflow via the function process_file at /src/reader.c."
-
-     This is another error that requires reading the garbled POC file with a version of `catdoc` built with address sanitizer.
 
 - [ ] [CVE-2023-41633](https://nvd.nist.gov/vuln/detail/CVE-2023-41633), "Catdoc v0.95 was discovered to contain a NULL pointer dereference via the component xls2csv at src/fileutil.c."
   - [ ] Contact rycbar77 and ask for their POC.
+
+## Investigate fixes committed to libdoc
+
+- [ ] Review [commits](https://github.com/uvoteam/libdoc/commits/master/) made to the similar C source code in [libdoc](https://github.com/uvoteam/libdoc/) that is based on catdoc.
+
+Note that libdoc [issue #1(https://github.com/uvoteam/libdoc/issues/1) (CVE-2018-20453) and [issue #2](https://github.com/uvoteam/libdoc/issues/2) (CVE-2018-20451) seem to be fixed by catdoc commit 12ab5099c7da32. This is confusing since user kasha13 claimed these fixed in libdoc yet it seems to have different source code changes.
 
 ## Investigate @yangzao's overflow and access violation issues
 - [ ] Investigate all issues @yangzao reported at https://github.com/vbwagner/catdoc/issues

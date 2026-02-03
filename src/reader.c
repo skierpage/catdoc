@@ -15,6 +15,25 @@ static unsigned char read_buf[256];
 static int buf_is_unicode;
 
 /**************************************************************************/
+/* Macro to safely add character to buffer with bounds checking           */
+/* Prevents CVE-2023-31979 global buffer overflow                         */
+/* We check for PARAGRAPH_BUFFER - 2 because:                             */
+/*   - We need 1 slot for the character we're adding (++bufptr)           */
+/*   - We need 1 slot for the null terminator added after the loop        */
+/**************************************************************************/
+#define SAFE_BUFFER_ADD(bufptr, c) do { \
+	if ((bufptr) < PARAGRAPH_BUFFER - 2) { \
+		buffer[++(bufptr)] = (c); \
+	} else { \
+		if ((bufptr) != -1) { /* Only warn once per paragraph */ \
+			fprintf(stderr, "Warning: paragraph buffer overflow, discarding paragraph\n"); \
+			(bufptr) = -1; \
+		} \
+		break; \
+	} \
+} while(0)
+
+/**************************************************************************/
 /* Just prints out content of input file. Called when file is not OLE     */
 /* stream                                                                 */
 /* Parameters - f - file to copy out. header - first few bytes of file,   */
@@ -120,11 +139,11 @@ int process_file(FILE *f,long stop) {
 			if (tabmode) {
 				tabmode=0;
 				if (c==0x007) {
-					buffer[++bufptr]=0x1E;
+					SAFE_BUFFER_ADD(bufptr, 0x1E);
 					continue;
 				} else {
-					buffer[++bufptr]=0x1C;
-				}  
+					SAFE_BUFFER_ADD(bufptr, 0x1C);
+				}
 			}   	 
 			if (c<32) {
 				switch (c) {
@@ -133,26 +152,26 @@ int process_file(FILE *f,long stop) {
 						break;
 					case 0x000D:
 					case 0x000B:
-						buffer[++bufptr]=0x000A;
+						SAFE_BUFFER_ADD(bufptr, 0x000A);
 						break;
 					case 0x000C:
-						buffer[++bufptr]=c;
+						SAFE_BUFFER_ADD(bufptr, c);
 						break;
 					case 0x001E:
-						buffer[++bufptr]='-';
+						SAFE_BUFFER_ADD(bufptr, '-');
 						break;
 					case 0x0002: break;
 
 					case 0x001F:
-								 buffer[++bufptr]=0xAD;/* translate to Unicode
+								 SAFE_BUFFER_ADD(bufptr, 0xAD);/* translate to Unicode
 														  soft hyphen */
 								 break;						  
 					case 0x0009:
-								 buffer[++bufptr]=c;
+								 SAFE_BUFFER_ADD(bufptr, c);
 								 break;
 					case 0x0013:
 								 hyperlink_mode=1;
-								 buffer[++bufptr]=' ';
+								 SAFE_BUFFER_ADD(bufptr, ' ');
 								 break;
 					case 0x0014:
 								 hyperlink_mode = 0;
@@ -160,7 +179,7 @@ int process_file(FILE *f,long stop) {
 					case 0x0015:
 								 /* just treat hyperlink separators as
 								  * space */
-								 buffer[++bufptr]=' ';
+								 SAFE_BUFFER_ADD(bufptr, ' ');
 								 break;
 					case 0x0001: if (hyperlink_mode) 
 									 	break;
@@ -171,10 +190,11 @@ int process_file(FILE *f,long stop) {
 			} else if (c != 0xfeff) {
 				/* skip ZERO-WIDTH-UNBREAKABLE-SPACE. Output anything
 				 * else*/
-				buffer[++bufptr]=c;
+				SAFE_BUFFER_ADD(bufptr, c);
 			}
 		} while (bufptr<=PARAGRAPH_BUFFER-2 &&
 				 !catdoc_eof(f) &&
+				 bufptr >= 0 &&
 				 buffer[bufptr]!=0x000a);
 		if ((bufptr>0) && (bufptr < sizeof(buffer) / sizeof(buffer[0]) - 1)) {
 			buffer[++bufptr]=0;

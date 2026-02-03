@@ -34,11 +34,8 @@ EXPECTED_LOG_COMPILER = $(srcdir)/run-single-test.sh
 TEST_LOG_COMPILER =
 
 # Expected failures (from xfail.list)
-# CVE tests are expected to fail until vulnerabilities are fixed
-XFAIL_TESTS = test_LO_file.ppt.expected \
-	cve-2023-31979.test \
-	cve-2018-20451.test \
-	cve-2018-20453.test
+# CVE-2023-31979, CVE-2018-20451, and CVE-2018-20453 are now fixed
+XFAIL_TESTS = test_LO_file.ppt.expected
 
 # Scripts needed for testing
 check_SCRIPTS = run-single-test.sh test-charsetpath.test \
