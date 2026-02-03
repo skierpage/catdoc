@@ -1,0 +1,37 @@
+#!/bin/bash
+# Test for NULL pointer dereference in list_charsets()
+# When CHARSETPATH points to an empty directory, glob_buf.gl_pathv is NULL
+# and dereferencing it causes a segfault
+
+set -e
+
+XLS2CSV="../src/xls2csv"
+
+# Check if xls2csv exists
+if [ ! -x "$XLS2CSV" ]; then
+    echo "ERROR: xls2csv not found: $XLS2CSV" >&2
+    echo "Did you run 'make' first?" >&2
+    exit 1
+fi
+
+# Check if built with Address Sanitizer
+if ! ldd "$XLS2CSV" 2>/dev/null | grep -q libasan; then
+    echo "SKIP: Test requires Address Sanitizer (configure with --enable-asan)"
+    exit 77
+fi
+
+# Create empty directory for charset path
+EMPTY_DIR=$(mktemp -d)
+trap "rm -rf $EMPTY_DIR" EXIT
+
+# Run xls2csv -l with empty charset directory
+# If vulnerable, this will crash with NULL pointer dereference
+# If fixed, it should just print "Available charsets: utf-8"
+if CHARSETPATH="$EMPTY_DIR" ASAN_OPTIONS=detect_leaks=0 "$XLS2CSV" -l >/dev/null 2>&1; then
+    # Completed successfully
+    exit 0
+else
+    # Crashed
+    echo "FAIL: xls2csv -l crashed with empty CHARSETPATH" >&2
+    exit 1
+fi

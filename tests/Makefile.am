@@ -13,6 +13,7 @@ FILE_TESTS = \
 
 # Custom tests (scripts that don't follow the file pattern)
 CUSTOM_TESTS = test-charsetpath.test \
+	test-empty-charsetpath.test \
 	cve-2023-31979.test \
 	cve-2018-20451.test \
 	cve-2018-20453.test
@@ -35,16 +36,20 @@ TEST_LOG_COMPILER =
 
 # Expected failures (from xfail.list)
 # CVE-2023-31979, CVE-2018-20451, and CVE-2018-20453 are now fixed
-XFAIL_TESTS = test_LO_file.ppt.expected
+# test-empty-charsetpath.test fails until NULL pointer dereference is fixed
+XFAIL_TESTS = test_LO_file.ppt.expected \
+	test-empty-charsetpath.test
 
 # Scripts needed for testing
 check_SCRIPTS = run-single-test.sh test-charsetpath.test \
+	test-empty-charsetpath.test \
 	cve-2023-31979.test cve-2018-20451.test cve-2018-20453.test
 
 # Include test scripts and test data files in distribution
 EXTRA_DIST = \
 	run-single-test.sh \
 	test-charsetpath.test \
+	test-empty-charsetpath.test \
 	cve-2023-31979.test \
 	cve-2018-20451.test \
 	cve-2018-20453.test \
