@@ -5,11 +5,25 @@
 - [ ] .github/workflows/c-cpp.yml can be simplified and may not need `make install
 - [ ] Check if copr build (using.packit.yaml) of Fedora RPM works.
 
+## mac-roman charset test
+Add a test for https://github.com/vbwagner/catdoc/issues/14 "-d mac-roman crashes catdoc and catppt"
+Without the fix
+  % xls2csv -d mac-roman tests/hungarian.xls 
+dumps core and outputs nothing.
+With the fix, it outputs something very close to tests/hungarian.xls.expected, except for
+    7c7
+    < "Születési hely és Id?",,,
+    ---
+    > "Születési hely és Idő",,,
+
+The trick is how to have a test that reuses .expected but I can specify "-d mac-roman"
+
+
 ## Investigate additional CVEs:
 
 - [ ] [CVE-2018-20451](https://nvd.nist.gov/vuln/detail/CVE-2018-20451), "The process_file function in reader.c in libdoc through 2017-10-23 has a heap-based buffer over-read"
 
-     This is in the libdoc library based on catdoc, [libdoc issue #2](/uvoteam/libdoc/issues/2) I think fixed in [commit 83e4bd51fa4](/uvoteam/libdoc/commit/83e4bd51fa4). `catdoc` does not report a buffer overflow and has a different check for `nLen` overflow.
+    This is in the libdoc library based on catdoc, [libdoc issue #2](/uvoteam/libdoc/issues/2) I think fixed in [commit 83e4bd51fa4](/uvoteam/libdoc/commit/83e4bd51fa4). `catdoc` does not report a buffer overflow and has a different check for `nLen` overflow.
 
 - [ ] [CVE-2018-20453](https://nvd.nist.gov/vuln/detail/CVE-2018-20453), "The getlong function in numutils.c in libdoc through 2017-10-23 has a heap-based buffer over-read"
 
@@ -45,4 +59,3 @@ Victor Wagner's original TODO:
 * [ ] used mathematical symbols (20xx-25xx) into tex.specchars file
 * [ ] Add handling of tables & footnotes
 * [ ] Fastsave support
-
