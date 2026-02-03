@@ -21,16 +21,26 @@ The trick is how to have a test that reuses .expected but I can specify "-d mac-
 ## Investigate additional CVEs:
 
 - [ ] [CVE-2023-41633](https://nvd.nist.gov/vuln/detail/CVE-2023-41633), "Catdoc v0.95 was discovered to contain a NULL pointer dereference via the component xls2csv at src/fileutil.c."
-  - [ ] Contact rycbar77 and ask for their POC.
+  - [ ] Contact rycbar77 and ask for their POC. This may [skierpage/catdoc issue #8](https://github.com/skierpage/catdoc/issues/8)
+
+- [ ] [CVE-2023-46345](https://nvd.nist.gov/vuln/detail/CVE-2023-46345) (references [rycbar77's gist](https://gist.github.com/rycbar77/d747b2c37b544ece30b2353a65ab41f9)), **Strftime-Nullptr-Dereference** "NULL pointer dereference via the component xls2csv at src/xlsparse.c"
 
 ## Investigate fixes committed to libdoc
 
 - [ ] Review [commits](https://github.com/uvoteam/libdoc/commits/master/) made to the similar C source code in [libdoc](https://github.com/uvoteam/libdoc/) that is based on catdoc.
 
-Note that libdoc [issue #1(https://github.com/uvoteam/libdoc/issues/1) (CVE-2018-20453) and [issue #2](https://github.com/uvoteam/libdoc/issues/2) (CVE-2018-20451) seem to be fixed by catdoc commit 12ab5099c7da32. This is confusing since user kasha13 claimed these fixed in libdoc yet it seems to have different source code changes.
+Note that libdoc [issue #1](https://github.com/uvoteam/libdoc/issues/1) (CVE-2018-20453) and [issue #2](https://github.com/uvoteam/libdoc/issues/2) (CVE-2018-20451) seem to be fixed by catdoc commit 12ab5099c7da32. This is confusing since user kasha13 claimed these fixed in libdoc yet it seems to have different source code changes.
+
+## Investigate issues reported against petewarden fork of catdoc
+- [ ] Analyze [issues](https://github.com/petewarden/catdoc/issues) , including:
+  - [ ] [Null pointer dereference in fileutil.c:75](https://github.com/petewarden/catdoc/issues/8)
 
 ## Investigate @yangzao's overflow and access violation issues
 - [ ] Investigate all issues @yangzao reported at https://github.com/vbwagner/catdoc/issues
+
+## Investigate catdoc bugs at https://catdocbugs.neocities.org/
+
+- [ ] dozens of asan test cases in the two tar files
 
 ## MISC
 - [ ] Build, or trigger, Fedora package builds.
@@ -52,3 +62,4 @@ Victor Wagner's original TODO:
 * [ ] used mathematical symbols (20xx-25xx) into tex.specchars file
 * [ ] Add handling of tables & footnotes
 * [ ] Fastsave support
+
