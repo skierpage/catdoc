@@ -141,10 +141,10 @@ void get_locale_charset() {
 		char *i,*newstr = strdup(codeset);
 		for (i=newstr;*i;i++) {
 			*i=tolower(*i);
-		}	
+		}
 		check_charset(&dest_csname,newstr);
 		locale_charset = dest_csname;
-		
+		free(newstr);
 	}	
 
 }	

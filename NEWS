@@ -18,6 +18,8 @@
 	process_file function in src/reader.c.
 	This also addresses CVE-2018-20451 and CVE-2018-20453 that were found
 	in libdoc (based on catdoc).
+	Fixed NULL derefence if charset directory is empty (issue #8).
+	Fixed memory leak in charset handling.
 
    0.96 July 7 2025
 	This incorporates several patches to catdoc that have
