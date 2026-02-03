@@ -105,6 +105,23 @@ AC_C_CONST
 #	CFLAGS="-g -O2 -Wall"
 #fi
 
+dnl Address Sanitizer support for reproducing CVEs
+AC_ARG_ENABLE([asan],
+	[AS_HELP_STRING([--enable-asan],
+		[Enable Address Sanitizer for detecting memory errors (required to reproduce some CVEs)])],
+	[enable_asan=$enableval],
+	[enable_asan=no])
+
+if test "$enable_asan" = "yes"; then
+	if test "$GCC" = "yes"; then
+		CFLAGS="$CFLAGS -fsanitize=address -fno-omit-frame-pointer -g"
+		LDFLAGS="$LDFLAGS -fsanitize=address"
+		AC_MSG_NOTICE([Address Sanitizer enabled])
+	else
+		AC_MSG_ERROR([Address Sanitizer requires GCC or Clang])
+	fi
+fi
+
 AC_DEFINE_UNQUOTED([SOURCE_CHARSET],"$sourcecharset",[Character encoding used by default for 8-bit source files])
 AC_DEFINE_UNQUOTED([TARGET_CHARSET],"$targetcharset",[Output character encoding used by default, if impossible to determine encoding from locale])
 AC_DEFINE_UNQUOTED([SPEC_EXT],"$specsuffix",[Suffix for files with special symbols map (ones to be replaced regardless of availability in target encoding)])
