@@ -175,15 +175,21 @@ void list_charsets(void) {
 		}
 		glob_flags|=GLOB_APPEND;
 	}
-	count=0;printf("Available charsets:"); 
-	for (ptr=glob_buf.gl_pathv;*ptr;ptr++) {
-		printf("%c",(count++)%5?'\t':'\n');
-		p=strrchr(*ptr,dir_sep[0]);
-		if (!p) continue;
-		p++;
-		if ((q=strchr(p,'.'))) *q=0;
-		fputs(p,stdout);
-	}  
+	count=0;printf("Available charsets:");
+	/* Check if gl_pathv is not NULL before dereferencing.
+	 * When no charset files are found, gl_pathv remains NULL.
+	 * Affects catdoc -l, catppt -l, and xls2csv -l.
+	 */
+	if (glob_buf.gl_pathv) {
+		for (ptr=glob_buf.gl_pathv;*ptr;ptr++) {
+			printf("%c",(count++)%5?'\t':'\n');
+			p=strrchr(*ptr,dir_sep[0]);
+			if (!p) continue;
+			p++;
+			if ((q=strchr(p,'.'))) *q=0;
+			fputs(p,stdout);
+		}
+	}
 	printf("%c",(count++)%5?'\t':'\n');
 	fputs("utf-8",stdout);
 	printf("\n");

@@ -36,9 +36,7 @@ TEST_LOG_COMPILER =
 
 # Expected failures (from xfail.list)
 # CVE-2023-31979, CVE-2018-20451, and CVE-2018-20453 are now fixed
-# test-empty-charsetpath.test fails until NULL pointer dereference is fixed
-XFAIL_TESTS = test_LO_file.ppt.expected \
-	test-empty-charsetpath.test
+XFAIL_TESTS = test_LO_file.ppt.expected
 
 # Scripts needed for testing
 check_SCRIPTS = run-single-test.sh test-charsetpath.test \
