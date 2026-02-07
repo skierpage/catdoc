@@ -5,18 +5,40 @@
 - [ ] .github/workflows/c-cpp.yml can be simplified and may not need `make install
 - [ ] Check if copr build (using.packit.yaml) of Fedora RPM works.
 
-## mac-roman charset test
-Add a test for https://github.com/vbwagner/catdoc/issues/14 "-d mac-roman crashes catdoc and catppt"
-Without the fix
-  % xls2csv -d mac-roman tests/hungarian.xls 
+- [ ] Why does `make distcheck` on GitHub fail? One test FAIL, but I don't know which one, maybe check artifact?
+
+## Research: find more Office 2007 test files
+
+- [ ] Do the Gnome LocalSearch (formerly Tracker), KFileMetadata, and LibreOffice projects have test
+  documents? In particular I'm looking for other encodings.
+- [ ] Is there an online Word 97-to-Office 2007 emulator or in-browser
+  tool that lets you make your own?
+
+## Research: consider alternative approaches
+This is old crappy C code.
+[ALTERNATIVES](ALTERNATIVES.md) discusses alternate ways to extract text.
+
+## low-priority: mac-roman charset test
+Add a test for https://github.com/vbwagner/catdoc/issues/14, "-d mac-roman
+crashes catdoc and catppt".  Without the fix (applied in commit 8866ca937
+cherry-picked from vbwagner)
+
+    % xls2csv -d mac-roman tests/hungarian.xls 
 dumps core and outputs nothing.
-With the fix, it outputs something very close to tests/hungarian.xls.expected, except for
+With the fix, it should output macintosh encoding, see
+tests/hungarian.txt.mac-roman.expected.
+To see the characters, use a tool that support macintosh/mac-roman encoding, or
+convert it back to utf-8 with
+
+    % src/xls2csv -d mac-roman tests/hungarian.xls | iconv -f macintosh - -t utf-8
+the output is close to tests/hungarian.xls.expected except for one character which I guess is missing from mac-roman?
     7c7
     < "Születési hely és Id?",,,
     ---
     > "Születési hely és Idő",,,
 
-The trick is how to have a test that reuses .expected but I can specify "-d mac-roman"
+Maybe implement a test harness that reuses the .expected machinery but you
+can specify options like "-d mac-roman"
 
 ## Investigate additional CVEs:
 

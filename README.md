@@ -12,6 +12,11 @@ The catdoc package also includes
   rows of comma-separated values.
 - `wordview`, which displays `catdoc` output in a window.
 
+See [INSTALL](INSTALL) for information about compiling and installing the
+catdoc programs on Linux and Mac OS.
+Several Linux distributions build the catdoc package, though as of
+December 2025 most build the old version 0.95.
+
 The KDE project's ["baloo"](https://community.kde.org/Baloo) file indexing and
 search framework uses these programs (via the KFileMetadata library) to index
 the text of old MS-Office files.
@@ -33,22 +38,24 @@ The patched source code _no longer compiles_ in Borland Turbo C.
 So v0.96 is likely the last release of the catdoc programs that build and run
 in 16-bit DOS. If anyone cares about DOS support, get in touch!
 
-## Alternatives
+## File format specifications
+
+Microsoft publishes the file format specifications:
+- [Word 97-2003 (.doc) binary file format](https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-doc/ccd7b486-7881-484c-a137-51170af7cc22)
+- [PowerPoint 97-2003 (.ppt) binary file format](https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-ppt/6be79dde-33c1-4c1b-8ccc-4b2301c08662)
+- [Excel 97-2003 binary file format (.xls) structure](https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-xls/cd03cb5f-ca02-4934-a391-bb674cb8aa06)
+
+## Limitations
 
 Since 0.93.0 catdoc parses OLE structure and extracts the WordDocument
 stream, but doesn't parse internal structure of it.
 
-This rough approach inevitable results in some garbage in output file,
-especially near the end of file and if file contains embedded OLE objects,
+This rough approach inevitable results in some garbage in the output,
+especially near the end of file and if the file contains embedded OLE objects
 such as pictures or equations.
 
-So, if you are looking for a purely automatic way to convert Word to LaTeX,
-you can better investigate word2x, wvware or LAOLA. The best programs to view
-and edit these Word, PowerPoint, and Excel file formats are those in the
-[LibreOffice](https://www.libreoffice.org/) office suite.
-
-See [INSTALL](INSTALL) for information about compiling and installing the
-catdoc programs on Linux and Mac OS.
+[ALTERNATIVES](ALTERNATIVES.md) discusses alternate ways to extract text
+from Office 97-2003 files, or convert them to other formats.
 
 ## Vulnerabilities
 
