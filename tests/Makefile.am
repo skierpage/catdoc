@@ -17,7 +17,8 @@ CUSTOM_TESTS = test-charsetpath.test \
 	test-memory-leaks.test \
 	cve-2023-31979.test \
 	cve-2018-20451.test \
-	cve-2018-20453.test
+	cve-2018-20453.test \
+	asan_failures/vbwagner_issue_9/test-yangzao-null-charset.test
 
 # All tests
 TESTS = $(FILE_TESTS) $(CUSTOM_TESTS)
@@ -42,7 +43,8 @@ XFAIL_TESTS = test_LO_file.ppt.expected
 # Scripts needed for testing
 check_SCRIPTS = run-single-test.sh test-charsetpath.test \
 	test-empty-charsetpath.test test-memory-leaks.test \
-	cve-2023-31979.test cve-2018-20451.test cve-2018-20453.test
+	cve-2023-31979.test cve-2018-20451.test cve-2018-20453.test \
+	asan_failures/vbwagner_issue_9/test-yangzao-null-charset.test
 
 # Include test scripts and test data files in distribution
 EXTRA_DIST = \
@@ -57,6 +59,8 @@ EXTRA_DIST = \
 	libdoc_reader_process_file_203.overflow \
 	libdoc_numutils_getlong_22.overflow \
 	test_charsets \
+	asan_failures/vbwagner_issue_9/test-yangzao-null-charset.test \
+	asan_failures/vbwagner_issue_9/4 \
 	$(wildcard *.doc) \
 	$(wildcard *.ppt) \
 	$(wildcard *.xls) \

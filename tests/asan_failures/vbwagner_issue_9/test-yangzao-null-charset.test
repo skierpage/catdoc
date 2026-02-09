@@ -1,0 +1,43 @@
+#!/bin/bash
+# Test for NULL pointer dereference in read_charset/stradd
+# Issue reported by GitHub user yangzao
+# https://github.com/vbwagner/catdoc/issues/9
+#
+# The POC file contains an unknown codepage that causes charset_from_codepage
+# to return NULL, which was then passed to stradd() causing a segfault in strlen()
+
+set -e
+
+XLS2CSV="../src/xls2csv"
+POC_FILE="asan_failures/vbwagner_issue_9/4"
+
+# Check if files exist
+if [ ! -x "$XLS2CSV" ]; then
+    echo "ERROR: xls2csv not found: $XLS2CSV" >&2
+    echo "Did you run 'make' first?" >&2
+    exit 1
+fi
+
+# Check if built with Address Sanitizer
+if ! ldd "$XLS2CSV" 2>/dev/null | grep -q libasan; then
+    echo "SKIP: Test requires Address Sanitizer (configure with --enable-asan)"
+    exit 77
+fi
+
+if [ ! -f "$POC_FILE" ]; then
+    echo "ERROR: POC file not found: $POC_FILE" >&2
+    exit 1
+fi
+
+# Run xls2csv on the POC file
+# If built with ASan and vulnerable, this will crash with SEGV on NULL pointer
+# If fixed or ASan not enabled, this should complete (may produce error message)
+# Suppress LeakSanitizer since we only care about the NULL pointer dereference
+if ASAN_OPTIONS=detect_leaks=0 "$XLS2CSV" "$POC_FILE" > /dev/null 2>&1; then
+    # Completed successfully
+    exit 0
+else
+    # Crashed or errored
+    echo "FAIL: GitHub issue #9 - xls2csv crashed on POC file" >&2
+    exit 1
+fi

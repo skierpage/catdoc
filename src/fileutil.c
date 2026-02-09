@@ -112,8 +112,10 @@ void check_charset(char **filename,const char *charset) {
 /*  Returns malloced string containing concatenation of two           */
 /*  arguments                                                         */
 /**********************************************************************/
-char *stradd(const char *s1,const char *s2) 
+char *stradd(const char *s1,const char *s2)
 { char *res;
+	if (!s1) s1 = "";
+	if (!s2) s2 = "";
 	res=malloc(strlen(s1)+strlen(s2)+1);
 	if (!res) {
 		fprintf (stderr,"Out of memory!");
