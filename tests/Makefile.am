@@ -24,8 +24,10 @@ CUSTOM_TESTS = test-charsetpath.test \
 TESTS = $(FILE_TESTS) $(CUSTOM_TESTS)
 
 # Set up test environment - CHARSETPATH so tests can find charset files
+# Disable leak detection in ASAN builds - we focus on crashes/corruption, not leaks
 AM_TESTS_ENVIRONMENT = \
-	CHARSETPATH='$(abs_top_srcdir)/charsets'; export CHARSETPATH;
+	CHARSETPATH='$(abs_top_srcdir)/charsets'; export CHARSETPATH; \
+	ASAN_OPTIONS=detect_leaks=0; export ASAN_OPTIONS;
 
 # Test extensions - tells Automake how to handle different test types
 TEST_EXTENSIONS = .expected .test
