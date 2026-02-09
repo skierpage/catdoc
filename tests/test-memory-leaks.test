@@ -5,7 +5,7 @@
 set -e
 
 CATDOC="../src/catdoc"
-TEST_FILE="basic.doc"
+TEST_FILE="${srcdir}/basic.doc"
 
 # Check if files exist
 if [ ! -x "$CATDOC" ]; then
