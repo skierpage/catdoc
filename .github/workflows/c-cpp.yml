@@ -22,6 +22,16 @@ jobs:
       run: make check
     - name: make distcheck
       run: make distcheck
+    - name: Upload test logs on failure
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-logs
+        path: |
+          tests/test-suite.log
+          tests/*.log
+          catdoc-*/_build/sub/tests/test-suite.log
+          catdoc-*/_build/sub/tests/*.log
     - name: Upload distribution .tar.gz as artifact
       uses: actions/upload-artifact@v4
       with:
