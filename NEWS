@@ -8,18 +8,24 @@
 	- CVE-2024-48877 xls2csv memory corruption vulnerability
 	- CVE-2024-52035 OLE Document Parser vulnerability
 	- CVE-2024-54028 OLE Document DIFAT Parser vulnerability
-	Use GNU autoconf to generate Makefiles and present and manage test
+	Used GNU autoconf to generate Makefiles and present and manage test
 	results. Add `autoconf -fiv` to INSTALL steps.
 	Users can set a CHARSETPATH environment variable to point to one or
 	more non-standard charsets directory locations (as an alternative
 	to charset_path in .catdocrc).
 
+	Developed test framework for memory access errors caught by 
+	address sanitizer.
 	Fixed CVE-2023-31979 global buffer overflow vulnerability in the
 	process_file function in src/reader.c.
 	This also addresses CVE-2018-20451 and CVE-2018-20453 that were found
-	in libdoc (based on catdoc).
-	Fixed NULL derefence if charset directory is empty (issue #8).
+	in libdoc (based on catdoc) and were also present in catdoc..
+	Fixed NULL derefence if charset directory is empty (issue #8), which
+	may be the same bug as CVE-2023-41633.
 	Fixed memory leak in charset handling.
+	Fixed several memory access bugs caught by address sanitizer that
+	were reported by GitHub user @yangzao against the upstream
+	vbwagner/catdoc as issues #6, #7, #8, #9, #10, #11, #12, and #13.
 
    0.96 July 7 2025
 	This incorporates several patches to catdoc that have

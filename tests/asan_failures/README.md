@@ -30,9 +30,11 @@ We now have a generic test framework for ASAN bug tests:
 
 ### Summary
 
-All 8 yangzao issues have been downloaded, tested, and integrated into the test suite:
-- **2 issues fixed**: #9, #11
-- **6 issues unfixed**: #6, #7, #8, #10, #12, #13
+All 8 issues reported by @yangzao have been downloaded, tested, integrated into the test suite,
+and subsequently fixed: #6, #7, #8, #9, #10, #11, #12, and #13.
+
+Note: Issues #6 and #12 remain in XFAIL_TESTS because the POC files are malformed
+and cause the program to exit with error codes, but they no longer trigger ASAN crashes.
 
 ## Status
 
@@ -45,4 +47,4 @@ GitHub issue | Test File | POC Location | Tool | Current Status | Fixed by | Des
 [vbwagner #10](https://github.com/vbwagner/catdoc/issues/10) | vbwagner-issue-10.test | vbwagner_issue_10/5 | xls2csv | ✅ PASS | 70d2bd1 | AccessViolation at xlsparse.c:438 |
 [vbwagner #11](https://github.com/vbwagner/catdoc/issues/11)/CVE-2017-11110 | vbwagner-issue-11.test | vbwagner_issue_11/6 | xls2csv | ✅ PASS | possibly 7c6fd7b | heap-buffer-overflow(read) at numutils.c:22 |
 [vbwagner #12](https://github.com/vbwagner/catdoc/issues/12) | vbwagner-issue-12.test | vbwagner_issue_12/7 | xls2csv | ✅ PASS | 4c5e43b | global-buffer-overflow(write) at xlsparse.c:608 |
-[vbwagner #13](https://github.com/vbwagner/catdoc/issues/13) | vbwagner-issue-13.test | vbwagner_issue_13/8 | xls2csv | ✅ PASS | (this commit) | global-buffer-overflow(write) at xlsparse.c:716 |
+[vbwagner #13](https://github.com/vbwagner/catdoc/issues/13) | vbwagner-issue-13.test | vbwagner_issue_13/8 | xls2csv | ✅ PASS | 44daea3 | global-buffer-overflow(write) at xlsparse.c:716 |

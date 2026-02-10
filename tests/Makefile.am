@@ -50,11 +50,7 @@ TEST_LOG_COMPILER =
 # vbwagner issues #6, #7, #8, #10, #12, and #13 are not yet fixed
 XFAIL_TESTS = test_LO_file.ppt.expected \
 	asan_failures/vbwagner-issue-6.test \
-	asan_failures/vbwagner-issue-7.test \
-	asan_failures/vbwagner-issue-8.test \
-	asan_failures/vbwagner-issue-10.test \
-	asan_failures/vbwagner-issue-12.test \
-	asan_failures/vbwagner-issue-13.test
+	asan_failures/vbwagner-issue-12.test
 
 # Scripts needed for testing
 check_SCRIPTS = run-single-test.sh \
