@@ -343,7 +343,11 @@ void process_item (uint16_t rectype, uint16_t reclen, unsigned char *rec) {
 		unsigned char **pcell;
 
 		saved_reference=NULL;
-		row = getshort(rec,0)-startrow; 
+		if (reclen < 10) {  /* Need at least 10 bytes: 2+2+2+4 for row, col, format_code, rk_value */
+			fprintf(stderr, "Warning: RK record too short\n");
+			break;
+		}
+		row = getshort(rec,0)-startrow;
 		col = getshort(rec,2);
 		pcell=allocate(row,col);
 		format_code = getshort(rec,4);
@@ -358,7 +362,11 @@ void process_item (uint16_t rectype, uint16_t reclen, unsigned char *rec) {
 		endcol = getshort(rec,reclen-2);
 		saved_reference=NULL;
 
-		for (offset=4,col=startcol;col<=endcol;offset+=6,col++) { 
+		for (offset=4,col=startcol;col<=endcol;offset+=6,col++) {
+			if (offset+6 > reclen) {  /* Need at least offset+6 bytes for format_code(2) + rk_value(4) */
+				fprintf(stderr, "Warning: MULRK record data truncated\n");
+				break;
+			}
 			pcell=allocate(row,col);
 			format_code=getshort(rec,offset);
 			*pcell=(unsigned char *)strdup(format_rk(rec+offset+2,format_code));
