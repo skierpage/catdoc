@@ -529,7 +529,7 @@ unsigned char *copy_unicode_string (unsigned char **src, int fromSst,
 
 	/* 	fprintf(stderr,"count=%d skip=%d start_offset=%d\n", */
 	/* 					count, to_skip, start_offset); */
-	/* а здесь мы копируем строку	*/
+	/* Now copy the string to dest */
 	if ( (dest=malloc(count+1)) == NULL ) {
 		perror("Dest string alloc error");
 		*src+=(to_skip+start_offset+(count*charsize));
@@ -741,12 +741,17 @@ time_t float2date(double d);
  * Extracts floating point value and formats it 
  */ 
 
-char *number2string(double d,short int format_code) { 
+char *number2string(double d,short int format_code) {
 	static char buffer [128];
 	char *datefmt;
 	if ((datefmt=isDateFormat(format_code))!=NULL) {
-		time_t t = float2date(d);	
-		strftime(buffer, 127,datefmt, gmtime(&t));  
+		time_t t = float2date(d);
+		struct tm *tm_ptr = gmtime(&t);
+		if (tm_ptr) {
+			strftime(buffer, 127, datefmt, tm_ptr);
+		} else {
+			sprintf(buffer, "INVALID_DATE");
+		}
 	} else {
 		sprintf(buffer,number_format,d);
 	}
