@@ -640,7 +640,7 @@ int BuiltInDateFormatIdx (int index) {
  * GetBuiltInDateFormat stores and returns
  * built in xls2csv strftime formats.
  */
-#define NUMOFDATEFORMATS 12
+#define NUMOFDATEFORMATS 13  /* Need 13 to hold indices 0-12 (0 is unused sentinel) */
 char *GetBuiltInDateFormat(int dateindex) {
 	static char *formats[]={
 		/* reserved  */ NULL, /* BuiltInDateFormatIdx use dateindex=0 as flag format not found */

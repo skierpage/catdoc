@@ -40,9 +40,9 @@ GitHub issue | Test File | POC Location | Tool | Current Status | Fixed by | Des
 ---- | ---- | ---- | ---- | ---- | ---- | ---- |
 [vbwagner #6](https://github.com/vbwagner/catdoc/issues/6) | vbwagner-issue-6.test | vbwagner_issue_6/1 | xls2csv | ✅ PASS | d74d3ac | NULL deref in calcFileBlockOffset() - AccessViolation at ole.c:450/544 |
 [vbwagner #7](https://github.com/vbwagner/catdoc/issues/7) | vbwagner-issue-7.test | vbwagner_issue_7/2 | xls2csv | ✅ PASS | 1aa8a2c | AccessViolation at xlsparse.c:679 (number2string) |
-[vbwagner #8](https://github.com/vbwagner/catdoc/issues/8) | vbwagner-issue-8.test | vbwagner_issue_8/3 | xls2csv | ✅ PASS | (this commit) | heap-buffer-overflow(read) at xlsparse.c:493 |
+[vbwagner #8](https://github.com/vbwagner/catdoc/issues/8) | vbwagner-issue-8.test | vbwagner_issue_8/3 | xls2csv | ✅ PASS | 70d2bd1 | heap-buffer-overflow(read) at xlsparse.c:493 |
 [vbwagner #9](https://github.com/vbwagner/catdoc/issues/9) | vbwagner-issue-9.test | vbwagner_issue_9/4 | xls2csv | ✅ PASS | 2c156ed | NULL deref in stradd() - AccessViolation at fileutil.c:124 |
-[vbwagner #10](https://github.com/vbwagner/catdoc/issues/10) | vbwagner-issue-10.test | vbwagner_issue_10/5 | xls2csv | ✅ PASS | (this commit) | AccessViolation at xlsparse.c:438 |
+[vbwagner #10](https://github.com/vbwagner/catdoc/issues/10) | vbwagner-issue-10.test | vbwagner_issue_10/5 | xls2csv | ✅ PASS | 70d2bd1 | AccessViolation at xlsparse.c:438 |
 [vbwagner #11](https://github.com/vbwagner/catdoc/issues/11)/CVE-2017-11110 | vbwagner-issue-11.test | vbwagner_issue_11/6 | xls2csv | ✅ PASS | possibly 7c6fd7b | heap-buffer-overflow(read) at numutils.c:22 |
-[vbwagner #12](https://github.com/vbwagner/catdoc/issues/12) | vbwagner-issue-12.test | vbwagner_issue_12/7 | xls2csv | ❌ XFAIL | No | global-buffer-overflow(write) at xlsparse.c:608 |
+[vbwagner #12](https://github.com/vbwagner/catdoc/issues/12) | vbwagner-issue-12.test | vbwagner_issue_12/7 | xls2csv | ✅ PASS | (this commit) | global-buffer-overflow(write) at xlsparse.c:608 |
 [vbwagner #13](https://github.com/vbwagner/catdoc/issues/13) | vbwagner-issue-13.test | vbwagner_issue_13/8 | xls2csv | ❌ XFAIL | No | global-buffer-overflow(write) at xlsparse.c:716 |
