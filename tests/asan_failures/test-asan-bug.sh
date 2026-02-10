@@ -1,0 +1,73 @@
+#!/bin/bash
+# Generic test runner for ASAN bug test cases
+# Usage: test-asan-bug.sh <issue_id> <tool> <poc_file> [description]
+#
+# Example: test-asan-bug.sh vbwagner_6 xls2csv vbwagner_issue_6/1 "NULL deref in ole.c"
+
+set -e
+
+if [ $# -lt 3 ]; then
+    echo "Usage: $0 <issue_id> <tool> <poc_file> [description]" >&2
+    echo "Example: $0 vbwagner_6 xls2csv vbwagner_issue_6/1 'NULL deref in ole.c'" >&2
+    exit 2
+fi
+
+ISSUE_ID="$1"
+TOOL="$2"
+POC_FILE="$3"
+DESCRIPTION="${4:-Issue $ISSUE_ID}"
+
+# Determine paths based on where script is run from
+if [ -f "../src/$TOOL" ]; then
+    # Running from tests/ directory
+    TOOL_PATH="../src/$TOOL"
+    CHARSETPATH="../charsets"
+    POC_PATH="asan_failures/$POC_FILE"
+elif [ -f "../../src/$TOOL" ]; then
+    # Running from tests/asan_failures/ directory
+    TOOL_PATH="../../src/$TOOL"
+    CHARSETPATH="../../charsets"
+    POC_PATH="$POC_FILE"
+elif [ -f "../../../src/$TOOL" ]; then
+    # Running from tests/asan_failures/vbwagner_issue_X/ directory
+    TOOL_PATH="../../../src/$TOOL"
+    CHARSETPATH="../../../charsets"
+    POC_PATH="$(basename $POC_FILE)"
+else
+    echo "ERROR: Cannot find $TOOL (tried ../src, ../../src, ../../../src)" >&2
+    exit 1
+fi
+
+# Check if tool exists and is executable
+if [ ! -x "$TOOL_PATH" ]; then
+    echo "ERROR: $TOOL not found or not executable: $TOOL_PATH" >&2
+    echo "Did you run 'make' first?" >&2
+    exit 1
+fi
+
+# Check if built with Address Sanitizer
+if ! ldd "$TOOL_PATH" 2>/dev/null | grep -q libasan; then
+    echo "SKIP: Test requires Address Sanitizer (configure with --enable-asan)"
+    exit 77
+fi
+
+# Check if POC file exists
+if [ ! -f "$POC_PATH" ]; then
+    echo "ERROR: POC file not found: $POC_PATH" >&2
+    exit 1
+fi
+
+# Run the tool on the POC file
+# If built with ASan and vulnerable, this will crash
+# If fixed, this should complete (may produce error message but exit 0)
+# Suppress LeakSanitizer since we're testing for specific bugs, not leaks
+export CHARSETPATH
+if ASAN_OPTIONS=detect_leaks=0 "$TOOL_PATH" "$POC_PATH" > /dev/null 2>&1; then
+    # Completed successfully - bug is fixed
+    exit 0
+else
+    EXIT_CODE=$?
+    # Crashed or errored - bug still present
+    echo "FAIL: $ISSUE_ID - $DESCRIPTION - $TOOL crashed on POC file (exit code $EXIT_CODE)" >&2
+    exit 1
+fi

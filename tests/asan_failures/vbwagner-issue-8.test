@@ -1,0 +1,5 @@
+#!/bin/bash
+# Test for vbwagner/catdoc issue #8: heap-buffer-overflow(read) at xlsparse.c:493
+# https://github.com/vbwagner/catdoc/issues/8
+
+exec "$(dirname "$0")/test-asan-bug.sh" vbwagner_8 xls2csv vbwagner_issue_8/3 "heap-buffer-overflow at xlsparse.c:493"

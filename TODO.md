@@ -1,11 +1,13 @@
 # TODO
 
+- [ ] Fix "Cannod read" misspelling
+
+## CI
 - [x] Use full GNU autoconf to create Makefiles.
      This will make it easier to build with Address Sanitizer (`-{f,l}asan`) to reproduce some of the above CVEs.
-- [ ] .github/workflows/c-cpp.yml can be simplified and may not need `make install
+- [x] .github/workflows/c-cpp.yml can be simplified and may not need `make install
 - [ ] Check if copr build (using.packit.yaml) of Fedora RPM works.
 
-- [ ] Why does `make distcheck` on GitHub fail? One test FAIL, but I don't know which one, maybe check artifact?
 
 ## Research: find more Office 2007 test files
 
@@ -58,7 +60,8 @@ Note that libdoc [issue #1](https://github.com/uvoteam/libdoc/issues/1) (CVE-201
   - [ ] [Null pointer dereference in fileutil.c:75](https://github.com/petewarden/catdoc/issues/8)
 
 ## Investigate @yangzao's overflow and access violation issues
-- [ ] Investigate all issues @yangzao reported at https://github.com/vbwagner/catdoc/issues
+- [x] Add the test cases to tests/asan_failures
+- [ ] Try to fix the failing tests in [tests/asan_failures/README.md](tests/asan_failures/README.md)
 
 ## Investigate catdoc bugs at https://catdocbugs.neocities.org/
 
@@ -67,7 +70,6 @@ Note that libdoc [issue #1](https://github.com/uvoteam/libdoc/issues/1) (CVE-201
 ## MISC
 - [ ] Build, or trigger, Fedora package builds.
 - [ ] Incorporate Victor Wagner's notes at https://www.wagner.pp.ru/~vitus/software/catdoc/ into README.md
-
 
 # BACKLOG
 

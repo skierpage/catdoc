@@ -1,0 +1,5 @@
+#!/bin/bash
+# Test for vbwagner/catdoc issue #10: AccessViolation at xlsparse.c:438
+# https://github.com/vbwagner/catdoc/issues/10
+
+exec "$(dirname "$0")/test-asan-bug.sh" vbwagner_10 xls2csv vbwagner_issue_10/5 "AccessViolation at xlsparse.c:438"

@@ -1,0 +1,5 @@
+#!/bin/bash
+# Test for vbwagner/catdoc issue #9: NULL deref in stradd()
+# https://github.com/vbwagner/catdoc/issues/9
+
+exec "$(dirname "$0")/test-asan-bug.sh" vbwagner_9 xls2csv vbwagner_issue_9/4 "NULL deref in stradd()"

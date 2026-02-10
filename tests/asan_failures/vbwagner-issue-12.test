@@ -1,0 +1,5 @@
+#!/bin/bash
+# Test for vbwagner/catdoc issue #12: global-buffer-overflow(write) at xlsparse.c:608
+# https://github.com/vbwagner/catdoc/issues/12
+
+exec "$(dirname "$0")/test-asan-bug.sh" vbwagner_12 xls2csv vbwagner_issue_12/7 "global-buffer-overflow at xlsparse.c:608"

@@ -1,0 +1,5 @@
+#!/bin/bash
+# Test for vbwagner/catdoc issue #6: NULL deref in ole.c calcFileBlockOffset()
+# https://github.com/vbwagner/catdoc/issues/6
+
+exec "$(dirname "$0")/test-asan-bug.sh" vbwagner_6 xls2csv vbwagner_issue_6/1 "NULL deref in ole.c calcFileBlockOffset()"

@@ -18,6 +18,12 @@ reproduces Debian bug 874048, Red Hat bug 2150140 - catdoc extracts no text from
 hungarian.xls  
 reproduces  Debian bug 878334 - wrong charset conversion in xls2csv
 
+### Address Sanitizer bugs
+The subdirectory [tests/asan_failures](asan_failures) contains various test
+cases that trigger memory access errors. These may trigger crashes in the
+normal binaries, but if you configure catdoc with `--enable-asan`, the test
+cases that remain unfixed will print detailed Address Sanitizer diagnostics.
+
 ## Expected failing files
 xfail.list lists test files that are expected to not succesfully be converted
 due to known bugs:
