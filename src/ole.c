@@ -536,6 +536,10 @@ long int calcFileBlockOffset(oleEntry *e, long int blk) {
 	if ( e->isBigBlock ) {
 		res=512+e->blocks[blk]*sectorSize;
 	} else {
+		if (!rootEntry || !rootEntry->blocks) {
+			fprintf(stderr, "Broken OLE structure: rootEntry or rootEntry->blocks is NULL in calcFileBlockOffset\n");
+			return 0;
+		}
 		long int sbdPerSector=sectorSize/shortSectorSize;
 		long int sbdSecNum=e->blocks[blk]/sbdPerSector;
 		long int sbdSecMod=e->blocks[blk]%sbdPerSector;

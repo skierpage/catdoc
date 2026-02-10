@@ -38,7 +38,7 @@ All 8 yangzao issues have been downloaded, tested, and integrated into the test 
 
 GitHub issue | Test File | POC Location | Tool | Current Status | Fixed by | Description |
 ---- | ---- | ---- | ---- | ---- | ---- | ---- |
-[vbwagner #6](https://github.com/vbwagner/catdoc/issues/6) | vbwagner-issue-6.test | vbwagner_issue_6/1 | xls2csv | ❌ XFAIL | No | NULL deref in calcFileBlockOffset() - AccessViolation at ole.c:450/544 |
+[vbwagner #6](https://github.com/vbwagner/catdoc/issues/6) | vbwagner-issue-6.test | vbwagner_issue_6/1 | xls2csv | ✅ PASS | (this commit) | NULL deref in calcFileBlockOffset() - AccessViolation at ole.c:450/544 |
 [vbwagner #7](https://github.com/vbwagner/catdoc/issues/7) | vbwagner-issue-7.test | vbwagner_issue_7/2 | xls2csv | ❌ XFAIL | No | AccessViolation at xlsparse.c:679 (number2string) |
 [vbwagner #8](https://github.com/vbwagner/catdoc/issues/8) | vbwagner-issue-8.test | vbwagner_issue_8/3 | xls2csv | ❌ XFAIL | No | heap-buffer-overflow(read) at xlsparse.c:493 |
 [vbwagner #9](https://github.com/vbwagner/catdoc/issues/9) | vbwagner-issue-9.test | vbwagner_issue_9/4 | xls2csv | ✅ PASS | 2c156ed | NULL deref in stradd() - AccessViolation at fileutil.c:124 |
