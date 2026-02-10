@@ -485,9 +485,18 @@ unsigned char *copy_unicode_string (unsigned char **src, int fromSst,
 	/* 		fprintf(stderr,"%02x ",(*src)[i]); */
 		/* 	fprintf(stderr,"\n"); */
 
+	/* Check we have enough bytes to read flags and count (need at least 3 bytes) */
+	if (sourceEnd && (*src < sourceStart || *src >= sourceEnd || *src + 2 >= sourceEnd)) {
+		fprintf(stderr, "Warning: string pointer out of bounds\n");
+		return NULL;
+	}
 	flags = *(*src+1+offset);
 	if (! ( flags == 0 || flags == 1 || flags == 8 || flags == 9 ||
 					flags == 4 || flags == 5 || flags == 0x0c || flags == 0x0d ) ) {
+		if (sourceEnd && (*src + offset >= sourceEnd)) {
+			fprintf(stderr, "Warning: not enough bytes to read adjusted string flags\n");
+			return NULL;
+		}
 		count=**src;
 		flags = *(*src+offset);
 		offset --;
@@ -540,6 +549,11 @@ unsigned char *copy_unicode_string (unsigned char **src, int fromSst,
 	*dest=0;l=0;
 	for (s=*src,d=dest,i=0;i<count;i++,s+=charsize) {
 		/* 		fprintf(stderr,"l=%d len=%d count=%d charsize=%d\n",l,len,count,charsize); */
+		/* Check bounds before accessing source buffer */
+		if (sourceEnd && s >= sourceEnd) {
+			fprintf(stderr, "Warning: string extends beyond buffer bounds\n");
+			break;
+		}
 		if (fromSst && (*s == 1 || *s == 0)) {
 			int sstOffset = (int) (s - sourceStart);
 			int flagFound = 0;
