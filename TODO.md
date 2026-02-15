@@ -20,28 +20,6 @@
 This is old crappy C code.
 [ALTERNATIVES](ALTERNATIVES.md) discusses alternate ways to extract text.
 
-## low-priority: mac-roman charset test
-Add a test for https://github.com/vbwagner/catdoc/issues/14, "-d mac-roman
-crashes catdoc and catppt".  Without the fix (applied in commit 8866ca937
-cherry-picked from vbwagner)
-
-    % xls2csv -d mac-roman tests/hungarian.xls 
-dumps core and outputs nothing.
-With the fix, it should output macintosh encoding, see
-tests/hungarian.txt.mac-roman.expected.
-To see the characters, use a tool that support macintosh/mac-roman encoding, or
-convert it back to utf-8 with
-
-    % src/xls2csv -d mac-roman tests/hungarian.xls | iconv -f macintosh - -t utf-8
-the output is close to tests/hungarian.xls.expected except for one character which I guess is missing from mac-roman?
-    7c7
-    < "Születési hely és Id?",,,
-    ---
-    > "Születési hely és Idő",,,
-
-Maybe implement a test harness that reuses the .expected machinery but you
-can specify options like "-d mac-roman"
-
 ## Investigate additional CVEs:
 
 - [ ] Contact rycbar77 and ask for their POC for [CVE-2023-41633](https://nvd.nist.gov/vuln/detail/CVE-2023-41633), "Catdoc v0.95 was discovered to contain a NULL pointer dereference via the component xls2csv at src/fileutil.c.". This may [skierpage/catdoc issue #8](/skierpage/catdoc/issues/8), if so it's fixed by commit e91fef7.

@@ -14,6 +14,7 @@ FILE_TESTS = \
 # Custom tests (scripts that don't follow the file pattern)
 CUSTOM_TESTS = test-charsetpath.test \
 	test-empty-charsetpath.test \
+	test-mac-roman-output.test \
 	test-memory-leaks.test \
 	cve-2023-31979.test \
 	cve-2018-20451.test \
@@ -55,7 +56,9 @@ XFAIL_TESTS = test_LO_file.ppt.expected \
 # Scripts needed for testing
 check_SCRIPTS = run-single-test.sh \
 	test-charsetpath.test \
-	test-empty-charsetpath.test test-memory-leaks.test \
+	test-empty-charsetpath.test \
+	test-mac-roman-output.test \
+	test-memory-leaks.test \
 	cve-2023-31979.test cve-2018-20451.test cve-2018-20453.test \
 	asan_failures/vbwagner-issue-6.test \
 	asan_failures/vbwagner-issue-7.test \
@@ -80,6 +83,7 @@ EXTRA_DIST = \
 	asan_failures/vbwagner-issue-13.test \
 	test-charsetpath.test \
 	test-empty-charsetpath.test \
+	test-mac-roman-output.test \
 	test-memory-leaks.test \
 	cve-2023-31979.test \
 	cve-2018-20451.test \

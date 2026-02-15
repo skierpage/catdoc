@@ -14,6 +14,11 @@
 	more non-standard charsets directory locations (as an alternative
 	to charset_path in .catdocrc).
 
+	Fixed handling of destination charsets with chars > u7FFF (e.g. when
+	specifying mac-roman as destination charset), and of missing charsets;
+	commit 8866ca937 (cherry-picked from vbwagner's upstream GitHub
+	repository). Also added test for the bug.
+
 	Developed test framework for memory access errors caught by 
 	address sanitizer.
 	Fixed CVE-2023-31979 global buffer overflow vulnerability in the
