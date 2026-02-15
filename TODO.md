@@ -58,10 +58,6 @@ can specify options like "-d mac-roman"
 - [ ] Analyze [issues](https://github.com/petewarden/catdoc/issues) , including:
   - [ ] [Null pointer dereference in fileutil.c:75](https://github.com/petewarden/catdoc/issues/8)
 
-## Investigate catdoc bugs at https://catdocbugs.neocities.org/
-
-- [ ] dozens of asan test cases in the two tar files
-
 ## MISC
 - [ ] Build, or trigger, Fedora package builds.
 - [ ] Incorporate Victor Wagner's notes at https://www.wagner.pp.ru/~vitus/software/catdoc/ into README.md

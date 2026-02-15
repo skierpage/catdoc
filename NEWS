@@ -26,6 +26,10 @@
 	Fixed several memory access bugs caught by address sanitizer that
 	were reported by GitHub user @yangzao against the upstream
 	vbwagner/catdoc as issues #6, #7, #8, #9, #10, #11, #12, and #13.
+	Confirmed that these fixes also address all the buggy files found by
+	Dean Pierce in 2015 using American Fuzzy Lop software fuzzer, reported
+	to the oss-sec mailing list and uploaded to
+	https://catdocbugs.neocities.org/ .
 
    0.96 July 7 2025
 	This incorporates several patches to catdoc that have
