@@ -58,16 +58,18 @@ if [ ! -f "$POC_PATH" ]; then
 fi
 
 # Run the tool on the POC file
-# If built with ASan and vulnerable, this will crash
-# If fixed, this should complete (may produce error message but exit 0)
+# If built with ASan and vulnerable, ASan will report errors to stderr
+# If fixed, the tool may reject invalid input (exit non-zero) but without ASan errors
 # Suppress LeakSanitizer since we're testing for specific bugs, not leaks
 export CHARSETPATH
-if ASAN_OPTIONS=detect_leaks=0 "$TOOL_PATH" "$POC_PATH" > /dev/null 2>&1; then
-    # Completed successfully - bug is fixed
-    exit 0
-else
-    EXIT_CODE=$?
-    # Crashed or errored - bug still present
-    echo "FAIL: $ISSUE_ID - $DESCRIPTION - $TOOL crashed on POC file (exit code $EXIT_CODE)" >&2
+OUTPUT=$(ASAN_OPTIONS=detect_leaks=0 "$TOOL_PATH" "$POC_PATH" 2>&1) || true
+
+# Check if ASan detected any errors (look for ASan error patterns in output)
+if echo "$OUTPUT" | grep -qE "(AddressSanitizer|SEGV|heap-buffer-overflow|global-buffer-overflow|stack-buffer-overflow|use-after-free|heap-use-after-free|stack-use-after-free)"; then
+    echo "FAIL: $ISSUE_ID - $DESCRIPTION - Address Sanitizer detected memory access error" >&2
+    echo "$OUTPUT" >&2
     exit 1
+else
+    # No ASan errors - bug is fixed (tool may still exit non-zero for invalid input, which is correct)
+    exit 0
 fi

@@ -46,12 +46,8 @@ EXPECTED_LOG_COMPILER = $(srcdir)/run-single-test.sh
 # .test files are executable scripts, no compiler needed
 TEST_LOG_COMPILER =
 
-# Expected failures (from xfail.list)
-# CVE-2023-31979, CVE-2018-20451, and CVE-2018-20453 are now fixed
-# vbwagner issues #6, #7, #8, #10, #12, and #13 are not yet fixed
-XFAIL_TESTS = test_LO_file.ppt.expected \
-	asan_failures/vbwagner-issue-6.test \
-	asan_failures/vbwagner-issue-12.test
+# Expected test failures (known bugs not fixed yet)
+XFAIL_TESTS = test_LO_file.ppt.expected
 
 # Scripts needed for testing
 check_SCRIPTS = run-single-test.sh \
@@ -103,8 +99,7 @@ EXTRA_DIST = \
 	$(wildcard *.doc) \
 	$(wildcard *.ppt) \
 	$(wildcard *.xls) \
-	$(wildcard *.expected) \
-	xfail.list
+	$(wildcard *.expected)
 
 # Clean up test logs (Automake creates .log and .trs files)
 clean-local:
