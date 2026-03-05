@@ -61,14 +61,11 @@ from Office 97-2003 files, or convert them to other formats.
 
 The catdoc programs are unsafe C code that parse old files. Unexpected or
 garbled file content will cause them to crash and running them on a
-specially-crafted file may allow an attacker to interfere with the operation
-of your computer. There are other unpatched known vulnerabilities in the
-programs:
-[CVE-2018-20451](https://nvd.nist.gov/vuln/detail/CVE-2018-20451),
-[CVE-2018-20453](https://nvd.nist.gov/vuln/detail/CVE-2018-20453),
-[CVE-2023-31979](https://nvd.nist.gov/vuln/detail/CVE-2023-31979).
-and
-[CVE-2023-41633](https://nvd.nist.gov/vuln/detail/CVE-2023-41633),
+specially-crafted file may allow an attacker to interfere with the operation of
+your computer. Version 0.97 fixes several memory access errors and Common
+Vulnerabilities and Exposures search the commit history for "CVE")  but there
+may be more. Some were detected by Address Sanitizer tools, see
+[tests/asan_failures](tests/asan_failures) for more details.
 
 ## Documentation, bugs, more information
 
