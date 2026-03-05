@@ -8,14 +8,14 @@
 #include "catdoc.h"
 
 /********************************************************************/
-/* Reads 2-byte LSB  int from buffer at given offset platfom-indepent
+/* Reads 2-byte LSB  int from buffer at given offset platform-independent
  * way
  *********************************************************************/ 
 uint16_t getshort(unsigned char *buffer,int offset) {
 	return (uint16_t)buffer[offset]|((uint16_t)buffer[offset+1]<<8);
 }  
 /********************************************************************/
-/* Reads 4-byte LSB  int from buffer at given offset almost platfom-indepent
+/* Reads 4-byte LSB  int from buffer at given offset almost platform-independent
  * way
  *********************************************************************/ 
 int32_t getlong(unsigned char *buffer,int offset) {

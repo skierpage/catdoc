@@ -34,8 +34,8 @@ void help (void) {
 	printf("Usage:\n xls2csv [-xlV] [-g number] [-f date-format] [-b string] [-s charset] [-d charset] [-c char] [ -q number] files\n");
 }
 /* Defines unicode chars which should be
-   replaced by strings before UNICODE->target chatset
-   mappigs are applied i.e. TeX special chars like %
+   replaced by strings before UNICODE->target charset
+   mappings are applied i.e. TeX special chars like %
    */
 char *input_buffer, *output_buffer;
 int main(int argc, char *argv[])
@@ -131,13 +131,13 @@ int main(int argc, char *argv[])
 	} 
 	spec_chars=read_substmap(stradd("ascii",SPEC_EXT));
 	if (!spec_chars) {
-		fprintf(stderr,"Cannod read substitution map ascii%s\n",
+		fprintf(stderr,"Cannot read substitution map ascii%s\n",
 				SPEC_EXT);
 		exit(1);
 	}  
 	replacements=read_substmap(stradd("ascii",REPL_EXT));
 	if (!replacements) {
-		fprintf(stderr,"Cannod read substitution map ascii%s\n",
+		fprintf(stderr,"Cannot read substitution map ascii%s\n",
 				REPL_EXT);
 		exit(1);
 	}  

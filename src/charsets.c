@@ -48,7 +48,7 @@ int to_unicode (uint16_t *charset, int c) {
 /************************************************************************/
 int from_unicode (CHARSET charset, int u) {
 	short int *p;
-	/* This is really assignment, not comparation */
+	/* This is really assignment, not comparison */
 	if ((p=charset[(unsigned)u>>8])) {
 		return p[u & 0xff];
 	} else {
@@ -195,7 +195,7 @@ int get_utf8 (FILE *f,long *offset,long fileend) {
 	if (c<0x80) 
 		return c;
 	if (c <0xC0) 
-		return 0xfeff; /*skip corrupted sequebces*/
+		return 0xfeff; /*skip corrupted sequences*/
 	if (c <0xE0) {
 		if (catdoc_read(buf+1, 1, 1, f)<=0) return EOF;
 		return (((c & 0x1F)<<6) | ((char)buf[1] & 0x3F));

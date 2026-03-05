@@ -109,7 +109,7 @@
 /* variable (defined in catdoc.c) which holds actual value of wrap margin*/
 extern  int wrap_margin;
 /*
- * Public types variables and procedures which should be avalable
+ * Public types variables and procedures which should be available
  * to all files in the program
  */
 
@@ -137,8 +137,8 @@ extern char *format_name;
 extern CHARSET target_charset;
 extern SUBSTMAP spec_chars;
                 /* Defines unicode chars which should be
-                replaced by strings before UNICODE->target chatset
-                mappigs are applied i.e. TeX special chars like %
+                replaced by strings before UNICODE->target charset
+                mappings are applied i.e. TeX special chars like %
                 */
 extern SUBSTMAP replacements;
                  /* Defines unicode chars which could be

@@ -1,10 +1,18 @@
 # TODO
 
-- [ ] Fix "Cannod read" misspelling
+- [x] Fix "Cannod read", "chatset", "platfom", and other misspellings
 
 ## Test cleanup
 
 - [ ] Maybe fix the memory leaks reported by asan so tests don't have to set ASAN_OPTIONS=detect_leaks=0
+
+  Investigation shows xls2csv has memory leaks (154 bytes: 128 from rowptr[row].cells allocation
+  at sheet.c:38, 26 from cell content at xlsparse.c:307). catdoc does not leak.
+
+  free_sheet() IS being called and executes all free() calls for rows/cells, but ASan still
+  reports the leak. This may be a complex issue with realloc/ASan interaction, or allocations
+  happening in a different code path. The leaks are small and occur at program exit, so this
+  may be "won't fix".
 
 ## Other CI issues
 

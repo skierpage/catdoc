@@ -17,7 +17,7 @@
 /* gets character sequence and appends it to buffer. If buffer is long  */
 /* enough, prints its beginning out                                     */
 /* Input parameter is pointer to the string which represents one unicode*/
-/* character after character set translation. See convert_char ina      */
+/* character after character set translation. See convert_char in       */
 /* charset.c                                                            */
 /************************************************************************/
 static char outputbuffer[LINE_BUF_SIZE]="";
@@ -64,7 +64,7 @@ void out_char(const char *chunk) {
 			/*worst case - nowhere to wrap. Will use brute force */
 			int i = wrap_margin;
 			if (target_charset == NULL) {
-				/* NULL target_charest means UTF-8 */
+				/* NULL target_charset means UTF-8 */
 				/* go back to start of nearest utf-8 character */
 				while(i>0 && (outputbuffer[i] & 0xC0) == 0x80) i--;
 			}			

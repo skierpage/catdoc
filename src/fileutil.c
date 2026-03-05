@@ -23,7 +23,7 @@
 
 /************************************************************************/
 /*  Copies component of string starting with p and ending one char      */
-/*  before q into path_buf, expanding ~ if neccessary                   */
+/*  before q into path_buf, expanding ~ if necessary                    */
 /************************************************************************/
 int prepare_path_buf(char *path_buf, const char *start, const char *end) {
 	if (*start == '~' && start[1] == DIR_SEP) {
@@ -87,7 +87,7 @@ char *find_file(char *name, const char *path)
 /************************************************************************/
 /* Searches for charset with given name and put pointer to malloced copy*/
 /* of its name into first arg if found. Otherwise leaves first arg      */
-/*  unchanged. Terminatnes program if charset not  found */ 
+/*  unchanged. Terminates program if charset not found */
 /************************************************************************/
 void check_charset(char **filename,const char *charset) {
 	char *tmppath;
@@ -147,7 +147,7 @@ void list_charsets(void) {
 		q=strchr(p,LIST_SEP);
 		if (q) {
 			if (q-p>=PATH_BUF_SIZE) {
-				/* Oops, dir name too long, perhabs broken config file */
+				/* Oops, dir name too long, perhaps broken config file */
 				continue;
 			}
 			strncpy(path_buf,p,q-p);

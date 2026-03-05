@@ -17,7 +17,7 @@ char cell_separator = ',';
 int quote_mode = QUOTE_ALL_STRINGS;
 char *sheet_separator = "\f";
 /* 
- * Allocates cell for given row and col and returns pointer to poitrer
+ * Allocates cell for given row and col and returns pointer to pointer
  * of cell contents
  */ 
 unsigned char **allocate (int row,int col) {

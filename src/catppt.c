@@ -1,7 +1,7 @@
 /**
  * @file   ppt2text.c
  * @author Alex Ott <alexott@gmail.com>
- * @date   23 äÅË 2004
+ * @date   23 ï¿½ï¿½ï¿½ 2004
  * Version: $Id: catppt.c,v 1.2 2006-10-17 19:11:29 vitus Exp $
  * Copyright: Alex Ott 
  * 
@@ -112,13 +112,13 @@ int main(int argc, char *argv[]) {
 	} 
 	spec_chars=read_substmap(stradd("ascii",SPEC_EXT));
 	if (!spec_chars) {
-		fprintf(stderr,"Cannod read substitution map ascii%s\n",
+		fprintf(stderr,"Cannot read substitution map ascii%s\n",
 						SPEC_EXT);
 		exit(1);
 	}  
 	replacements=read_substmap(stradd("ascii",REPL_EXT));
 	if (!replacements) {
-		fprintf(stderr,"Cannod read substitution map ascii%s\n",
+		fprintf(stderr,"Cannot read substitution map ascii%s\n",
 						REPL_EXT);
 		exit(1);
 	}  
