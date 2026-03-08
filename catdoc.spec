@@ -1,10 +1,10 @@
 Name: catdoc
-Version: v0.97_devel
+Version: 0.97
 Release: %autorelease
 Summary: programs which extract text from Microsoft Office 97-2004 files
 License: GPL-2.0-or-later
 URL: https://github.com/skierpage/catdoc
-Source0: https://github.com/skierpage/%{name}/archive/refs/tags/v%{version}.tar.gz
+Source0: catdoc-0.97.tar.gz
 BuildRequires: gcc
 BuildRequires: make
 BuildRequires: tk
@@ -38,7 +38,7 @@ wordview is a program that displays Microsoft Word files in a graphical window
 via Tk.
 
 %prep
-%autosetup -p1
+%autosetup -p1 -n %{name}-%{version}
 
 %build
 %configure
