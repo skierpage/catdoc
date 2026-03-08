@@ -22,8 +22,12 @@ actions:
     # packit uses the last line of output as the archive path
     - bash -c "ls catdoc-*.tar.gz"
 
+srpm_build_deps:
+  - autoconf
+  - automake
+  - make
+
 jobs:
 - job: copr_build
   trigger: pull_request
   targets: [fedora-stable]
-
