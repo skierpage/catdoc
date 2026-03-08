@@ -1,4 +1,4 @@
-   0.97 development pre-release ?? 2025
+   0.97 March 8 2026
 	Remove 16-bit DOS support. Use version 0.96 if you're still building and
 	running the catdoc programs in DOS.
 	Incorporated Debian patches for the three 2024 CVEs identified and
@@ -19,6 +19,8 @@
 	specifying mac-roman as destination charset), and of missing charsets;
 	commit 8866ca937 (cherry-picked from vbwagner's upstream GitHub
 	repository). Also added test for the bug.
+	The other vbwagner commit in 2025, "Fix ole name bug", was already
+	incorporated in this fork's version 0.96.
 
 	Developed test framework for memory access errors caught by 
 	address sanitizer.
@@ -36,6 +38,7 @@
 	Dean Pierce in 2015 using American Fuzzy Lop software fuzzer, reported
 	to the oss-sec mailing list and uploaded to
 	https://catdocbugs.neocities.org/ .
+	Added build automation to trigger Fedora Copr builds.
 
    0.96 July 7 2025
 	This incorporates several patches to catdoc that have
