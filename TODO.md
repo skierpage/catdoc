@@ -1,7 +1,5 @@
 # TODO
 
-- [x] Fix "Cannod read", "chatset", "platfom", and other misspellings
-
 ## Test cleanup
 
 - [ ] Maybe fix the memory leaks reported by asan so tests don't have to set ASAN_OPTIONS=detect_leaks=0
@@ -16,10 +14,7 @@
 
 ## Other CI issues
 
-- [x] Use full GNU autoconf to create Makefiles.
-     This will make it easier to build with Address Sanitizer (`-{f,l}asan`) to reproduce some of the above CVEs.
-- [x] .github/workflows/c-cpp.yml can be simplified and may not need `make install
-- [ ] Check if copr build (using.packit.yaml) of Fedora RPM works.
+- [ ] Check if [Fedora copr build](https://copr.fedorainfracloud.org/coprs/skierpage/catdoc/) (using [packit.yaml](packit.yaml)) of Fedora RPM works.
 
 
 ## Research: find more Office 2007 test files

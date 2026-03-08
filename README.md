@@ -1,4 +1,4 @@
-# catdoc version 0.97 in development
+# catdoc version 0.97
 
 `catdoc` is a program which reads MS-Office Word `.doc` files and prints their
 content as readable ASCII text to stdout.  It can also produce correct
@@ -25,17 +25,21 @@ the text of old MS-Office files.
 user-definable output formats and support for Word97 files, which contain
 UNICODE internally.
 
-## version 0.97 in development
+## version 0.97
 
-This in-development next release of the catdoc programs incorporates the Debian
-patches for the vulnerabilities
-[CVE-2024-54028](https://nvd.nist.gov/vuln/detail/CVE-2024-54028),
-[CVE-2024-52035](https://nvd.nist.gov/vuln/detail/CVE-2024-52035),
-and
-[CVE-2024-48877](https://nvd.nist.gov/vuln/detail/CVE-2024-48877)
-identified and addressed by the Cisco Talos team.
-The patched source code _no longer compiles_ in Borland Turbo C.
-So v0.96 is likely the last release of the catdoc programs that build and run
+This release of the catdoc programs addresses numerous vulnerabilities
+described below. To do so it has updated autoconf/automake tooling to make it
+easier to build with Address Sanitizer, and an automake test harness to check
+for memory errors. The steps to build it from source changed slightly, see
+[INSTALL](INSTALL).
+
+[vbwagner's upstream]() came back to life after a 9 year absence with a couple
+of fixes in November 2025; this fork incorporates them. 
+
+### End of DOS support
+
+The patched source code _no longer compiles_ in Borland Turbo C;
+v0.96 is the last release of the catdoc programs that builds and runs
 in 16-bit DOS. If anyone cares about DOS support, get in touch!
 
 ## File format specifications
@@ -63,8 +67,18 @@ The catdoc programs are unsafe C code that parse old files. Unexpected or
 garbled file content will cause them to crash and running them on a
 specially-crafted file may allow an attacker to interfere with the operation of
 your computer. Version 0.97 fixes several memory access errors and Common
-Vulnerabilities and Exposures search the commit history for "CVE")  but there
-may be more. Some were detected by Address Sanitizer tools, see
+Vulnerabilities and Exposures reported against various forks and distribution
+packages of catdoc over the years, but there may be more.
+
+This release of the catdoc programs incorporates the Debian patches for the
+vulnerabilities
+[CVE-2024-54028](https://nvd.nist.gov/vuln/detail/CVE-2024-54028),
+[CVE-2024-52035](https://nvd.nist.gov/vuln/detail/CVE-2024-52035),
+and
+[CVE-2024-48877](https://nvd.nist.gov/vuln/detail/CVE-2024-48877)
+identified and addressed by the Cisco Talos team.
+See [NEWS](NEWS) and the commit history (search history for "CVE") for other
+fixes made. Some were detected by Address Sanitizer tools, see
 [tests/asan_failures](tests/asan_failures) for more details.
 
 ## Documentation, bugs, more information
@@ -77,7 +91,7 @@ those who don't have man command (such as MS-DOS users), plain text and
 PostScript versions of the man pages are in the doc directory.
 
 Your bug reports and suggestions are welcome, as are code contributions;
-[TODO](TODO) is an incomplete list of things to work on.  In particular, if
+[TODO.md](TODO.md) is an incomplete list of things to work on.  In particular, if
 you have old MS-Office files from which the catdoc text extraction programs do
 not produce correct output, please file an issue and attach a small test file. 
 
