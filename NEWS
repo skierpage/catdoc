@@ -12,7 +12,8 @@
 	results. Add `autoconf -fiv` to INSTALL steps.
 	Users can set a CHARSETPATH environment variable to point to one or
 	more non-standard charsets directory locations (as an alternative
-	to charset_path in .catdocrc).
+	to charset_path in .catdocrc). This allows testing without doing
+	`make install`.
 
 	Fixed handling of destination charsets with chars > u7FFF (e.g. when
 	specifying mac-roman as destination charset), and of missing charsets;
