@@ -15,6 +15,7 @@
 ## Other CI issues
 
 - [ ] Check if [Fedora copr build](https://copr.fedorainfracloud.org/coprs/skierpage/catdoc/) (using [packit.yaml](packit.yaml)) of Fedora RPM works.
+- [ ] Why didn't uploading tag v0.97, or creating a release, do anything? They don't seem to have triigerred a build.
 
 
 ## Research: find more Office 2007 test files

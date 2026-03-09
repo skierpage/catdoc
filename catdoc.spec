@@ -4,7 +4,7 @@ Release: %autorelease
 Summary: programs which extract text from Microsoft Office 97-2004 files
 License: GPL-2.0-or-later
 URL: https://github.com/skierpage/catdoc
-Source0: catdoc-0.97.tar.gz
+Source0: https://github.com/skierpage/%{name}/archive/refs/tags/v%{version}.tar.gz
 BuildRequires: gcc
 BuildRequires: make
 BuildRequires: tk
