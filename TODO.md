@@ -12,10 +12,33 @@
   happening in a different code path. The leaks are small and occur at program exit, so this
   may be "won't fix".
 
+## Prepare 0.97.1 release
+
+- [ ] Update configure.ac, catdoc.spec, README.md, NEWS to version 0.97.1 (drop `_devel`)
+- [ ] Run `make distcheck` to produce `catdoc-0.97.1.tar.gz`
+- [ ] Tag `v0.97.1` and create a GitHub Release
+- [ ] Upload `catdoc-0.97.1.tar.gz` (from `make distcheck`) as a release asset
+- [ ] Verify packit `trigger: release` Copr build fires and succeeds (see CI issues below)
+
 ## Other CI issues
 
-- [ ] Check if [Fedora copr build](https://copr.fedorainfracloud.org/coprs/skierpage/catdoc/) (using [packit.yaml](packit.yaml)) of Fedora RPM works.
-- [ ] Why didn't uploading tag v0.97, or creating a release, do anything? They don't seem to have triigerred a build.
+- [x] Confirmed packit PR builds work. To check builds for a PR, go to
+  https://dashboard.packit.dev/projects/github.com/skierpage/catdoc, find the PR under
+  "PRs Handled", then follow the Copr build links (e.g.
+  https://copr.fedorainfracloud.org/coprs/packit/skierpage-catdoc-10/). RPMs are in the
+  "Pulp results" link at the bottom of each chroot page.
+- [ ] `trigger: release` Copr build never fires or fails silently — packit lacks permission
+  to build in `skierpage/catdoc` Copr project. Need to investigate granting packit access.
+  See packit docs for Copr credential/permission setup.
+- [ ] Fix `Source0` in catdoc.spec to point to the `make dist` tarball uploaded as a GitHub
+  release asset:
+  `https://github.com/skierpage/%{name}/releases/download/v%{version}/%{name}-%{version}.tar.gz`
+  Currently points to a raw git archive which lacks autotools-generated files and fails to build.
+  (Packit ignores Source0 since `create-archive` overrides it, so this only matters for manual RPM builds.)
+- [ ] Fix `%check` in catdoc.spec to run the test suite against the just-built binaries.
+  Current attempt with `%{__make} check` runs the system `/usr/bin/catdoc` instead of the
+  BUILDROOT binary. Fix requires prepending `%{buildroot}%{_bindir}` to PATH in `%check`
+  and setting `CHARSETPATH` correctly.
 
 
 ## Research: find more Office 2007 test files
@@ -57,7 +80,7 @@ dating from around 2010
   - [✅] [Issue 10](https://github.com/petewarden/catdoc/issues/10), "global-buffer-overflow on reader.c:177:20" is fixed in this fork
 
 ## MISC
-- [ ] Build, or trigger, Fedora package builds.
+- [ ] Trigger Fedora package builds for skierpage/catdoc Copr once packit permissions are sorted.
 - [ ] Incorporate Victor Wagner's notes at https://www.wagner.pp.ru/~vitus/software/catdoc/ into README.md
 
 # BACKLOG

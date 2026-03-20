@@ -1,13 +1,14 @@
 #!/bin/bash
 # Generic test runner for ASAN bug test cases
-# Usage: test-asan-bug.sh <issue_id> <tool> <poc_file> [description]
+# Usage: test-asan-bug.sh <issue_id> <tool> <poc_file> [description] [extra_tool_args...]
 #
 # Example: test-asan-bug.sh vbwagner_6 xls2csv vbwagner_issue_6/1 "NULL deref in ole.c"
+# Example: test-asan-bug.sh cve_2023_31979 catdoc global-buffer-overflow "Global buffer overflow" -b
 
 set -e
 
 if [ $# -lt 3 ]; then
-    echo "Usage: $0 <issue_id> <tool> <poc_file> [description]" >&2
+    echo "Usage: $0 <issue_id> <tool> <poc_file> [description] [extra_tool_args...]" >&2
     echo "Example: $0 vbwagner_6 xls2csv vbwagner_issue_6/1 'NULL deref in ole.c'" >&2
     exit 2
 fi
@@ -16,6 +17,7 @@ ISSUE_ID="$1"
 TOOL="$2"
 POC_FILE="$3"
 DESCRIPTION="${4:-Issue $ISSUE_ID}"
+EXTRA_ARGS=("${@:5}")
 
 # Determine paths based on where script is run from
 if [ -f "../src/$TOOL" ]; then
@@ -62,7 +64,7 @@ fi
 # If fixed, the tool may reject invalid input (exit non-zero) but without ASan errors
 # Suppress LeakSanitizer since we're testing for specific bugs, not leaks
 export CHARSETPATH
-OUTPUT=$(ASAN_OPTIONS=detect_leaks=0 "$TOOL_PATH" "$POC_PATH" 2>&1) || true
+OUTPUT=$(ASAN_OPTIONS=detect_leaks=0 "$TOOL_PATH" "${EXTRA_ARGS[@]}" "$POC_PATH" 2>&1) || true
 
 # Check if ASan detected any errors (look for ASan error patterns in output)
 if echo "$OUTPUT" | grep -qE "(AddressSanitizer|SEGV|heap-buffer-overflow|global-buffer-overflow|stack-buffer-overflow|use-after-free|heap-use-after-free|stack-use-after-free)"; then

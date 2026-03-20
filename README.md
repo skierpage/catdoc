@@ -1,4 +1,4 @@
-# catdoc version 0.97
+# catdoc version 0.97.1 in development
 
 `catdoc` is a program which reads MS-Office Word `.doc` files and prints their
 content as readable ASCII text to stdout.  It can also produce correct

@@ -4,13 +4,21 @@
 
 set -e
 
-CATDOC="../src/catdoc"
 TEST_FILE="${srcdir}/basic.doc"
 
-# Check if files exist
-if [ ! -x "$CATDOC" ]; then
-    echo "ERROR: catdoc not found: $CATDOC" >&2
+# Determine path to catdoc based on working directory
+if [ -f "../src/catdoc" ]; then
+    CATDOC="../src/catdoc"
+elif [ -f "../../src/catdoc" ]; then
+    CATDOC="../../src/catdoc"
+else
+    echo "ERROR: catdoc not found (tried ../src, ../../src)" >&2
     echo "Did you run 'make' first?" >&2
+    exit 1
+fi
+
+if [ ! -x "$CATDOC" ]; then
+    echo "ERROR: catdoc not executable: $CATDOC" >&2
     exit 1
 fi
 
@@ -25,8 +33,8 @@ if ! ldd "$CATDOC" 2>/dev/null | grep -q libasan; then
     exit 77
 fi
 
-# Set CHARSETPATH if not already set
-: ${CHARSETPATH:=$(dirname "$0")/../charsets}
+# Set CHARSETPATH if not already set (works when run from tests/ or tests/asan_failures/)
+: ${CHARSETPATH:=$(dirname "$0")/../../charsets}
 
 # Run catdoc and capture stderr
 STDERR_FILE=$(mktemp)

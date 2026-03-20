@@ -1,15 +1,17 @@
-This directory contains test documents crafted to demonstrate various memory errors that Address Sanitization detects.
+This directory contains test documents crafted to demonstrate various
+memory errors that Address Sanitization detects, and a test framework
+to run them as part of `make check`.
 
+Several people and groups have reported memory errors in catdoc programs
+over the years. A small number of code changes fixed multiple
+overlapping bug reports.
 
-# List of bugs
+catdoc version 0.97 fixes ✅ all these bugs, unless otherwise indicated.
 
-## yangzao bugs
+## Test Infrastructure
 
-GitHub user @yangzao reported several issues [in vbwagner's catdoc repository](https://github.com/vbwagner/catdoc/issues)
-
-### Test Infrastructure
-
-We now have a generic test framework for ASAN bug tests:
+Most of these bugs are exercised by a common generic test framework for
+ASAN bug tests. 
 
 1. **Generic test script**: `test-asan-bug.sh`
    - Usage: `./test-asan-bug.sh <issue_id> <tool> <poc_file> [description]`
@@ -27,6 +29,50 @@ We now have a generic test framework for ASAN bug tests:
    - Add to Makefile.am: CUSTOM_TESTS, check_SCRIPTS, EXTRA_DIST
    - If unfixed, add to XFAIL_TESTS
    - Update status table below
+
+# List of address sanitizer bugs
+
+## Bugs reported against pwarden repo
+
+https://github.com/petewarden/catdoc is the old version 0.93 of catdoc put on GitHub before https://github.com/vbwagner/catdoc (version 0.95) was created.
+
+- cve-2023-31979.test
+
+    This reproduces https://github.com/petewarden/catdoc/issues/9 using test file
+    global-buffer-overflow, which became CVE-2023-31979
+
+
+## Bugs reported against libdoc
+
+https://github.com/uvoteam/libdoc is based on catdoc sources, so some
+bugs reported against it apply to catdoc as well.
+
+- cve-2018-20451.test
+
+    This reproduces https://github.com/uvoteam/libdoc/issues/2 using test file
+    libdoc_reader_process_file_203.overflow, which became CVE-2018-20451
+
+- cve-2018-20453.test
+
+    This reproduces https://github.com/uvoteam/libdoc/issues/1 using test file
+    libdoc_numutils_getlong_22.overflow, which became CVE-2018-20453
+
+## Miscellaneous memory access bugs
+
+- test-empty-charsetpath.test
+
+    This tests a NULL pointer dereference if the charset directory is empty.
+
+- test-memory-leaks.test
+
+    This checks for memory leak(s) in basic catdoc operation.
+
+    ❌ This is not fixed in catdoc version 0.97.
+
+## yangzao bugs
+
+GitHub user @yangzao reported several issues [in vbwagner's catdoc repository](https://github.com/vbwagner/catdoc/issues)
+
 
 ### Summary
 
@@ -51,7 +97,7 @@ GitHub issue | Test File | POC Location | Tool | Current Status | Fixed by | Des
 
 ---
 
-## Dean Pierce 2015 AFL Fuzzing Campaign
+## Dean Pierce 2015 AFL fuzzing campaign
 
 In March 2015, Dean Pierce reported multiple bugs discovered through [AFL (American Fuzzy Lop)](https://en.wikipedia.org/wiki/American_Fuzzy_Lop_(software)) fuzzing to the [oss-sec mailing list](https://seclists.org/oss-sec/2015/q1/835). The crash samples were too large for the mailing list (>200KB), so they were hosted at [catdocbugs.neocities.org](https://catdocbugs.neocities.org/).
 
@@ -68,16 +114,23 @@ Pierce noted these were "read violations, so non-trivial to exploit" and unlikel
 
 ### Test Files
 
-Test files are located in:
-- `crashes/` - 35 files with descriptive names (bug00-substmap.doc through bug34-ole-asan.doc)
-  - Corresponds to crashes_raw/ id:000000 through id:000034
+The tarballs contain the following:
+- `catdoc-crashes.tar.bz2` - 35 files with descriptive names (bug00-substmap.doc through bug34-ole-asan.doc)
+  - Corresponds to id:000000 through id:000034 in catdoc-crashes-raw.tar.bz2
   - `original-filenames.txt` contains the mapping
-- `crashes_raw/` - All 62 crash files with AFL's original naming (id:000000 through id:000061)
+- `catdoc-crashes-raw.tar.bz2` - All 62 crash files with AFL's original naming (id:000000 through id:000061)
   - id:000000-034: The 35 analyzed crashes (mapped to crashes/)
   - id:000035-061: Additional 27 crashes from catdoc-crashes-raw.tar.bz2
   - Testing confirms all 27 additional crashes also trigger CVE-2023-31979 (same buffer overflow)
 
-### Current Status
+### Testing these
+
+Developed  internal (unreleased) `test-all-afl-bugs.sh` and
+`test-additional-crashes.sh` scripts to systematically check if old
+catdoc binaries crash or report memory errors when run on these files and if
+newer binaries with memory access fixes are OK.
+
+### Test results
 
 Testing with multiple binary versions reveals the evolution of fixes:
 
@@ -102,21 +155,10 @@ Substmap bugs (00-02, 10, 12-13, 15, 19):
 - ✅ 2026-02-09+ binaries: Pass
 - **Fixed by:** e89ff38 "Fix memory leak in character set handling" (2026-02-03)
 
-### Testing
-
-Use `test-all-afl-bugs.sh` to systematically test all 35 bugs against multiple binary versions:
-
-```bash
-cd tests/asan_failures
-./test-all-afl-bugs.sh
-```
-
-This script tests with leak detection enabled and shows which binary versions pass/fail each test.
-
 ### Summary Table
 
 Bug # | Module | POC File | Current Status | 2026-02-02 | 2026-02-02 with `-b` | Fixed By |
------ | ------ | -------- | -------------- | ---------- | -------------------- | -------- |
+---- | ------ | -------- | -------------- | ---------- | -------------------- | -------- |
 00 | substmap | bug00-substmap.doc | ✅ Pass | ❌ Leak | ❌ Overflow | e89ff38 (leak), 1a09fc5 (overflow) |
 01 | substmap | bug01-substmap.doc | ✅ Pass | ❌ Leak | ❌ Overflow | e89ff38 (leak), 1a09fc5 (overflow) |
 02 | substmap | bug02-substmap.doc | ✅ Pass | ❌ Leak | ❌ Overflow | e89ff38 (leak), 1a09fc5 (overflow) |
@@ -161,4 +203,3 @@ Bug # | Module | POC File | Current Status | 2026-02-02 | 2026-02-02 with `-b` |
 
 **Key Finding:** All AFL-discovered bugs (both the 35 analyzed crashes and 27 additional unanalyzed crashes) expose the same underlying vulnerability: CVE-2023-31979, a global-buffer-overflow in the process_file function. The early "Broken OLE file" rejection provides defense-in-depth, but using `-b` flag on vulnerable binaries triggers the overflow.
 
-Testing script for additional crashes: `test-additional-crashes.sh`

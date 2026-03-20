@@ -5,12 +5,20 @@
 
 set -e
 
-XLS2CSV="../src/xls2csv"
+# Determine path to xls2csv based on working directory
+if [ -f "../src/xls2csv" ]; then
+    XLS2CSV="../src/xls2csv"
+elif [ -f "../../src/xls2csv" ]; then
+    XLS2CSV="../../src/xls2csv"
+else
+    echo "ERROR: xls2csv not found (tried ../src, ../../src)" >&2
+    echo "Did you run 'make' first?" >&2
+    exit 1
+fi
 
 # Check if xls2csv exists
 if [ ! -x "$XLS2CSV" ]; then
-    echo "ERROR: xls2csv not found: $XLS2CSV" >&2
-    echo "Did you run 'make' first?" >&2
+    echo "ERROR: xls2csv not executable: $XLS2CSV" >&2
     exit 1
 fi
 
