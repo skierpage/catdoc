@@ -1,5 +1,6 @@
    0.97.1 in development
-	Clean up address sanitizer tests
+	Clean up address sanitizer tests.
+	Simplify RPM package builds triggered by Packit.
 
    0.97 March 8 2026
 	Remove 16-bit DOS support. Use version 0.96 if you're still building and

@@ -1,10 +1,12 @@
 Name: catdoc
-Version: 0.97
-Release: %autorelease
+Version: 0.97.1_devel
+Release: 1.20260320162811988977.master.2.gbb7d4c7%{?dist}
 Summary: programs which extract text from Microsoft Office 97-2004 files
 License: GPL-2.0-or-later
 URL: https://github.com/skierpage/catdoc
 Source0: https://github.com/skierpage/%{name}/archive/refs/tags/v%{version}.tar.gz
+BuildRequires: autoconf
+BuildRequires: automake
 BuildRequires: gcc
 BuildRequires: make
 BuildRequires: tk
@@ -39,6 +41,7 @@ via Tk.
 
 %prep
 %autosetup -p1 -n %{name}-%{version}
+autoreconf -fi
 
 %build
 %configure
@@ -47,16 +50,11 @@ via Tk.
 %install
 %make_install
 
-# Struggling to get this to work
-#       %check
-#       %{make} check
-# fails when I invoke `packit build locally` with
-#        /var/tmp/rpm-tmp.5GB8PL: line 47: fg: no job control
-#        error: Bad exit status from /var/tmp/rpm-tmp.5GB8PL (%check)
-#       %{__make} check
-# works, but fails because it runs /usr/bin/catdoc, not the just-built BUILDROOT/usr/bin/
-# %check
-# %{__make} check
+# Test scripts use ../src/catdoc relative to the tests/ build directory,
+# so they run the just-built binary without needing %{buildroot}/%{_bindir}.
+# Set CHARSETPATH relative to the build tree for the same reason.
+%check
+CHARSETPATH="$(pwd)/charsets" %make_build check
 
 %files
 %license COPYING
@@ -67,7 +65,7 @@ via Tk.
 %{_mandir}/man1/catppt.1.*
 %{_mandir}/man1/xls2csv.1.*
 %{_datadir}/catdoc
-%doc README.md NEWS
+%doc README.md NEWS ALTERNATIVES.md CREDITS
 
 %files wordview
 %{_bindir}/wordview

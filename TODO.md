@@ -18,28 +18,8 @@
 - [ ] Run `make distcheck` to produce `catdoc-0.97.1.tar.gz`
 - [ ] Tag `v0.97.1` and create a GitHub Release
 - [ ] Upload `catdoc-0.97.1.tar.gz` (from `make distcheck`) as a release asset
-- [ ] Verify packit `trigger: release` Copr build fires and succeeds (see CI issues below)
-
-## Other CI issues
-
-- [x] Confirmed packit PR builds work. To check builds for a PR, go to
-  https://dashboard.packit.dev/projects/github.com/skierpage/catdoc, find the PR under
-  "PRs Handled", then follow the Copr build links (e.g.
-  https://copr.fedorainfracloud.org/coprs/packit/skierpage-catdoc-10/). RPMs are in the
-  "Pulp results" link at the bottom of each chroot page.
-- [ ] `trigger: release` Copr build never fires or fails silently — packit lacks permission
-  to build in `skierpage/catdoc` Copr project. Need to investigate granting packit access.
-  See packit docs for Copr credential/permission setup.
-- [ ] Fix `Source0` in catdoc.spec to point to the `make dist` tarball uploaded as a GitHub
-  release asset:
-  `https://github.com/skierpage/%{name}/releases/download/v%{version}/%{name}-%{version}.tar.gz`
-  Currently points to a raw git archive which lacks autotools-generated files and fails to build.
-  (Packit ignores Source0 since `create-archive` overrides it, so this only matters for manual RPM builds.)
-- [ ] Fix `%check` in catdoc.spec to run the test suite against the just-built binaries.
-  Current attempt with `%{__make} check` runs the system `/usr/bin/catdoc` instead of the
-  BUILDROOT binary. Fix requires prepending `%{buildroot}%{_bindir}` to PATH in `%check`
-  and setting `CHARSETPATH` correctly.
-
+- [ ] Verify packit `trigger: release` fires off a Copr build and succeeds,
+  see https://dashboard.packit.dev/projects/github.com/skierpage/catdoc
 
 ## Research: find more Office 2007 test files
 

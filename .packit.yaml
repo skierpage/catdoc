@@ -19,18 +19,8 @@ actions:
   # overwrites Version: in the spec. This reads the version from configure.ac.
   get-current-version:
     - autoconf --trace='AC_INIT:$2' configure.ac
-  create-archive:
-    - autoreconf -fiv
-    - ./configure
-    - make dist
-    # packit uses the last line of output as the archive path
-    - bash -c "ls catdoc-*.tar.gz"
-
-srpm_build_deps:
-  - autoconf
-  - automake
-  - make
-  - gcc
+  # No create-archive needed: packit uses a raw git archive, and autoreconf -fi
+  # in the spec's %prep generates the required autotools files during the RPM build.
 
 jobs:
 - job: copr_build

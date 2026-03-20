@@ -26,6 +26,7 @@ src/wordview
 # Autotools generated files
 aclocal.m4
 build-aux/
+configure
 Makefile.in
 src/Makefile.in
 tests/Makefile.in
@@ -37,3 +38,7 @@ src/config.h.in
 tests/**/*.log
 tests/**/*.trs
 tests/test-suite.log
+
+# `make dist` and local RPM/packit builds
+catdoc-*.tar.gz
+x86_64/
