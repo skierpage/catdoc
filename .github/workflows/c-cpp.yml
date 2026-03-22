@@ -5,13 +5,16 @@ on:
 
   pull_request:
 
+  release:
+    types: [created]
+
 jobs:
   build:
 
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Update generated configuration files
       run: autoreconf -fiv
     - name: configure
@@ -24,7 +27,7 @@ jobs:
       run: make distcheck
     - name: Upload test logs on failure
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: test-logs
         path: |
@@ -33,7 +36,16 @@ jobs:
           catdoc-*/_build/sub/tests/test-suite.log
           catdoc-*/_build/sub/tests/*.log
     - name: Upload distribution .tar.gz as artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: dist-archive
         path: catdoc-*.tar.gz
+    - name: Upload distribution tarball to release
+      if: github.event_name == 'release'
+      run: |
+        version=$(echo catdoc-*.tar.gz | sed 's/catdoc-//;s/\.tar\.gz//')
+        # Rename the file, otherwise it has the same filename as the source code tarball.
+        cp catdoc-*.tar.gz catdoc-${version}-dist.tar.gz
+        gh release upload ${{ github.event.release.tag_name }} catdoc-${version}-dist.tar.gz
+      env:
+        GH_TOKEN: ${{ github.token }}
