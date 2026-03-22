@@ -12,15 +12,6 @@
   happening in a different code path. The leaks are small and occur at program exit, so this
   may be "won't fix".
 
-## Prepare 0.97.1 release
-
-- [ ] Update configure.ac, catdoc.spec, README.md, NEWS to version 0.97.1 (drop `_devel`)
-- [ ] Run `make distcheck` to produce `catdoc-0.97.1.tar.gz`
-- [ ] Tag `v0.97.1` and create a GitHub Release
-- [ ] Upload `catdoc-0.97.1.tar.gz` (from `make distcheck`) as a release asset
-- [ ] Verify packit `trigger: release` fires off a Copr build and succeeds,
-  see https://dashboard.packit.dev/projects/github.com/skierpage/catdoc
-
 ## Research: find more Office 2007 test files
 
 - [ ] Do the Gnome LocalSearch (formerly Tracker), KFileMetadata, and LibreOffice projects have test
