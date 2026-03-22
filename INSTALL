@@ -3,14 +3,25 @@ INSTALLING catdoc
 Starting with patchlevel alpha 3 version 0.90, catdoc uses Unix
 autotools. Thanks for Stephen Farell to convince Victor Wagner.
 
-Typically you should run
+If you're building from git, you need the `autoreconf` package installed.
+Typically you should run:
     autoreconf -fiv
     ./configure
     make
     make -j 4 check
     make install
 
-to compile and install catdoc.
+to compile and install catdoc. You may need to run `make install` as the
+super-user (root), thus e.g. run `sudo make install` if you get permission
+errors.
+
+You can also build from the distribution tarball for a particular release,
+which requires only `make` and a C compiler. The steps are the same except
+you don't run `autoreconf`:
+    ./configure
+    make
+    make -j 4 check
+    make install
 
 NOTE for HPUX users. If you want to compile catdoc with aCC,
 use CC="aCC -Ae" ./configure

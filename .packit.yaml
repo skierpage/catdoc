@@ -22,6 +22,11 @@ actions:
   # No create-archive needed: packit uses a raw git archive, and autoreconf -fi
   # in the spec's %prep generates the required autotools files during the RPM build.
 
+# autoconf is needed in the SRPM build environment for the get-current-version action.
+# (BuildRequires in the spec covers the RPM build environment, not the SRPM build.)
+srpm_build_deps:
+  - autoconf
+
 jobs:
 - job: copr_build
   trigger: pull_request

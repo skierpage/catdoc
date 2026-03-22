@@ -25,12 +25,15 @@ The subdirectory [tests/asan_failures](asan_failures) contains various test
 cases that trigger memory access errors. These may trigger crashes in the
 normal binaries, but if you configure catdoc with `--enable-asan`, the test
 cases that remain unfixed will print detailed Address Sanitizer diagnostics.
+The address sanitizer tests use the `ldd` tool to check if the binary was
+compiled with Address Sanitizer support.
 
 ## Expected failing files
 XFAIL_TESTS in tests/Makefile lists test files that are expected to not
 succesfully convert or cause other errors due to known bugs.
 
 ## Command-line tests
+
 Some command lines demonstrate failures, e.g. [petewarden issue #10](https://github.com/petewarden/catdoc/issues/10) - global-buffer-overflow on reader.c:177:20
 
    % catdoc / /-v -wbawdd

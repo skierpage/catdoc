@@ -1,4 +1,4 @@
-   0.97.1 in development
+   0.97.1 March 21 2026
 	Clean up address sanitizer tests.
 	Simplify RPM package builds triggered by Packit.
 

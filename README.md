@@ -76,10 +76,11 @@ vulnerabilities
 [CVE-2024-52035](https://nvd.nist.gov/vuln/detail/CVE-2024-52035),
 and
 [CVE-2024-48877](https://nvd.nist.gov/vuln/detail/CVE-2024-48877)
-identified and addressed by the Cisco Talos team.
+identified and addressed by the Cisco Talos team, and several other memory 
+access vulnerabilities reported over the years.
 See [NEWS](NEWS) and the commit history (search history for "CVE") for other
 fixes made. Some were detected by Address Sanitizer tools, see
-[tests/asan_failures](tests/asan_failures) for more details.
+[tests/asan_failures/README.md](tests/asan_failures/README.md) for more details.
 
 ## Documentation, bugs, more information
 

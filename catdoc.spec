@@ -1,6 +1,6 @@
 Name: catdoc
-Version: 0.97.1_devel
-Release: 1.20260320162811988977.master.2.gbb7d4c7%{?dist}
+Version: 0.97.1
+Release: %autorelease
 Summary: programs which extract text from Microsoft Office 97-2004 files
 License: GPL-2.0-or-later
 URL: https://github.com/skierpage/catdoc
