@@ -1,6 +1,8 @@
 # -* wish *-
 # fallback which allows me to run wordview.tcl without doing make
-package require Tcl 8.3
+if {[package vcompare [info tclversion] 8.3] < 0} {
+    error "wordview requires Tcl 8.3 or later"
+}
 
 if ![info exist charset_lib] {
   set charset_lib /usr/local/lib/catdoc
@@ -48,7 +50,7 @@ foreach l [glob [file join $charset_lib *.txt]] {
 
 set in_charset Default 
 
-trace var in_charset w reread
+trace add variable in_charset write reread
 set m [menu .mainmenu.help]
 .mainmenu  add cascade -label Help -menu $m -underline 0
 $m add command -label "Manual page" -command [list  show_help [file tail $argv0]]
@@ -273,7 +275,7 @@ button .about.ok -text Ok -command {destroy .about}
 pack .about.m .about.ok
 }
 if [llength $argv] {
- if {![file exist [lindex $argv 0]]} {
+ if {![file exists [lindex $argv 0]]} {
     puts stderr "No such file: [lindex $argv 0]"
     exit 1
  }   
