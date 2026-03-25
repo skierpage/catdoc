@@ -1,3 +1,8 @@
+   0.97.2 March 24 2026
+	Fix Tcl incompatibility in wordview GUI wrapper around catdoc.
+	Add the "distribution tarball" created by `make check` as a release
+	asset; other CI automation improvements.
+
    0.97.1 March 21 2026
 	Clean up address sanitizer tests.
 	Simplify RPM package builds triggered by Packit.
@@ -31,7 +36,7 @@
 	Fixed CVE-2023-31979 global buffer overflow vulnerability in the
 	process_file function in src/reader.c.
 	This also addresses CVE-2018-20451 and CVE-2018-20453 that were found
-	in libdoc (based on catdoc) and were also present in catdoc..
+	in libdoc (based on catdoc) and were also present in catdoc.
 	Fixed NULL derefence if charset directory is empty (issue #8), which
 	may be the same bug as CVE-2023-41633.
 	Fixed memory leak in charset handling.
