@@ -1,5 +1,18 @@
 # TODO
 
+## CI
+
+### Fedora RPM automation
+- [ ] Trigger Fedora package builds for skierpage/catdoc Copr once packit permissions are sorted.
+  - `trigger: release` in .packit.yaml targets `owner: skierpage, project: catdoc` but builds
+    never happen: the release shows up in the Packit dashboard under "Releases Handled" with no
+    build created, and https://copr.fedorainfracloud.org/coprs/skierpage/catdoc/builds/ stays empty.
+  - Packit is installed as a GitHub App (Settings > GitHub Actions > Packit-as-a-service).
+  - PR builds work fine (go to temporary `packit/skierpage-catdoc-N` Copr projects).
+  - Latest Packit docs focus on `dist-git` integration (submitting to Fedora proper); the Copr
+    release trigger workflow may need different configuration or explicit Copr permissions granted
+    to the Packit service account.
+
 ## Test cleanup
 
 - [ ] Maybe fix the memory leaks reported by asan so tests don't have to set ASAN_OPTIONS=detect_leaks=0
@@ -51,7 +64,6 @@ dating from around 2010
   - [✅] [Issue 10](https://github.com/petewarden/catdoc/issues/10), "global-buffer-overflow on reader.c:177:20" is fixed in this fork
 
 ## MISC
-- [ ] Trigger Fedora package builds for skierpage/catdoc Copr once packit permissions are sorted.
 - [ ] Incorporate Victor Wagner's notes at https://www.wagner.pp.ru/~vitus/software/catdoc/ into README.md
 
 # BACKLOG

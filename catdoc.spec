@@ -1,5 +1,5 @@
 Name: catdoc
-Version: 0.97.1
+Version: 0.97.2
 Release: %autorelease
 Summary: programs which extract text from Microsoft Office 97-2004 files
 License: GPL-2.0-or-later
