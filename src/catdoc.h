@@ -7,6 +7,13 @@
 #ifndef CATDOC_H
 #define CATDOC_H
 
+#ifdef DEBUG
+#define DBGPRINT(fmt, ...) \
+    fprintf(stderr, "DEBUG [%s:%d]: " fmt "\n", __FILE__, __LINE__, ##__VA_ARGS__)
+#else
+#define DBGPRINT(fmt, ...) do {} while(0)
+#endif
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

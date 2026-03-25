@@ -49,7 +49,7 @@ EXPECTED_LOG_COMPILER = $(srcdir)/run-single-test.sh
 TEST_LOG_COMPILER =
 
 # Expected test failures (known bugs not fixed yet)
-XFAIL_TESTS = test_LO_file.ppt.expected
+XFAIL_TESTS =
 
 # Scripts needed for testing
 check_SCRIPTS = run-single-test.sh \

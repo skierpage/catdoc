@@ -1,7 +1,7 @@
 /**
  * @file   ppttypes.h
  * @author Alex Ott <alexott@gmail.com>
- * @date   26 äÅË 2004
+ * @date   26 ï¿½ï¿½ï¿½ 2004
  * Version: $Id: ppttypes.h,v 1.1 2006-02-24 17:44:06 vitus Exp $
  * Copyright: Alex Ott
  * 
@@ -53,11 +53,12 @@
 #define PROG_STRING_TAG 5001
 #define PROG_BINARY_TAG 5002
 #define PERSIST_PTR_INCREMENTAL_BLOCK 6002
-/* #define  */
-/* #define  */
-/* #define  */
-/* #define  */
-/* #define  */
+/* Escher (Office Drawing) container record types, used inside PPDrawing */
+#define ESCHER_DG_CONTAINER        0xF002  /* Drawing container */
+#define ESCHER_SPGR_CONTAINER      0xF003  /* Shape group container */
+#define ESCHER_SP_CONTAINER        0xF004  /* Shape container */
+#define ESCHER_CLIENT_TEXTBOX      0xF00D  /* Client textbox - contains PPT text atoms */
+#define ESCHER_CLIENT_DATA         0xF011  /* Client data container */
 
 #endif /* _PPTTYPES_H */
 

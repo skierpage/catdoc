@@ -63,6 +63,15 @@ dating from around 2010
   - [✅] [Issue 9](https://github.com/petewarden/catdoc/issues/9), "catdoc global buffer overflow -- by misuse of the option "-b"" is fixed by commit 1a09fc5
   - [✅] [Issue 10](https://github.com/petewarden/catdoc/issues/10), "global-buffer-overflow on reader.c:177:20" is fixed in this fork
 
+## catppt slide separator (form feed) inconsistency
+- [ ] `basic.ppt` (MS PowerPoint format) outputs a form feed between each slide and after
+  the last slide. `test_LO_file.ppt` (LibreOffice Impress format) only outputs a form
+  feed after the last slide. Root cause: MS PPT stores text in `SlideListWithText` with
+  `SlidePersistAtom` records that trigger `slide_state = START_SLIDE`, while LO PPT
+  stores text in `PPDrawing`/Escher `ClientTextbox` records where there is no equivalent
+  per-slide state transition. Fix would require emitting slide separators when entering
+  each `Slide` container, not just when processing `SlidePersistAtom`.
+
 ## MISC
 - [ ] Incorporate Victor Wagner's notes at https://www.wagner.pp.ru/~vitus/software/catdoc/ into README.md
 
