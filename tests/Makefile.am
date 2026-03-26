@@ -4,11 +4,14 @@
 # File-based tests (each .expected file is a test)
 FILE_TESTS = \
 	basic.doc.expected \
-	basic.ppt.expected \
+	example-3slides.ppt.expected \
 	basic.xls.expected \
-	hungarian.xls.expected \
 	test_LO_file.doc.expected \
 	test_LO_file.ppt.expected \
+	file_example_PPT_1MB.ppt.expected \
+	protection_warning.ppt.expected \
+	test_LO_file.ppt.expected \
+	hungarian.xls.expected \
 	unicode_MS.xls.expected
 
 # Custom tests (scripts that don't follow the file pattern)
