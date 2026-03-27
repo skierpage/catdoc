@@ -1,5 +1,42 @@
 # TODO
 
+## catdoc issues
+
+### medium priority: incomplete/inconsistent input file checking
+
+GitHub issue #9: catdoc doesn't error if you give it a directory to convert; catppt and xls2csv print "/usr is not OLE file or Error" (with no error, exit status is 0). They should consistently fail. Could also check
+
+Unreadable file inconsistency:
+  % catdoc -b  /tmp/unreadable
+prints
+    catdoc: Permission denied
+but
+  % catppt  /tmp/unreadable
+prints the better
+    /tmp/unreadable: Permission denied
+
+Likewise for /tmp/nosuchfile
+
+
+## catppt issues
+
+### low priority: catppt slide separator (form feed) inconsistency
+- [ ] `basic.ppt` (MS PowerPoint format) outputs a form feed between each slide and after
+  the last slide. `test_LO_file.ppt` (LibreOffice Impress format) only outputs a form
+  feed after the last slide. Root cause: MS PPT stores text in `SlideListWithText` with
+  `SlidePersistAtom` records that trigger `slide_state = START_SLIDE`, while LO PPT
+  stores text in `PPDrawing`/Escher `ClientTextbox` records where there is no equivalent
+  per-slide state transition. Fix would require emitting slide separators when entering
+  each `Slide` container, not just when processing `SlidePersistAtom`.
+
+### medium priority: catppt doesn't extract text from chart object
+
+tests/file_example_PPT_1MB.ppt has a chart object on slide 2. catppt does not output the text in the Data Table is not output.
+
+### low priority: "IRM protected" in protection_warning.ppt sample file.
+
+The sample PowerPoint I found and used as a basic .ppt sample test file doesn't show any text in LibreOffice besides "This presentation has been IRM protected by policy." This makes it a bad test file. Maybe it's worth figuring out if there's other text in the file and if this is a special protected PowerPoint feature.
+
 ## CI
 
 ### Fedora RPM automation
@@ -33,10 +70,14 @@
   tool that lets you make your own?
 
 ## Research: consider alternative approaches
+
 This is old C code.
 [ALTERNATIVES](ALTERNATIVES.md) discusses alternate ways to extract text.
 
-## Investigate additional CVEs:
+## Confirm some CVE fixes
+
+v0.97 fixed nearly all outstanding CVEs and memory access errors, see (NEWS)[NEWS] for details.
+But there are a few loose ends
 
 - [ ] Contact rycbar77 and ask for their POC for [CVE-2023-41633](https://nvd.nist.gov/vuln/detail/CVE-2023-41633), "Catdoc v0.95 was discovered to contain a NULL pointer dereference via the component xls2csv at src/fileutil.c.". This may [skierpage/catdoc issue #8](/skierpage/catdoc/issues/8), if so it's fixed by commit e91fef7.
 
@@ -49,28 +90,6 @@ This is old C code.
 - [ ] Review [commits](https://github.com/uvoteam/libdoc/commits/master/) made to the similar C source code in [libdoc](https://github.com/uvoteam/libdoc/) that is based on catdoc.
 
     Note that libdoc [issue #1](https://github.com/uvoteam/libdoc/issues/1) (CVE-2018-20453) and [issue #2](https://github.com/uvoteam/libdoc/issues/2) (CVE-2018-20451) seem to be fixed by catdoc commit 12ab509. This is confusing since user kasha13 claimed these were fixed in libdoc with different source code changes.
-
-## Investigate issues reported against petewarden fork of catdoc
-[petewarden/catdoc](https://github.com/petewarden/catdoc) is a commit of version 0.93 of catdoc,
-dating from around 2010
-- [✅] Analyze [issues](https://github.com/petewarden/catdoc/issues) , including:
-  - [✅] [Issue 3](https://github.com/petewarden/catdoc/issues/3), "change character ก to Ď during xls2csv -d utf-8 /source.xls > desination.csv" may be fixed in this fork, see comment on issue
-  - [✅] [Issue 4](https://github.com/petewarden/catdoc/issues/4), "Heap-buffer-overflow in catdoc version 0.95 (numutils.c)" is fixed as part of Address Sanitizer fixes in this fork
-  - [✅] [Issue 5](https://github.com/petewarden/catdoc/issues/5) "Heap-buffer-overflow in catdoc version 0.95 (numutils.c)" is removed
-  - [✅] [Issue 6](https://github.com/petewarden/catdoc/issues/6) "Global-buffer-overflow in xls2csv" is removed
-  - [✅] [Issue 7](https://github.com/petewarden/catdoc/issues/7) "Buffer overflow in xls2csv (xlsparse.c:716)" is fixed by commit 44daea395; it may have a Debian bug number.
-  - [✅] [Issue 7](https://github.com/petewarden/catdoc/issues/7) "Buffer overflow in xls2csv (xlsparse.c:716)" is fixed by commit 44daea395; it may have a Debian bug number.
-  - [✅] [Issue 9](https://github.com/petewarden/catdoc/issues/9), "catdoc global buffer overflow -- by misuse of the option "-b"" is fixed by commit 1a09fc5
-  - [✅] [Issue 10](https://github.com/petewarden/catdoc/issues/10), "global-buffer-overflow on reader.c:177:20" is fixed in this fork
-
-## catppt slide separator (form feed) inconsistency
-- [ ] `basic.ppt` (MS PowerPoint format) outputs a form feed between each slide and after
-  the last slide. `test_LO_file.ppt` (LibreOffice Impress format) only outputs a form
-  feed after the last slide. Root cause: MS PPT stores text in `SlideListWithText` with
-  `SlidePersistAtom` records that trigger `slide_state = START_SLIDE`, while LO PPT
-  stores text in `PPDrawing`/Escher `ClientTextbox` records where there is no equivalent
-  per-slide state transition. Fix would require emitting slide separators when entering
-  each `Slide` container, not just when processing `SlidePersistAtom`.
 
 ## MISC
 - [ ] Incorporate Victor Wagner's notes at https://www.wagner.pp.ru/~vitus/software/catdoc/ into README.md
