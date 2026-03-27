@@ -34,27 +34,28 @@ ASAN bug tests.
 
 ## Bugs reported against pwarden repo
 
-https://github.com/petewarden/catdoc is the old version 0.93 of catdoc put on GitHub before https://github.com/vbwagner/catdoc (version 0.95) was created.
+[petewarden/catdoc](/petewarden/catdoc) is the old version 0.93 of catdoc put on GitHub before [vbwagner/catdoc](vbwagner/catdoc) (version 0.95) was created.
 
 - cve-2023-31979.test
 
-    This reproduces https://github.com/petewarden/catdoc/issues/9 using test file
+    This reproduces petewarden/catdoc/#9 using test file
     global-buffer-overflow, which became CVE-2023-31979
 
+The other bugs (issues 3-10) [reported against petewarden/catdoc](/petewarden/catdoc/issues) are fixed in later versions of catdoc from vbwagner or in this fork, see comments on those issues.
 
 ## Bugs reported against libdoc
 
-https://github.com/uvoteam/libdoc is based on catdoc sources, so some
+[uvoteam/libdoc](/uvoteam/libdoc) is based on catdoc sources, so some
 bugs reported against it apply to catdoc as well.
 
 - cve-2018-20451.test
 
-    This reproduces https://github.com/uvoteam/libdoc/issues/2 using test file
+    This reproduces uvoteam/libdoc#2 using test file
     libdoc_reader_process_file_203.overflow, which became CVE-2018-20451
 
 - cve-2018-20453.test
 
-    This reproduces https://github.com/uvoteam/libdoc/issues/1 using test file
+    This reproduces uvoteam/libdoc#1 using test file
     libdoc_numutils_getlong_22.overflow, which became CVE-2018-20453
 
 ## Miscellaneous memory access bugs
@@ -71,7 +72,7 @@ bugs reported against it apply to catdoc as well.
 
 ## yangzao bugs
 
-GitHub user @yangzao reported several issues [in vbwagner's catdoc repository](https://github.com/vbwagner/catdoc/issues)
+GitHub user @yangzao reported several issues [in vbwagner's catdoc repository](/vbwagner/catdoc/issues)
 
 
 ### Summary
@@ -86,14 +87,14 @@ and cause the program to exit with error codes, but they no longer trigger ASAN 
 
 GitHub issue | Test File | POC Location | Tool | Current Status | Fixed by | Description |
 ---- | ---- | ---- | ---- | ---- | ---- | ---- |
-[vbwagner #6](https://github.com/vbwagner/catdoc/issues/6) | vbwagner-issue-6.test | vbwagner_issue_6/1 | xls2csv | ✅ PASS | d74d3ac | NULL deref in calcFileBlockOffset() - AccessViolation at ole.c:450/544 |
-[vbwagner #7](https://github.com/vbwagner/catdoc/issues/7) | vbwagner-issue-7.test | vbwagner_issue_7/2 | xls2csv | ✅ PASS | 1aa8a2c | AccessViolation at xlsparse.c:679 (number2string) |
-[vbwagner #8](https://github.com/vbwagner/catdoc/issues/8) | vbwagner-issue-8.test | vbwagner_issue_8/3 | xls2csv | ✅ PASS | 70d2bd1 | heap-buffer-overflow(read) at xlsparse.c:493 |
-[vbwagner #9](https://github.com/vbwagner/catdoc/issues/9) | vbwagner-issue-9.test | vbwagner_issue_9/4 | xls2csv | ✅ PASS | 2c156ed | NULL deref in stradd() - AccessViolation at fileutil.c:124 |
-[vbwagner #10](https://github.com/vbwagner/catdoc/issues/10) | vbwagner-issue-10.test | vbwagner_issue_10/5 | xls2csv | ✅ PASS | 70d2bd1 | AccessViolation at xlsparse.c:438 |
-[vbwagner #11](https://github.com/vbwagner/catdoc/issues/11)/CVE-2017-11110 | vbwagner-issue-11.test | vbwagner_issue_11/6 | xls2csv | ✅ PASS | possibly 7c6fd7b | heap-buffer-overflow(read) at numutils.c:22 |
-[vbwagner #12](https://github.com/vbwagner/catdoc/issues/12) | vbwagner-issue-12.test | vbwagner_issue_12/7 | xls2csv | ✅ PASS | 4c5e43b | global-buffer-overflow(write) at xlsparse.c:608 |
-[vbwagner #13](https://github.com/vbwagner/catdoc/issues/13) | vbwagner-issue-13.test | vbwagner_issue_13/8 | xls2csv | ✅ PASS | 44daea3 | global-buffer-overflow(write) at xlsparse.c:716 |
+vbwagner/catdoc#6 | vbwagner-issue-6.test | vbwagner_issue_6/1 | xls2csv | ✅ PASS | d74d3ac | NULL deref in calcFileBlockOffset() - AccessViolation at ole.c:450/544 |
+vbwagner/catdoc#7 | vbwagner-issue-7.test | vbwagner_issue_7/2 | xls2csv | ✅ PASS | 1aa8a2c | AccessViolation at xlsparse.c:679 (number2string) |
+vbwagner/catdoc#8 | vbwagner-issue-8.test | vbwagner_issue_8/3 | xls2csv | ✅ PASS | 70d2bd1 | heap-buffer-overflow(read) at xlsparse.c:493 |
+vbwagner/catdoc#9 | vbwagner-issue-9.test | vbwagner_issue_9/4 | xls2csv | ✅ PASS | 2c156ed | NULL deref in stradd() - AccessViolation at fileutil.c:124 |
+vbwagner/catdoc#10 | vbwagner-issue-10.test | vbwagner_issue_10/5 | xls2csv | ✅ PASS | 70d2bd1 | AccessViolation at xlsparse.c:438 |
+vbwagner/catdoc#11/CVE-2017-11110 | vbwagner-issue-11.test | vbwagner_issue_11/6 | xls2csv | ✅ PASS | possibly 7c6fd7b | heap-buffer-overflow(read) at numutils.c:22 |
+vbwagner/catdoc#12 | vbwagner-issue-12.test | vbwagner_issue_12/7 | xls2csv | ✅ PASS | 4c5e43b | global-buffer-overflow(write) at xlsparse.c:608 |
+vbwagner/catdoc#13 | vbwagner-issue-13.test | vbwagner_issue_13/8 | xls2csv | ✅ PASS | 44daea3 | global-buffer-overflow(write) at xlsparse.c:716 |
 
 ---
 

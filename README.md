@@ -25,10 +25,14 @@ the text of old MS-Office files.
 user-definable output formats and support for Word97 files, which contain
 UNICODE internally.
 
+## version 0.97.2
+
+This extracts text from many more PowerPoint .ppt files
+
 ## version 0.97
 
 This release of the catdoc programs addresses numerous vulnerabilities
-described below. To do so it has updated autoconf/automake tooling to make it
+described [below](#vulnerabilities). To do so it has updated autoconf/automake tooling to make it
 easier to build with Address Sanitizer, and an automake test harness to check
 for memory errors. The steps to build it from source changed slightly, see
 [INSTALL](INSTALL).

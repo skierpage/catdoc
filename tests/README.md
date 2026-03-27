@@ -2,11 +2,11 @@ Automatic: install following INSTALL instructions, then run `make check`.
 
 Manual: Run each test file through its converter (catdoc for Microsoft Office
 .doc files, pptdoc for .ppt, and xls2csv for .xls) and compare the output the
-corresponding .expected file.
+corresponding .expected file, ignoring whitespace differences.
 
 For example,
 
-    catdoc basic.doc | diff - basic.doc.expected
+    catdoc basic.doc | diff -u --ignore-blank-lines --ignore-trailing-space - basic.doc.expected
 
 ## Test files include:
 unicode_MS.xls  
