@@ -1,13 +1,14 @@
-   0.97.2 in development
+   0.97.2 March 26 2026
 	Fix Tcl incompatibility in wordview GUI wrapper around catdoc.
 	Add the "distribution tarball" created by `make check` as a release
 	asset; other CI automation improvements.
+	Add more PowerPoint sample files to tests.
 	Fix empty catppt output from many PowerPoint files (issue #6) including 
 	LibreOffice Impress documents saved in .ppt format (issue #7) by
 	processing ClientTextboxes in PPDrawing records.
 	Don't print spurious theme names (e.g. "Office Theme", "Default
 	Design") in PowerPoint files that appear as CString records in master
-	slides rather than slide content.
+	slides.
 
    0.97.1 March 21 2026
 	Clean up address sanitizer tests.
