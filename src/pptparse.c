@@ -164,6 +164,10 @@ static void process_item (int rectype, long reclen, FILE* input) {
 		long text_len;
 
 		DBGPRINT("TextCharsAtom/CString, reclen=%ld", reclen);
+		if (!in_slide) {
+			catdoc_seek(input, reclen, SEEK_CUR);
+			break;
+		}
 		start_text_out();
 		text_len=reclen/2;
 		for(i=0; i < text_len; i++) {

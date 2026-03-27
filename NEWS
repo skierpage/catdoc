@@ -1,12 +1,13 @@
-   0.97.3 in development
-	Fix empty catppt output from LibreOffice Impress documents saved in
-	.ppt format and other .ppt files by processing ClientTextboxes in
-	PPDrawing records.
-
-   0.97.2 March 24 2026
+   0.97.2 in development
 	Fix Tcl incompatibility in wordview GUI wrapper around catdoc.
 	Add the "distribution tarball" created by `make check` as a release
 	asset; other CI automation improvements.
+	Fix empty catppt output from many PowerPoint files (issue #6) including 
+	LibreOffice Impress documents saved in .ppt format (issue #7) by
+	processing ClientTextboxes in PPDrawing records.
+	Don't print spurious theme names (e.g. "Office Theme", "Default
+	Design") in PowerPoint files that appear as CString records in master
+	slides rather than slide content.
 
    0.97.1 March 21 2026
 	Clean up address sanitizer tests.
@@ -39,9 +40,11 @@
 	Developed test framework for memory access errors caught by 
 	address sanitizer.
 	Fixed CVE-2023-31979 global buffer overflow vulnerability in the
-	process_file function in src/reader.c.
-	This also addresses CVE-2018-20451 and CVE-2018-20453 that were found
-	in libdoc (based on catdoc) and were also present in catdoc.
+	process_file function in src/reader.c, reported as issue 9 in
+	petewarden's early catdoc repo on GitHub. This also addresses bugs
+	CVE-2018-20451 and CVE-2018-20453 found in libdoc (based on catdoc),
+	that were also present in catdoc.
+
 	Fixed NULL derefence if charset directory is empty (issue #8), which
 	may be the same bug as CVE-2023-41633.
 	Fixed memory leak in charset handling.
