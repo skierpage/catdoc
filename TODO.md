@@ -62,6 +62,37 @@ The sample PowerPoint I found and used as a basic .ppt sample test file doesn't 
   happening in a different code path. The leaks are small and occur at program exit, so this
   may be "won't fix".
 
+## Project management
+This project is a fork of https://github.com/vbwagner/catdoc . Because that project went ~9 years without an update (2016–2025), there are bug reports and patches floating all over GitHub forks, CVE reports, and the bug and patch trackers of various Linux distros. I _think_ I have analyzed and addressed most of these up to early 2026, but it is exhausting having to check all of these for updates.
+
+### Repos, bug trackers, and patch lists to consult
+| Name/URL | Comment | Last checked |
+| --- | --- | --- |
+| [vbwagner's catdoc](https://github.com/vbwagner/catdoc) | Upstream. Was inactive 2016–2025; a few fixes appeared Nov 2025. Has open issues from yangzao and others. Also has a git mirror at http://wagner.pp.ru/git/oss/catdoc | 2026-03 |
+| [petewarden's catdoc](https://github.com/petewarden/catdoc) | Early out-of-date fork with multiple bug reports; most have been incorporated | 2026-03 |
+| [uvoteam/libdoc](https://github.com/uvoteam/libdoc) | Based on catdoc source; has CVE-related issues #1 (CVE-2018-20453) and #2 (CVE-2018-20451) | 2025 |
+| [Debian package tracker](https://tracker.debian.org/pkg/catdoc) | Central Debian page; patches live in [Salsa git](https://salsa.debian.org/debian/catdoc) | 2026-03 |
+| [Debian bug tracker](https://bugs.debian.org/cgi-bin/pkgreport.cgi?pkg=catdoc) | Individual Debian bug reports; several old ones (327905, 363541, 383576, 878330, 878334, 904291+) already applied | 2026-03 |
+| [Fedora package source](https://src.fedoraproject.org/rpms/catdoc) | Fedora/RHEL RPM spec and any downstream patches | 2025 |
+| [Fedora bugzilla](https://bugzilla.redhat.com/buglist.cgi?product=Fedora&component=catdoc) | Fedora-specific bug reports | never |
+| [OpenSUSE OBS package](https://build.opensuse.org/package/show/openSUSE:Factory/catdoc) | Has patches (e.g. CVE-2017-11110 patch already applied) | 2025 |
+| [Arch AUR](https://aur.archlinux.org/packages/catdoc) | Community package; check for downstream patches | never |
+| [Victor Wagner's site](https://www.wagner.pp.ru/~vitus/software/catdoc/) | Original author's page with notes not yet in README | never |
+
+### Approach to scanning for changes
+
+The table above has too many URLs to check manually on any regular basis. Options:
+
+- **GitHub repos** (vbwagner, petewarden, libdoc): Use `gh api` to check for new issues since a given date:
+  ```sh
+  gh api 'repos/vbwagner/catdoc/issues?state=open&since=2026-01-01' --jq '.[].html_url'
+  ```
+  Could wrap all three repos in a script `local/check-upstreams.sh`.
+
+- **Distro trackers** (Debian, Fedora, openSUSE, Arch): These don't have a convenient API. Best approach is a Claude `/schedule` agent that runs `WebFetch` on each URL monthly and summarizes changes, or manually bump "Last checked" dates after a periodic review.
+
+- **Automated option**: Add a GitHub Actions cron workflow that runs the `gh api` checks weekly and opens an issue in this repo if new upstream issues are found.
+
 ## Research: find more Office 2007 test files
 
 - [ ] Do the Gnome LocalSearch (formerly Tracker), KFileMetadata, and LibreOffice projects have test
