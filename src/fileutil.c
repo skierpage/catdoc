@@ -13,6 +13,7 @@
 #include <sys/stat.h>
 #include <stdlib.h>
 #include "catdoc.h"
+#include "ole.h"
 #if defined(_WIN32)
 #include <dir.h>
 #include <dos.h>
@@ -106,6 +107,36 @@ void check_charset(char **filename,const char *charset) {
 	} 
 	fprintf(stderr, "charset %s not found\n", charset);
 	exit(1);
+}
+
+/************************************************************************/
+/* Opens an Office 97 binary file. Returns NULL with an error to       */
+/* stderr if the path is a directory, inaccessible, empty, or smaller  */
+/* than BBD_BLOCK_SIZE bytes. Returns an open FILE* on success.        */
+/************************************************************************/
+FILE *open_ole_file(const char *filename) {
+	struct stat st;
+	if (stat(filename, &st) != 0) {
+		perror(filename);
+		return NULL;
+	}
+	if (S_ISDIR(st.st_mode)) {
+		fprintf(stderr, "%s: is a directory\n", filename);
+		return NULL;
+	}
+	if (st.st_size == 0) {
+		fprintf(stderr, "%s: file is empty\n", filename);
+		return NULL;
+	}
+	if (st.st_size < (off_t)BBD_BLOCK_SIZE) {
+		fprintf(stderr, "%s: file too small (%ld bytes) to be an Office document\n",
+			filename, (long)st.st_size);
+		return NULL;
+	}
+	FILE *f = fopen(filename, "rb");
+	if (!f)
+		perror(filename);
+	return f;
 }
 
 /**********************************************************************/

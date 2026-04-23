@@ -46,6 +46,7 @@ int main(int argc, char *argv[])
 	short int *tmp_charset;
 	int c;
 	int i;
+	int retcode = 0;
 	char *tempname;
 	read_config_file(SYSTEMRC);
 #ifdef USERRC
@@ -151,10 +152,10 @@ int main(int argc, char *argv[])
 	}	
 	for (i=optind;i<argc;i++) {
 		filename = argv[i];
-		input=fopen(filename,"rb");
+		input=open_ole_file(filename);
 		if (!input) {
-			perror(filename);
-			exit(1);
+			retcode=1;
+			continue;
 		}
 		if ((new_file=ole_init(input, NULL, 0)) != NULL) {
 			set_ole_func();
@@ -166,15 +167,17 @@ int main(int argc, char *argv[])
 						|| strcasecmp(((oleEntry*)ole_file)->name,"Book") == 0) {
 						do_table(ole_file,filename);
 					}
-				} 
+				}
 				ole_close(ole_file);
 			}
 			set_std_func();
 			ole_finish();
 			fclose(new_file);
 		} else {
-			fprintf(stderr, "%s is not OLE file or Error\n", filename);
+			fprintf(stderr, "%s: not an OLE file\n", filename);
+			fclose(input);
+			retcode=1;
 		}
 	}
-	return 0;
+	return retcode;
 }

@@ -157,10 +157,9 @@ int main(int argc, char **argv) {
 			analyze_format(stdin);
 			stdin_processed=1;
 		} else {
-			f=fopen(argv[i],"rb");
+			f=open_ole_file(argv[i]);
 			if (!f) {
 				c=1;
-				perror("catdoc");
 				continue;
 			}
 			if (input_buffer) {

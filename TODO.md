@@ -2,22 +2,6 @@
 
 ## catdoc issues
 
-### medium priority: incomplete/inconsistent input file checking
-
-GitHub issue #9: catdoc doesn't error if you give it a directory to convert; catppt and xls2csv print "/usr is not OLE file or Error" (with no error, exit status is 0). They should consistently fail. Could also check
-
-Unreadable file inconsistency:
-  % catdoc -b  /tmp/unreadable
-prints
-    catdoc: Permission denied
-but
-  % catppt  /tmp/unreadable
-prints the better
-    /tmp/unreadable: Permission denied
-
-Likewise for /tmp/nosuchfile
-
-
 ## catppt issues
 
 ### low priority: catppt slide separator (form feed) inconsistency
