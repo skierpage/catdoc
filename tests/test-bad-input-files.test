@@ -1,0 +1,105 @@
+#!/bin/bash
+# Test error handling when catppt is given bad input files
+# Verifies that catppt:
+# 1. Reports an error for each bad file and continues (does not exit early)
+# 2. Still produces output from valid files after encountering errors
+# 3. Exits non-zero when any input file fails
+# 4. Rejects zero-length and too-small files with non-zero exit
+# Covers GitHub issue #9
+
+set -e
+
+: ${srcdir=.}
+
+TOOL="../src/catppt"
+GOODFILE="${srcdir}/example-3slides.ppt"
+
+if [ ! -x "$TOOL" ]; then
+    echo "ERROR: Required tool not found: $TOOL" >&2
+    exit 1
+fi
+
+if [ ! -f "$GOODFILE" ]; then
+    echo "ERROR: Test file not found: $GOODFILE" >&2
+    exit 1
+fi
+
+TEMPFORTEST=$(mktemp -d)
+trap 'rm -rf "$TEMPFORTEST"' EXIT  # cancelled below on failure so artifacts can be inspected
+
+touch "$TEMPFORTEST/zerolengthfile"
+mkdir "$TEMPFORTEST/somedirectory"
+# 100 bytes of zeros: too small to contain a valid OLE header (minimum 512 bytes)
+dd if=/dev/zero bs=100 count=1 of="$TEMPFORTEST/toosmallfile" 2>/dev/null
+# "$TEMPFORTEST/nosuchfile" intentionally not created
+
+FAIL=0
+
+# --- Test 1: continues past errors and processes valid file ---
+
+"$TOOL" "$TEMPFORTEST/nosuchfile" "$TEMPFORTEST/zerolengthfile" \
+    "$TEMPFORTEST/somedirectory" "$GOODFILE" \
+    >"$TEMPFORTEST/stdout" 2>"$TEMPFORTEST/stderr" && EXIT_CODE=0 || EXIT_CODE=$?
+
+if [ "$EXIT_CODE" -eq 0 ]; then
+    echo "FAIL: expected non-zero exit when some files fail, got 0" >&2
+    FAIL=1
+fi
+
+# The valid file's output must appear even though earlier files failed.
+# If catppt exit(1)s on the first bad file, stdout will be empty.
+if ! grep -q "Example file" "$TEMPFORTEST/stdout"; then
+    echo "FAIL: no output from valid file -- catppt likely exited early on first error" >&2
+    echo "  stdout: $(head -3 "$TEMPFORTEST/stdout")" >&2
+    FAIL=1
+fi
+
+if ! grep -q "nosuchfile" "$TEMPFORTEST/stderr"; then
+    echo "FAIL: expected error message for non-existent file in stderr" >&2
+    echo "  stderr: $(cat "$TEMPFORTEST/stderr")" >&2
+    FAIL=1
+fi
+
+if ! grep -q "is a directory" "$TEMPFORTEST/stderr"; then
+    echo "FAIL: expected 'is a directory' error for directory argument" >&2
+    echo "  stderr: $(cat "$TEMPFORTEST/stderr")" >&2
+    FAIL=1
+fi
+
+# --- Test 2: zero-length file is rejected with non-zero exit ---
+
+"$TOOL" "$TEMPFORTEST/zerolengthfile" \
+    >"$TEMPFORTEST/stdout2" 2>"$TEMPFORTEST/stderr2" && EXIT_CODE=0 || EXIT_CODE=$?
+
+if [ "$EXIT_CODE" -eq 0 ]; then
+    echo "FAIL: expected non-zero exit for zero-length file, got 0" >&2
+    echo "  stderr: $(cat "$TEMPFORTEST/stderr2")" >&2
+    FAIL=1
+fi
+
+if [ ! -s "$TEMPFORTEST/stderr2" ]; then
+    echo "FAIL: expected error message on stderr for zero-length file, got none" >&2
+    FAIL=1
+fi
+
+# --- Test 3: file smaller than OLE header (512 bytes) is rejected ---
+
+"$TOOL" "$TEMPFORTEST/toosmallfile" \
+    >"$TEMPFORTEST/stdout3" 2>"$TEMPFORTEST/stderr3" && EXIT_CODE=0 || EXIT_CODE=$?
+
+if [ "$EXIT_CODE" -eq 0 ]; then
+    echo "FAIL: expected non-zero exit for file smaller than OLE header, got 0" >&2
+    echo "  stderr: $(cat "$TEMPFORTEST/stderr3")" >&2
+    FAIL=1
+fi
+
+if [ ! -s "$TEMPFORTEST/stderr3" ]; then
+    echo "FAIL: expected error message on stderr for too-small file, got none" >&2
+    FAIL=1
+fi
+
+if [ $FAIL -ne 0 ]; then
+    echo "  (test artifacts left in $TEMPFORTEST for inspection)" >&2
+    trap - EXIT
+fi
+exit $FAIL

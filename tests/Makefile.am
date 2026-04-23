@@ -19,6 +19,7 @@ FILE_TESTS = \
 # the catdoc programs are built with Address Sanitizer (configure with --enable-asan)
 CUSTOM_TESTS = test-charsetpath.test \
 	test-mac-roman-output.test \
+	test-bad-input-files.test \
 	asan_failures/test-empty-charsetpath.test \
 	asan_failures/test-memory-leaks.test \
 	asan_failures/cve-2023-31979.test \
@@ -58,6 +59,7 @@ XFAIL_TESTS =
 check_SCRIPTS = run-single-test.sh \
 	test-charsetpath.test \
 	test-mac-roman-output.test \
+	test-bad-input-files.test \
 	asan_failures/test-empty-charsetpath.test \
 	asan_failures/test-memory-leaks.test \
 	asan_failures/cve-2023-31979.test \
@@ -82,6 +84,7 @@ EXTRA_DIST = \
 	test-charsetpath.test \
 	test_charsets \
 	test-mac-roman-output.test \
+	test-bad-input-files.test \
 	asan_failures/global-buffer-overflow \
 	asan_failures/libdoc_reader_process_file_203.overflow \
 	asan_failures/libdoc_numutils_getlong_22.overflow \
