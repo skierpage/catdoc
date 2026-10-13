@@ -127,6 +127,7 @@ int main(int argc, char *argv[]) {
 			help();
 			exit(0);
 		}    
+		set_std_func();
 		do_ppt(stdin,"STDIN");
 		exit (0);
 	}	
