@@ -1,0 +1,34 @@
+#!/bin/bash
+# Test that catdoc does not loop forever (growing memory) on an OLE file whose
+# directory/FAT chain contains a cycle (ole-cycle.doc).
+# Uses timeout(1) so it works with or without Address Sanitizer builds.
+
+: ${srcdir=.}
+
+TOOL="../src/catdoc"
+BADFILE="${srcdir}/ole-cycle.doc"
+TIMEOUT_SECS=10
+
+if [ ! -x "$TOOL" ]; then
+    echo "ERROR: Required tool not found: $TOOL" >&2
+    exit 1
+fi
+
+if [ ! -f "$BADFILE" ]; then
+    echo "ERROR: Test file not found: $BADFILE" >&2
+    exit 1
+fi
+
+# The fixed catdoc rejects the file immediately; exit status is not checked
+# except for timeouts and crashes.
+timeout -k 2 "$TIMEOUT_SECS" "$TOOL" "$BADFILE" >/dev/null 2>&1
+EXIT_CODE=$?
+
+if [ "$EXIT_CODE" -eq 124 ] || [ "$EXIT_CODE" -eq 137 ]; then
+    echo "FAIL: catdoc still running after ${TIMEOUT_SECS}s on $BADFILE (endless loop)" >&2
+    exit 1
+elif [ "$EXIT_CODE" -ge 128 ]; then
+    echo "FAIL: catdoc killed by signal $((EXIT_CODE - 128)) on $BADFILE" >&2
+    exit 1
+fi
+exit 0
