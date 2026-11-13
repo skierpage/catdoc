@@ -318,6 +318,11 @@ FILE* ole_init(FILE *f, void *buffer, size_t bufSize)  {
 				  return NULL;
 			}
 			propLen++;
+			if (propLen > fileLength / sectorSize) {
+				/* the FAT chain is longer than the file: it loops */
+				ole_finish();
+				return NULL;
+			}
 			if (propLen >= propMaxLen) {
 				unsigned char *newProp;
 
