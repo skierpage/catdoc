@@ -137,6 +137,13 @@ int prev_rectype=0;
  */
 unsigned char **saved_reference = NULL;
 
+/* allocate() may realloc and move the sheet's cell arrays, which would leave
+ * saved_reference dangling, so always clear it first. */
+static unsigned char **alloc_cell(int row, int col) {
+	saved_reference=NULL;
+	return allocate(row,col);
+}
+
 /* return 0 on error and 1 on success */
 static int saveSstBoundary(int boundary) {
 	int *p;
@@ -258,18 +265,17 @@ void process_item (uint16_t rectype, uint16_t reclen, unsigned char *rec) {
 		unsigned char **pcell;
 		unsigned char *src=(unsigned char *)rec+6;
 
-		saved_reference=NULL;
 		row = getshort(rec,0); 
 		col = getshort(rec,2);
 		/* 		fprintf(stderr,"LABEL!\n"); */
-		pcell=allocate(row,col);
+		pcell=alloc_cell(row,col);
 		*pcell=copy_unicode_string(&src, 0, rec, rec + reclen);
 		break;
 	}     
 	case BLANK: { int row,col;unsigned char **pcell;
 			row = getshort(rec,0);
 			col = getshort(rec,2);
-			pcell=allocate(row,col);
+			pcell=alloc_cell(row,col);
 			*pcell=NULL;
 			break;
 	}
@@ -279,7 +285,7 @@ void process_item (uint16_t rectype, uint16_t reclen, unsigned char *rec) {
 		row = getshort(rec,0);
 		startcol = getshort(rec,2);
 		endcol=getshort(rec,reclen-2);
-		pcell=allocate(row,endcol);
+		pcell=alloc_cell(row,endcol);
 		*pcell=NULL;
 		(void)startcol;
 		break;
@@ -295,8 +301,7 @@ void process_item (uint16_t rectype, uint16_t reclen, unsigned char *rec) {
 		}    
 		/* 									fprintf(stderr,"col=%d row=%d no=%d\n",col,row,string_no); */
 									
-		saved_reference=NULL;
-		pcell=allocate(row,col);
+		pcell=alloc_cell(row,col);
 		if (string_no>=sstsize|| string_no < 0 ) {
 			fprintf(stderr,"string index out of boundary\n"); 
 			exit(1);	 
@@ -320,10 +325,9 @@ void process_item (uint16_t rectype, uint16_t reclen, unsigned char *rec) {
 		int row,col;
 		unsigned char **pcell;
 
-		saved_reference=NULL;
 		row = getshort(rec,0)-startrow; 
 		col = getshort(rec,2);
-		pcell=allocate(row,col);
+		pcell=alloc_cell(row,col);
 		*pcell=(unsigned char *)strdup(format_double(rec,6,getshort(rec,4)));
 		break;
 	}
@@ -333,7 +337,7 @@ void process_item (uint16_t rectype, uint16_t reclen, unsigned char *rec) {
 
 		row = getshort(rec,0)-startrow;
 		col = getshort(rec,2);
-		pcell=allocate(row,col);
+		pcell=alloc_cell(row,col);
 		*pcell=(unsigned char *)strdup(format_int(getshort(rec,7),getshort(rec,4)));		  
 		break;
 
@@ -349,7 +353,7 @@ void process_item (uint16_t rectype, uint16_t reclen, unsigned char *rec) {
 		}
 		row = getshort(rec,0)-startrow;
 		col = getshort(rec,2);
-		pcell=allocate(row,col);
+		pcell=alloc_cell(row,col);
 		format_code = getshort(rec,4);
 		*pcell=(unsigned char *)strdup(format_rk(rec+6,format_code));
 		break;
@@ -367,7 +371,7 @@ void process_item (uint16_t rectype, uint16_t reclen, unsigned char *rec) {
 				fprintf(stderr, "Warning: MULRK record data truncated\n");
 				break;
 			}
-			pcell=allocate(row,col);
+			pcell=alloc_cell(row,col);
 			format_code=getshort(rec,offset);
 			*pcell=(unsigned char *)strdup(format_rk(rec+offset+2,format_code));
 
@@ -377,10 +381,9 @@ void process_item (uint16_t rectype, uint16_t reclen, unsigned char *rec) {
 	case FORMULA: { 
 		int row,col;
 		unsigned char **pcell;
-		saved_reference=NULL;
 		row = getshort(rec,0)-startrow; 
 		col = getshort(rec,2);
-		pcell=allocate(row,col);
+		pcell=alloc_cell(row,col);
 		if (((unsigned char)rec[12]==0xFF)&&(unsigned char)rec[13]==0xFF) {
 			/* not a floating point value */
 			if (rec[6]==1) {
