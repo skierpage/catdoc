@@ -258,6 +258,12 @@ FILE* ole_init(FILE *f, void *buffer, size_t bufSize)  {
 			}
 
 			sbdLen++;
+			/* A valid chain can't have more sectors than the file, so exceeding that means the chain loops. */
+			if (sbdLen > fileLength / sectorSize) {
+				fprintf(stderr, "Broken OLE file: mini-FAT sector chain loops\n");
+				ole_finish();
+				return NULL;
+			}
 			if (sbdLen >= sbdMaxLen) {
 				unsigned char *newSBD;
 
@@ -276,7 +282,7 @@ FILE* ole_init(FILE *f, void *buffer, size_t bufSize)  {
 					return NULL;
 				}
 			}
-			if (sbdCurrent * 4 > bbdSize) {
+			if (sbdCurrent * 4 >= bbdSize) {
 				ole_finish();
 				return NULL;
 			}
@@ -318,8 +324,9 @@ FILE* ole_init(FILE *f, void *buffer, size_t bufSize)  {
 				  return NULL;
 			}
 			propLen++;
+			/* A valid chain can't have more sectors than the file, so exceeding that means the chain loops. */
 			if (propLen > fileLength / sectorSize) {
-				/* the FAT chain is longer than the file: it loops */
+				fprintf(stderr, "Broken OLE file: directory sector chain loops\n");
 				ole_finish();
 				return NULL;
 			}
@@ -368,7 +375,8 @@ FILE* ole_init(FILE *f, void *buffer, size_t bufSize)  {
 	propCurNumber = 0;
 	fseek(newfile, 0, SEEK_SET);
 	if (!rootEntry) {
-		fprintf(stderr,"Broken OLE structure. Cannot find root entry in this file!\n");		ole_finish();
+		fprintf(stderr,"Broken OLE structure. Cannot find root entry in this file!\n");
+		ole_finish();
 		return NULL;
 	}
 	return newfile;
