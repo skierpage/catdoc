@@ -55,7 +55,7 @@ EXPECTED_LOG_COMPILER = $(srcdir)/run-single-test.sh
 TEST_LOG_COMPILER =
 
 # Expected test failures (known bugs not fixed yet)
-XFAIL_TESTS = xls-uaf.test
+XFAIL_TESTS =
 
 # Scripts needed for testing
 check_SCRIPTS = run-single-test.sh \
