@@ -20,6 +20,8 @@ FILE_TESTS = \
 CUSTOM_TESTS = test-charsetpath.test \
 	test-mac-roman-output.test \
 	test-bad-input-files.test \
+	ole-cycle.test \
+	xls-uaf.test \
 	asan_failures/test-empty-charsetpath.test \
 	asan_failures/test-memory-leaks.test \
 	asan_failures/cve-2023-31979.test \
@@ -53,13 +55,15 @@ EXPECTED_LOG_COMPILER = $(srcdir)/run-single-test.sh
 TEST_LOG_COMPILER =
 
 # Expected test failures (known bugs not fixed yet)
-XFAIL_TESTS =
+XFAIL_TESTS = xls-uaf.test
 
 # Scripts needed for testing
 check_SCRIPTS = run-single-test.sh \
 	test-charsetpath.test \
 	test-mac-roman-output.test \
 	test-bad-input-files.test \
+	ole-cycle.test \
+	xls-uaf.test \
 	asan_failures/test-empty-charsetpath.test \
 	asan_failures/test-memory-leaks.test \
 	asan_failures/cve-2023-31979.test \
@@ -85,6 +89,8 @@ EXTRA_DIST = \
 	test_charsets \
 	test-mac-roman-output.test \
 	test-bad-input-files.test \
+	ole-cycle.test \
+	xls-uaf.test \
 	asan_failures/global-buffer-overflow \
 	asan_failures/libdoc_reader_process_file_203.overflow \
 	asan_failures/libdoc_numutils_getlong_22.overflow \

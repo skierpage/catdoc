@@ -1,0 +1,5 @@
+#!/bin/bash
+# Test for heap-use-after-free at xlsparse.c:410 in process_item (xls-uaf.xls)
+# Needs an Address Sanitizer build; skipped otherwise (handled by test-asan-bug.sh).
+
+exec "$(dirname "$0")/asan_failures/test-asan-bug.sh" xls_uaf xls2csv ../xls-uaf.xls "heap-use-after-free at xlsparse.c:410"
