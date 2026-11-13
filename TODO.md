@@ -2,6 +2,24 @@
 
 ## catdoc issues
 
+### Fix compiler warnings
+- [ ] Fix the compiler warnings in the build (e.g. the `-Wdiscarded-qualifiers` warning in
+  `fileutil.c`).
+
+### Create a test .doc that triggers the mini-FAT (SBD) chain loop
+- [ ] `tests/ole-cycle.doc` only exercises the directory chain loop in `ole_init()`. Fabricate a
+  .doc (e.g. patch a valid one with a script) whose header SBD start sector (offset 0x3c) is
+  > 0 and whose FAT entry for that sector points to itself, and add a test like
+  `tests/ole-cycle.test`, to cover the SBD loop bound.
+
+### Create test .xls files for the stale `saved_reference` fixes in xlsparse.c
+- [ ] `tests/xls-uaf.xls` only covers a STRING record after a BOF that frees the sheet. Fabricate
+  .xls files (patch a valid one) for the other cases, run under ASan:
+  - a string FORMULA, then EOF (MSEOF frees the sheet), then a STRING record;
+  - a string FORMULA, then an INTEGER_CELL, BLANK or MULBLANK whose `alloc_cell()` call
+    reallocs and moves the cell arrays, then a STRING record.
+  These fixes are currently untested beyond reading the code.
+
 ## catppt issues
 
 ### low priority: catppt slide separator (form feed) inconsistency
