@@ -419,6 +419,7 @@ void process_item (uint16_t rectype, uint16_t reclen, unsigned char *rec) {
                         print_sheet();
 			free_sheet();
 		}
+		saved_reference=NULL;
 		break;
 	}	  
 	case XF_4P:
@@ -452,6 +453,7 @@ void process_item (uint16_t rectype, uint16_t reclen, unsigned char *rec) {
 		if (!rowptr) break;
 		print_sheet();
 		free_sheet();
+		saved_reference=NULL;
 		break;
 	}
 	case ROW: { 
