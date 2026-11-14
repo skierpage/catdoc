@@ -1,3 +1,18 @@
+   0.97.3 November 14 2026
+	Fix endless loop and unbounded memory growth in OLE files whose
+	directory or mini-FAT sector chain loops (vbwagner issue #20), found
+	and fixed by DicksonWu654. Print an error message for such files.
+	Fix xls2csv heap-use-after-free when a STRING record follows a
+	string FORMULA record after a BOF or EOF record, or after a record
+	that reallocates the cell arrays (vbwagner issue #19), found and fixed
+	by DicksonWu654.
+	Fix off-by-one in checking mini-FAT sector index.
+	Fix inconsistent and incorrect handling of bad input files such as
+	directories, empty files and files too small to be OLE files (issue
+	#9).
+	Add regression tests for the above.
+	Add a list of catdoc repos, bug trackers, and packages to TODO.md.
+
    0.97.2 March 26 2026
 	Fix Tcl incompatibility in wordview GUI wrapper around catdoc.
 	Add the "distribution tarball" created by `make check` as a release

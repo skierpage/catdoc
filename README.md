@@ -1,4 +1,4 @@
-# catdoc version 0.97.2
+# catdoc version 0.97.3
 
 `catdoc` is a program which reads MS-Office Word `.doc` files and prints their
 content as readable ASCII text to stdout.  It can also produce correct
@@ -25,6 +25,12 @@ the text of old MS-Office files.
 user-definable output formats and support for Word97 files, which contain
 UNICODE internally.
 
+## version 0.97.3
+
+This fixes an endless loop on OLE files with a cyclic sector chain and a
+use-after-free in `xls2csv`, both found by DicksonWu654, and gives clear
+errors for directories and too-small input files.
+
 ## version 0.97.2
 
 This extracts text from many more PowerPoint .ppt files
@@ -39,6 +45,8 @@ for memory errors. The steps to build it from source changed slightly, see
 
 [vbwagner's upstream]() came back to life after a 9 year absence with a couple
 of fixes in November 2025; this fork incorporates them. 
+
+See [NEWS](NEWS) and `git log` for changes in earlier releases.
 
 ### End of DOS support
 

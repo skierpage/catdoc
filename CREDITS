@@ -17,6 +17,15 @@ Robert Zavalczki <robert.zavalczki@gmail.com>
    xls2csv
 Nick Bane <nick@enomem.co.uk>
    amd64 fixes
+DicksonWu654 (GitHub user)
+   Found and fixed an endless loop on cyclic OLE sector chains and a
+   use-after-free in xls2csv, and provided test files, in 2026
+yangzao (GitHub user)
+   Reported eight memory access bugs in the vbwagner/catdoc repository
+   and provided test files, see tests/asan_failures/README.md
+Dean Pierce
+   Found many crashes by AFL fuzzing in 2015 and reported them to the
+   oss-sec mailing list, see tests/asan_failures/README.md
 
 Earlier contributors prior to 2006 or so:
 
