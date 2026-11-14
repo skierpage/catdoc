@@ -13,7 +13,9 @@ Typically you should run:
 
 to compile and install catdoc. You may need to run `make install` as the
 super-user (root), thus e.g. run `sudo make install` if you get permission
-errors.
+errors. To install somewhere else, e.g. into your home directory so you don't
+need root, give `./configure` a different prefix such as
+`./configure --prefix=$HOME/catdoc`.
 
 You can also build from the distribution tarball for a particular release,
 which requires only `make` and a C compiler. The steps are the same except
@@ -33,6 +35,11 @@ standard --prefix,  --exec-prefix and so on)
           which requires X11. (note, it would be disabled automatically,
 	  if you don't have appropriate version of Tcl/Tk). You may
 	  wish to use this if you don't have X installed.
+
+--enable-asan - builds the programs with GCC or Clang's Address Sanitizer,
+	  which detects memory errors at run time. Some tests (e.g. those in
+	  tests/asan_failures) only run in such a build. It makes the programs
+	  slower and larger, so don't use it for normal installs.
 
 --with-wish=path - specifies path to wish interpreter. This option have
           two uses
