@@ -773,3 +773,41 @@ void set_std_func(void) {
 	catdoc_tell=ftell;
 }
 
+/**
+ * Calls handler() on each stream of an OLE file whose name is name1 or
+ * (if it is not NULL) name2, ignoring case. The file may be standard input
+ * and need not be seekable. Closes the file.
+ *
+ * @param input the file
+ * @param filename its name, for messages
+ * @param name1 name of the stream to process
+ * @param name2 alternative name of the stream, or NULL
+ * @param handler function to call on each matching stream
+ *
+ * @return 0 on success, 1 if input is not an OLE file
+ */
+int ole_process_streams(FILE *input, char *filename, const char *name1,
+		const char *name2, void (*handler)(FILE *stream, char *filename)) {
+	FILE *new_file, *ole_file;
+	if ((new_file=ole_init(input, NULL, 0)) == NULL) {
+		fprintf(stderr, "%s: not an OLE file\n", filename);
+		fclose(input);
+		return 1;
+	}
+	set_ole_func();
+	while((ole_file=ole_readdir(new_file)) != NULL) {
+		int res=ole_open(ole_file);
+/* 		fprintf(stderr, "name = %s\n", ((oleEntry*)ole_file)->name); */
+		if (res >= 0) {
+			if (strcasecmp(((oleEntry*)ole_file)->name, name1) == 0
+				|| (name2 && strcasecmp(((oleEntry*)ole_file)->name, name2) == 0)) {
+				handler(ole_file,filename);
+			}
+		}
+		ole_close(ole_file);
+	}
+	set_std_func();
+	ole_finish();
+	fclose(new_file);
+	return 0;
+}

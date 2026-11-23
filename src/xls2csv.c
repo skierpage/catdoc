@@ -38,15 +38,19 @@ void help (void) {
    mappings are applied i.e. TeX special chars like %
    */
 char *input_buffer, *output_buffer;
+
+/*
+ * Prints the workbook of an OLE file, which may be standard input.
+ * Returns 0 on success, 1 if it is not an OLE file.
+ */
+static int process_xls(FILE *input, char *filename) {
+	return ole_process_streams(input,filename,"Workbook","Book",do_table);
+}
+
 int main(int argc, char *argv[])
 {
-	FILE *input;
-	FILE *new_file, *ole_file;
-	char *filename =NULL;
 	short int *tmp_charset;
 	int c;
-	int i;
-	int retcode = 0;
 	char *tempname;
 	read_config_file(SYSTEMRC);
 #ifdef USERRC
@@ -142,43 +146,10 @@ int main(int argc, char *argv[])
 				REPL_EXT);
 		exit(1);
 	}  
-	if (optind>=argc) {
-		if (isatty(fileno(stdin))) {
-			help();
-			exit(0);
-		}    
-		set_std_func();
-		do_table(stdin,"STDIN");
-		exit (0);
-	}	
-	for (i=optind;i<argc;i++) {
-		filename = argv[i];
-		input=open_ole_file(filename);
-		if (!input) {
-			retcode=1;
-			continue;
-		}
-		if ((new_file=ole_init(input, NULL, 0)) != NULL) {
-			set_ole_func();
-			while((ole_file=ole_readdir(new_file)) != NULL) {
-				int res=ole_open(ole_file);
-/* 				fprintf(stderr, "name = %s\n", ((oleEntry*)ole_file)->name); */
-				if (res >= 0) {
-					if (strcasecmp(((oleEntry*)ole_file)->name , "Workbook") == 0
-						|| strcasecmp(((oleEntry*)ole_file)->name,"Book") == 0) {
-						do_table(ole_file,filename);
-					}
-				}
-				ole_close(ole_file);
-			}
-			set_std_func();
-			ole_finish();
-			fclose(new_file);
-		} else {
-			fprintf(stderr, "%s: not an OLE file\n", filename);
-			fclose(input);
-			retcode=1;
-		}
+	set_std_func();
+	if (optind>=argc && isatty(fileno(stdin))) {
+		help();
+		exit(0);
 	}
-	return retcode;
+	return process_files(argc,argv,optind,process_xls);
 }

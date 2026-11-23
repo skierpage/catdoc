@@ -184,6 +184,8 @@ extern int unknown_as_hex;
 char *find_file(char *name, const char *path);
 char *stradd(const char *s1, const char *s2);
 FILE *open_ole_file(const char *filename);
+int process_files(int argc, char **argv, int first,
+		int (*process)(FILE *f, char *filename));
 void read_config_file(const char *filename);
 #ifdef HAVE_LANGINFO
 void get_locale_charset(void);

@@ -27,6 +27,13 @@ values to stdout.
 Numbers are printed without delimiters, strings are
 enclosed in the double quotes.
 Double-quotes inside string are doubled.
+.PP
+If no file name is supplied,
+.B xls2csv
+processes its standard input unless it is a terminal, in which case it
+prints a brief usage message and exits.
+Processing of standard input (even among other files) can be forced using
+dash '-' as file name.
 .SH "OPTIONS"
 .TP 8
 .B \-x

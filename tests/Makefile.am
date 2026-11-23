@@ -20,6 +20,7 @@ FILE_TESTS = \
 CUSTOM_TESTS = test-charsetpath.test \
 	test-mac-roman-output.test \
 	test-bad-input-files.test \
+	test-stdin.test \
 	ole-cycle.test \
 	xls-uaf.test \
 	asan_failures/test-empty-charsetpath.test \
@@ -62,6 +63,7 @@ check_SCRIPTS = run-single-test.sh \
 	test-charsetpath.test \
 	test-mac-roman-output.test \
 	test-bad-input-files.test \
+	test-stdin.test \
 	ole-cycle.test \
 	xls-uaf.test \
 	asan_failures/test-empty-charsetpath.test \
@@ -90,6 +92,7 @@ EXTRA_DIST = \
 	test_charsets \
 	test-mac-roman-output.test \
 	test-bad-input-files.test \
+	test-stdin.test \
 	ole-cycle.test \
 	xls-uaf.test \
 	asan_failures/global-buffer-overflow \

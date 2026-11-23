@@ -118,13 +118,12 @@ see [tests/asan_failures/README.md](tests/asan_failures/README.md) for more deta
 Since a malicious file might exploit a remaining bug (see above), it is prudent
 to run these programs in a sandbox, especially on files you don't trust.
 `catdoc`, `xls2csv` and `catppt` need very little access:
-- they read the input file(s) named on the command line (`catdoc` can also
-  read standard input)
+- they read the input file(s) named on the command line, or standard input
 - they read the charset and character-substitution files in the catdoc data
   directory (usually `/usr/share/catdoc`, or the directories in `$CHARSETPATH`)
 - they read the optional configuration files `/etc/catdocrc` and `~/.catdocrc`
 - they write only to standard output and standard error
-- `catdoc` creates a temporary file in `/tmp` only when its input is a pipe
+- they create a temporary file in `/tmp` only when the input is a pipe
 - they never use the network or run other programs.
 
 (This does not apply to `wordview`, a Tcl/Tk GUI that runs `catdoc`.)
@@ -154,8 +153,9 @@ bwrap --unshare-all --die-with-parent --new-session \
   the sandbox, so the configuration files are not read.
 
 Use `/usr/bin/xls2csv` or `/usr/bin/catppt` the same way. To pipe a file into
-`catdoc` instead, drop the `--ro-bind untrusted.doc /input` line and the
-`/input` argument and add `--tmpfs /tmp` for its temporary file.
+the program instead, drop the `--ro-bind untrusted.doc /input` line and the
+`/input` argument and add `--tmpfs /tmp` for the temporary file. (Before
+version 0.97.4, `xls2csv` and `catppt` crash when reading standard input.)
 
 ## Documentation, bugs, more information
 

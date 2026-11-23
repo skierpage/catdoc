@@ -33,14 +33,6 @@
   - this does not help someone who does not trust the catdoc binary itself; for that only
     an external sandbox works, hence the `bwrap` example in README.md.
 
-### xls2csv and catppt crash reading from standard input
-- [ ] `xls2csv < file.xls` and `catppt < file.ppt` (no file name argument) die with a
-  segmentation fault. When there are no arguments, `main()` in `xls2csv.c` and `catppt.c`
-  calls `do_table(stdin,...)` or `do_ppt(stdin,...)` directly, without the `ole_init()` and
-  `set_ole_func()` calls that the loop over file names makes, so the `catdoc_read` etc.
-  function pointers are still NULL. `catdoc` reads standard input correctly.
-   - this was reported as https://bugzilla.altlinux.org/35505 (filed in what seems to be Russian), with a patch/pull request https://github.com/vbwagner/catdoc/pull/18. Evaluate that patch and incorporate it as closely as possible, crediting author https://github.com/vitlav and referencing the bug report and pull request.
-
 ### Fix compiler warnings
 - [ ] Fix the compiler warnings in the build (e.g. the `-Wdiscarded-qualifiers` warning in
   `fileutil.c`).

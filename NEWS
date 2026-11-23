@@ -2,7 +2,17 @@
 	Fix xls2csv memory leaks: the last row of each sheet was never freed,
 	and neither were the old contents of a cell that a malformed file
 	defines more than once.
+	Fix xls2csv leaking the strings of the previous file when given
+	several files.
 	Run the tests with LeakSanitizer enabled in an --enable-asan build.
+	Fix xls2csv and catppt crashing with a segmentation fault when reading
+	a file from standard input (ALT Linux bug #35505 reported by cetus,
+	vbwagner pull request #18 by Vitaly Lipatov).
+	xls2csv and catppt now read standard input as an OLE file when given
+	no file name or the file name "-", the same as catdoc. The three
+	programs share the code that handles their file arguments.
+	catdoc's exit status is now non-zero if any file fails, not only if
+	the last one does.
    0.97.3 November 14 2026
 	Fix endless loop and unbounded memory growth in OLE files whose
 	directory or mini-FAT sector chain loops (vbwagner issue #20), found

@@ -1,0 +1,61 @@
+#!/bin/bash
+# Test that catdoc, xls2csv and catppt read a file from standard input when
+# given no file name or the file name "-", both redirected (seekable) and
+# piped (not seekable), and produce the same output as when given the file name.
+# xls2csv and catppt used to crash, see https://bugzilla.altlinux.org/35505
+# and https://github.com/vbwagner/catdoc/pull/18
+
+# Support automake's separate build directories (srcdir is set by automake)
+: ${srcdir=.}
+
+# Make a pipeline fail if the tool fails, not only if diff finds a difference
+set -o pipefail
+
+retcode=0
+compare="diff -u --ignore-blank-lines --ignore-trailing-space"
+
+for pair in "catdoc basic.doc" "catdoc test_LO_file.doc" \
+            "xls2csv basic.xls" "xls2csv hungarian.xls" \
+            "catppt test_LO_file.ppt" "catppt example-3slides.ppt"; do
+    set -- $pair
+    TOOL="../src/$1"
+    INPUTFILE="${srcdir}/$2"
+    if [ ! -x "$TOOL" ]; then
+        echo "ERROR: Required tool not found: $TOOL" >&2
+        exit 1
+    fi
+    if ! "$TOOL" < "$INPUTFILE" | $compare "$INPUTFILE.expected" - >&2; then
+        echo "FAIL: $1 reading $2 from redirected stdin" >&2
+        retcode=1
+    fi
+    if ! cat "$INPUTFILE" | "$TOOL" | $compare "$INPUTFILE.expected" - >&2; then
+        echo "FAIL: $1 reading $2 from piped stdin" >&2
+        retcode=1
+    fi
+    if ! cat "$INPUTFILE" | "$TOOL" - | $compare "$INPUTFILE.expected" - >&2; then
+        echo "FAIL: $1 reading $2 from piped stdin named as -" >&2
+        retcode=1
+    fi
+    # "-" among other files: the output must be the same as naming the file thrice
+    if ! "$TOOL" "$INPUTFILE" - "$INPUTFILE" < "$INPUTFILE" |
+         $compare <("$TOOL" "$INPUTFILE" "$INPUTFILE" "$INPUTFILE") - >&2; then
+        echo "FAIL: $1 reading $2 from stdin named as - among other files" >&2
+        retcode=1
+    fi
+    "$TOOL" - - < "$INPUTFILE" >/dev/null 2>&1
+    if [ $? != 1 ]; then
+        echo "FAIL: $1 did not exit with status 1 when given - twice" >&2
+        retcode=1
+    fi
+done
+
+# Input that is not an OLE file must be rejected without crashing
+for tool in xls2csv catppt; do
+    echo "this is not an OLE file" | "../src/$tool" >/dev/null 2>&1
+    if [ $? != 1 ]; then
+        echo "FAIL: $tool did not exit with status 1 for non-OLE standard input" >&2
+        retcode=1
+    fi
+done
+
+exit $retcode

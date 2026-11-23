@@ -16,6 +16,13 @@ catppt \- reads MS-PowerPoint file and puts its content on standard output
 
 .B catppt
 reads MS-PowerPoint presentations and dumps its content to stdout.
+.PP
+If no file name is supplied,
+.B catppt
+processes its standard input unless it is a terminal, in which case it
+prints a brief usage message and exits.
+Processing of standard input (even among other files) can be forced using
+dash '-' as file name.
 .SH "OPTIONS"
 .TP 8
 .B \-l

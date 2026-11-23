@@ -25,17 +25,31 @@ int (*get_unicode_char)(FILE *f,long *offset,long fileend) =NULL;
 
 char *input_buffer, *output_buffer;
 
+/*
+ * Prints the text of a file, which may be standard input.
+ * Returns 0 on success.
+ */
+static int process_doc(FILE *f, char *filename) {
+	int ret;
+	if (input_buffer) {
+		if (setvbuf(f,input_buffer,_IOFBF,FILE_BUFFER)) {
+			perror(filename);
+		}
+	}
+	ret=analyze_format(f);
+	if (f!=stdin) fclose(f);
+	return ret;
+}
+
 /**************************************************************/
 /*       Main program                                         */
 /*  Processes options, reads charsets  files and substitution */
 /*  maps and passes all remaining args to processfile         */
 /**************************************************************/
 int main(int argc, char **argv) {
-	FILE *f;
-	int c,i;
+	int c;
 	char *tempname;
 	short int *tmp_charset;
-	int stdin_processed=0;
 	read_config_file(SYSTEMRC);
 #ifdef USERRC
 	tempname=find_file(strdup(USERRC),getenv("HOME"));
@@ -138,40 +152,11 @@ int main(int argc, char **argv) {
 		}
 	}
 	set_std_func();
-	if (optind == argc) {
-		if (isatty(fileno(stdin))) {
-			help();
-			exit(0);
-		}
-		if (input_buffer) setvbuf(stdin,input_buffer,_IOFBF,FILE_BUFFER);
-		return analyze_format(stdin);
+	if (optind == argc && isatty(fileno(stdin))) {
+		help();
+		exit(0);
 	}
-	c=0;
-	for (i=optind;i<argc;i++) {
-		if (!strcmp(argv[i],"-")) {
-			if (stdin_processed) {
-				fprintf(stderr,"Cannot process stdin twice\n");
-				exit(1);
-			}
-			if (input_buffer) setvbuf(stdin,input_buffer,_IOFBF,FILE_BUFFER);
-			analyze_format(stdin);
-			stdin_processed=1;
-		} else {
-			f=open_ole_file(argv[i]);
-			if (!f) {
-				c=1;
-				continue;
-			}
-			if (input_buffer) {
-				if (setvbuf(f,input_buffer,_IOFBF,FILE_BUFFER)) {
-					perror(argv[i]);
-				}
-			}
-			c=analyze_format(f);
-			fclose(f);
-		}
-	}
-	return c;
+	return process_files(argc,argv,optind,process_doc);
 }
 /************************************************************************/
 /* Displays  help message                                               */

@@ -233,8 +233,14 @@ void process_item (uint16_t rectype, uint16_t reclen, unsigned char *rec) {
 		/* If exists first SST entry, then just drop it and start new*/
 		if (sstBuffer != NULL) 
 			free(sstBuffer);
-		if (sst != NULL)
+		if (sst != NULL) {
+			/* e.g. the SST of the previous file on the command line */
+			int i;
+			for (i=0;i<sstsize;i++) free(sst[i]);
 			free(sst);
+			sst=NULL;
+			sstsize=0;
+		}
 		if (sstPartBoundaries != NULL) {
 			free(sstPartBoundaries);
 			sstPartBoundaries = NULL;

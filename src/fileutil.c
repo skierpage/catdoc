@@ -139,6 +139,43 @@ FILE *open_ole_file(const char *filename) {
 	return f;
 }
 
+/************************************************************************/
+/* Calls process() on each file named in argv[first] to argv[argc-1],   */
+/* or on standard input if there are none. The file name "-" also means */
+/* standard input. process() must close the file it is given.           */
+/* Returns 0 if every file was processed successfully, otherwise the    */
+/* last non-zero value returned by process(), or 1 if a file could not  */
+/* be opened.                                                           */
+/************************************************************************/
+int process_files(int argc, char **argv, int first,
+		int (*process)(FILE *f, char *filename)) {
+	FILE *f;
+	int i, ret, retcode=0;
+	int stdin_processed=0;
+	if (first>=argc) {
+		return process(stdin,"STDIN");
+	}
+	for (i=first;i<argc;i++) {
+		if (!strcmp(argv[i],"-")) {
+			if (stdin_processed) {
+				fprintf(stderr,"Cannot process stdin twice\n");
+				exit(1);
+			}
+			ret=process(stdin,"STDIN");
+			stdin_processed=1;
+		} else {
+			f=open_ole_file(argv[i]);
+			if (!f) {
+				retcode=1;
+				continue;
+			}
+			ret=process(f,argv[i]);
+		}
+		if (ret) retcode=ret;
+	}
+	return retcode;
+}
+
 /**********************************************************************/
 /*  Returns malloced string containing concatenation of two           */
 /*  arguments                                                         */

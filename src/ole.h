@@ -62,6 +62,8 @@ extern long (*catdoc_tell)(FILE *stream);
 
 void set_ole_func(void);
 void set_std_func(void);
+int ole_process_streams(FILE *input, char *filename, const char *name1,
+		const char *name2, void (*handler)(FILE *stream, char *filename));
 
 #endif /* _OLE_H */
 
