@@ -108,7 +108,7 @@ identified and addressed by the Cisco Talos team
 - it fixes the memory access errors [reported by yangzao against vbwagner's catdoc upstream](/vbwagner/catdoc/issues?q=is%3Aissue%20author%3Ayangzao)
 - it fixes the buffer overflow [CVE-2023-31979](https://nvd.nist.gov/vuln/detail/CVE-2023-31979) reported by randomssr against petewarden's outdated copy of catdoc; this also fixes the heap buffer over-reads in [CVE-2018-20451](https://nvd.nist.gov/vuln/detail/CVE-2018-20451) and [CVE-2018-20453](https://nvd.nist.gov/vuln/detail/CVE-2018-20453) reported against libuvdoc (based on catdoc)
 - it probably fixes [CVE-2023-46345](https://nvd.nist.gov/vuln/detail/CVE-2023-46345) and [CVE-2023-41633](https://nvd.nist.gov/vuln/detail/CVE-2023-41633) reported by rycbar77
-- it fixes the out-of-bounds read [CVE-2026-111126](https://www.cve.org/CVERecord?id=CVE-2026-111126) in `xls2csv` reported by HaiND in 2026 (version 0.97.4 fixes some similar ones)
+- it fixes the out-of-bounds reads [CVE-2026-111126](https://www.cve.org/CVERecord?id=CVE-2026-111126) and [CVE-2026-111127](https://www.cve.org/CVERecord?id=CVE-2026-111127) in `xls2csv` reported by HaiND in 2026 (version 0.97.4 fixes some similar ones)
 - together, these fixes address all the [many bugs detected by Dean Pierce in 2015](https://seclists.org/oss-sec/2015/q1/835)
 
 Some were detected by Address Sanitizer tools,

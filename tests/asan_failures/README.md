@@ -76,6 +76,25 @@ bugs reported against it apply to catdoc as well.
     a MULRK record whose length is larger than the record buffer, and
     MULRK and MULBLANK records too short to contain their last column.
 
+## CVE-2026-111127 and similar xls2csv string bugs
+
+- cve-2026-111127.test
+
+    [CVE-2026-111127](https://www.cve.org/CVERecord?id=CVE-2026-111127),
+    also reported by HaiND, is an out-of-bounds read in
+    `copy_unicode_string()` in `xlsparse.c` when a LABEL, STRING or SST
+    record declares more characters than it holds. Version 0.97 already
+    fixed this with the bounds checks added in commit 70d2bd1.
+
+    The test files in `cve_2026_111127/` were made with `make-xls-poc.py`
+    (the test script lists the records). `label-count.xls`,
+    `string-count.xls` and `sst-count.xls` are the CVE itself. The other
+    five files found similar out-of-bounds reads of a truncated shared
+    string table, fixed in version 0.97.4: an SST record too short to hold
+    its count of strings, a string that ends in the middle of a two-byte
+    character, and strings that end before the sizes of their rich text or
+    Far East data.
+
 ## Miscellaneous memory access bugs
 
 - test-empty-charsetpath.test

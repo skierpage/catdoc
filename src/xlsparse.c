@@ -552,28 +552,43 @@ unsigned char *copy_unicode_string (unsigned char **src, int fromSst,
 	}   
 	charsize=(flags &0x01) ? 2 : 1;
 
+	/* The sizes of any rich text and Far East data follow the flags */
+	switch (flags & 12 ) {
+	case 0x0c: /* Far East with RichText formating */
+		start_offset=2+offset+2+4;
+		break;
+	case 0x08: /* With RichText formating */
+		start_offset=2+offset+2;
+		break;
+	case 0x04: /* Far East */
+		start_offset=2+offset+4;
+		break;
+	default:
+		start_offset=2+offset;
+	}
+	if (sourceEnd && sourceEnd - *src < start_offset) {
+		fprintf(stderr, "Warning: string header extends beyond buffer bounds\n");
+		return NULL;
+	}
+
 	switch (flags & 12 ) {
 	case 0x0c: /* Far East with RichText formating */
 		to_skip=4*getshort(*src,2+offset)+getlong(*src, 4+offset);
-		start_offset=2+offset+2+4;
 		/* 		fprintf(stderr,"Far East with RichText formating\n"); */
 		break;
 
 	case 0x08: /* With RichText formating */
 		to_skip=4*getshort(*src,2+offset);
-		start_offset=2+offset+2;
 		/* 		fprintf(stderr,"With RichText formating %d\n",getshort(*src,2+offset)); */
 		break;
 
 	case 0x04: /* Far East */
 		to_skip=getlong(*src, 2+offset);
-		start_offset=2+offset+4;
 		/* 		fprintf(stderr,"Far East\n"); */
 		break;
 
 	default:
 		to_skip=0;
-		start_offset=2+offset;
 		/* 		fprintf(stderr,"Default string\n"); */
 	}
 
@@ -619,6 +634,10 @@ unsigned char *copy_unicode_string (unsigned char **src, int fromSst,
 		}
 
 		if ( charsize == 2 ){
+			if (sourceEnd && s + 1 >= sourceEnd) {
+				fprintf(stderr, "Warning: string extends beyond buffer bounds\n");
+				break;
+			}
 			u=(unsigned short)getshort(s,0);
 			c=(unsigned char *)convert_char(u);
 			/* 			fprintf(stderr,"char=%02x %02x\n", *s, *(s+1)); */
@@ -891,6 +910,12 @@ void parse_sst(unsigned char *sstbuf,int bufsize) {
 	unsigned char *barrier=(unsigned char *)sstbuf+bufsize; /*pointer to end of buffer*/
 	unsigned char **parsedString;/*pointer into parsed array*/ 
 			
+	if (bufsize < 8) {
+		/* No room for the total and unique counts of strings */
+		fprintf(stderr, "Warning: SST record too short\n");
+		sstsize = 0;
+		return;
+	}
 	sstsize = getlong(sstbuf+4,0);	// int
 
 	// Guard the next allocation against a product overflow.
@@ -910,7 +935,10 @@ void parse_sst(unsigned char *sstbuf,int bufsize) {
 	for (i=0,parsedString=sst,curString=sstbuf+8;
 			 i<sstsize && curString<barrier; i++,parsedString++) {
 		/* 		fprintf(stderr,"copying %d string\n",i); */
+		unsigned char *start = curString;
 		*parsedString = copy_unicode_string(&curString, 1, sstbuf, barrier);
+		/* A bad string does not advance, so every later one would be the same */
+		if (curString == start) break;
 	}       
 	/* 	fprintf(stderr,"end sst i=%d sstsize=%d\n",i,sstsize); */
 

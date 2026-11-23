@@ -17,6 +17,11 @@
 	(reported by HaiND, and already fixed in 0.97): a record longer than
 	the record buffer, and MULRK and MULBLANK records too short to contain
 	their last column.
+	Fix more out-of-bounds reads in xls2csv, similar to CVE-2026-111127
+	(reported by HaiND, and already fixed in 0.97), when the shared string
+	table is truncated: an SST record too short to hold its count of
+	strings, a string that ends in the middle of a two-byte character or
+	before the sizes of its rich text or Far East data.
    0.97.3 November 14 2026
 	Fix endless loop and unbounded memory growth in OLE files whose
 	directory or mini-FAT sector chain loops (vbwagner issue #20), found
