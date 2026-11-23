@@ -126,9 +126,9 @@ void print_sheet(void) {
 	int i,j,printed=0;
 	struct rowdescr *row;
 	unsigned char **col;
-	lastrow--;
-	while (lastrow>0&&!rowptr[lastrow].cells) lastrow--;
-	for(i=0,row=rowptr;i<=lastrow;i++,row++) {
+	int last=lastrow-1; /* don't modify lastrow, free_sheet() needs it */
+	while (last>0&&!rowptr[last].cells) last--;
+	for(i=0,row=rowptr;i<=last;i++,row++) {
 		if (row->cells) {
 			for (j=0,col=row->cells;j<=row->last;j++,col++) {
 				if (j){

@@ -1,3 +1,8 @@
+   0.97.4 in development
+	Fix xls2csv memory leaks: the last row of each sheet was never freed,
+	and neither were the old contents of a cell that a malformed file
+	defines more than once.
+	Run the tests with LeakSanitizer enabled in an --enable-asan build.
    0.97.3 November 14 2026
 	Fix endless loop and unbounded memory growth in OLE files whose
 	directory or mini-FAT sector chain loops (vbwagner issue #20), found

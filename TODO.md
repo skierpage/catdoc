@@ -20,6 +20,14 @@
     reallocs and moves the cell arrays, then a STRING record.
   These fixes are currently untested beyond reading the code.
 
+### Fix the charset name leak in check_charset()
+- [ ] `check_charset()` in `src/fileutil.c` `strdup()`s the charset name into `source_csname` or
+  `dest_csname` without freeing the previous value, so e.g. `xls2csv -d mac-roman` leaks a few
+  bytes. It can't simply `free()` the old value, because that may be a string literal (the
+  initial values in `src/charsets.c`), may be the `charset` argument itself (e.g.
+  `check_charset(&dest_csname,dest_csname)`), or may still be referenced by `locale_charset` in
+  `src/confutil.c`. Once fixed, remove `leak:check_charset` from `tests/lsan.supp`.
+
 ## catppt issues
 
 ### low priority: catppt slide separator (form feed) inconsistency
@@ -61,18 +69,6 @@ The sample PowerPoint I found and used as a basic .ppt sample test file doesn't 
   - approving Packit's `builder` permission request on the Copr permissions page.
 - Pull request builds go to temporary `packit/skierpage-catdoc-N` Copr projects, not to
   skierpage/catdoc, so only releases reach the `dnf copr enable skierpage/catdoc` repository.
-
-## Test cleanup
-
-- [ ] Maybe fix the memory leaks reported by asan so tests don't have to set ASAN_OPTIONS=detect_leaks=0
-
-  Investigation shows xls2csv has memory leaks (154 bytes: 128 from rowptr[row].cells allocation
-  at sheet.c:38, 26 from cell content at xlsparse.c:307). catdoc does not leak.
-
-  free_sheet() IS being called and executes all free() calls for rows/cells, but ASan still
-  reports the leak. This may be a complex issue with realloc/ASan interaction, or allocations
-  happening in a different code path. The leaks are small and occur at program exit, so this
-  may be "won't fix".
 
 ## Project management
 This project is a fork of https://github.com/vbwagner/catdoc . Because that project went ~9 years without an update (2016–2025), there are bug reports and patches floating all over GitHub forks, CVE reports, and the bug and patch trackers of various Linux distros. I _think_ I have analyzed and addressed most of these up to early 2026, but it is exhausting having to check all of these for updates.

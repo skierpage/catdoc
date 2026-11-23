@@ -138,10 +138,15 @@ int prev_rectype=0;
 unsigned char **saved_reference = NULL;
 
 /* allocate() may realloc and move the sheet's cell arrays, which would leave
- * saved_reference dangling, so always clear it first. */
+ * saved_reference dangling, so always clear it first.
+ * A malformed file can define the same cell twice, so free any old contents. */
 static unsigned char **alloc_cell(int row, int col) {
+	unsigned char **pcell;
 	saved_reference=NULL;
-	return allocate(row,col);
+	pcell=allocate(row,col);
+	free(*pcell);
+	*pcell=NULL;
+	return pcell;
 }
 
 /* return 0 on error and 1 on success */
@@ -410,6 +415,7 @@ void process_item (uint16_t rectype, uint16_t reclen, unsigned char *rec) {
 			fprintf(stderr,"String record without preceeding string formula\n");
 			break;
 		}
+		free(*saved_reference); /* in case of two STRING records in a row */
 		*saved_reference=copy_unicode_string(&src, 0, rec, rec + reclen);
 		break;
 	}	    
