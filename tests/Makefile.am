@@ -26,6 +26,7 @@ CUSTOM_TESTS = test-charsetpath.test \
 	asan_failures/test-empty-charsetpath.test \
 	asan_failures/test-memory-leaks.test \
 	asan_failures/cve-2023-31979.test \
+	asan_failures/cve-2026-111126.test \
 	asan_failures/cve-2018-20451.test \
 	asan_failures/cve-2018-20453.test \
 	asan_failures/vbwagner-issue-6.test \
@@ -69,6 +70,7 @@ check_SCRIPTS = run-single-test.sh \
 	asan_failures/test-empty-charsetpath.test \
 	asan_failures/test-memory-leaks.test \
 	asan_failures/cve-2023-31979.test \
+	asan_failures/cve-2026-111126.test \
 	asan_failures/cve-2018-20451.test \
 	asan_failures/cve-2018-20453.test \
 	asan_failures/vbwagner-issue-6.test \
@@ -100,9 +102,11 @@ EXTRA_DIST = \
 	asan_failures/libdoc_numutils_getlong_22.overflow \
 	asan_failures/README.md \
 	asan_failures/test-asan-bug.sh \
+	asan_failures/make-xls-poc.py \
 	asan_failures/test-empty-charsetpath.test \
 	asan_failures/test-memory-leaks.test \
 	asan_failures/cve-2023-31979.test \
+	asan_failures/cve-2026-111126.test \
 	asan_failures/cve-2018-20451.test \
 	asan_failures/cve-2018-20453.test \
 	asan_failures/vbwagner-issue-6.test \
@@ -113,6 +117,7 @@ EXTRA_DIST = \
 	asan_failures/vbwagner-issue-11.test \
 	asan_failures/vbwagner-issue-12.test \
 	asan_failures/vbwagner-issue-13.test \
+	asan_failures/cve_2026_111126 \
 	asan_failures/vbwagner_issue_6/1 \
 	asan_failures/vbwagner_issue_7/2 \
 	asan_failures/vbwagner_issue_8/3 \
