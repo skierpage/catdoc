@@ -102,7 +102,15 @@ void do_table(FILE *input,char *filename) {
 		if(itemsread == 0)
 			break;
 		reclen=getshort(buffer,0);
-		if (reclen && reclen <MAX_MS_RECSIZE &&reclen >0){
+		if (reclen >= MAX_MS_RECSIZE) {
+			/* It does not fit in rec, and no valid record is this long.
+			 * Print the sheet so far and give up. */
+			fprintf(stderr,"%s: record 0x%04x is too long (%d bytes)\n",
+					filename,rectype,reclen);
+			process_item(MSEOF,0,NULL);
+			return;
+		}
+		if (reclen) {
 			itemsread = catdoc_read(rec, 1, reclen, input);
 			rec[reclen] = '\0';
 		}
@@ -293,6 +301,10 @@ void process_item (uint16_t rectype, uint16_t reclen, unsigned char *rec) {
 	case MULBLANK: {
 		int row, startcol,endcol;
 		unsigned char **pcell;
+		if (reclen < 6) {  /* Need 2+2+2 bytes for row, startcol, endcol */
+			fprintf(stderr, "Warning: MULBLANK record too short\n");
+			break;
+		}
 		row = getshort(rec,0);
 		startcol = getshort(rec,2);
 		endcol=getshort(rec,reclen-2);
@@ -372,10 +384,14 @@ void process_item (uint16_t rectype, uint16_t reclen, unsigned char *rec) {
 	case MULRK: {
 		int row,col,startcol,endcol,offset,format_code;
 		unsigned char **pcell;
+		saved_reference=NULL;
+		if (reclen < 6) {  /* Need 2+2+2 bytes for row, startcol, endcol */
+			fprintf(stderr, "Warning: MULRK record too short\n");
+			break;
+		}
 		row = getshort(rec,0)-startrow; 
 		startcol = getshort(rec,2);
 		endcol = getshort(rec,reclen-2);
-		saved_reference=NULL;
 
 		for (offset=4,col=startcol;col<=endcol;offset+=6,col++) {
 			if (offset+6 > reclen) {  /* Need at least offset+6 bytes for format_code(2) + rk_value(4) */

@@ -13,6 +13,10 @@
 	programs share the code that handles their file arguments.
 	catdoc's exit status is now non-zero if any file fails, not only if
 	the last one does.
+	Fix more out-of-bounds reads in xls2csv, similar to CVE-2026-111126
+	(reported by HaiND, and already fixed in 0.97): a record longer than
+	the record buffer, and MULRK and MULBLANK records too short to contain
+	their last column.
    0.97.3 November 14 2026
 	Fix endless loop and unbounded memory growth in OLE files whose
 	directory or mini-FAT sector chain loops (vbwagner issue #20), found

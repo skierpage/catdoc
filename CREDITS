@@ -25,6 +25,8 @@ Vitaly Lipatov (GitHub user vitlav)
    and provided a patch (vbwagner/catdoc pull request #18), in 2026
 cetus (ALT Linux Bugzilla user)
    Reported that crash as https://bugzilla.altlinux.org/35505 in 2018
+HaiND from the Post and Telecommunication Institute of Technology
+   Found CVE-2026-111126, an out-of-bounds read in xls2csv
 yangzao (GitHub user)
    Reported eight memory access bugs in the vbwagner/catdoc repository
    and provided test files, see tests/asan_failures/README.md

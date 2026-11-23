@@ -58,6 +58,24 @@ bugs reported against it apply to catdoc as well.
     This reproduces uvoteam/libdoc#1 using test file
     libdoc_numutils_getlong_22.overflow, which became CVE-2018-20453
 
+## CVE-2026-111126 and similar xls2csv record length bugs
+
+- cve-2026-111126.test
+
+    [CVE-2026-111126](https://www.cve.org/CVERecord?id=CVE-2026-111126),
+    reported by HaiND, is an out-of-bounds read in the MULRK record handler
+    of `process_item()` in `xlsparse.c` when the record's last column is
+    too large. Version 0.97 already fixed this with the bounds check added
+    for vbwagner/catdoc#13.
+
+    The finder's proof of concept is no longer online, so the test files in
+    `cve_2026_111126/` were made with `make-xls-poc.py`, which wraps BIFF
+    records given in hexadecimal in a minimal .xls file (the test script
+    lists the records). `mulrk-endcol.xls` is the CVE itself. The other
+    three files found similar out-of-bounds reads, fixed in version 0.97.4:
+    a MULRK record whose length is larger than the record buffer, and
+    MULRK and MULBLANK records too short to contain their last column.
+
 ## Miscellaneous memory access bugs
 
 - test-empty-charsetpath.test
