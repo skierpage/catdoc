@@ -1,0 +1,8 @@
+# LeakSanitizer suppressions for `make check` in an --enable-asan build,
+# used through LSAN_OPTIONS in tests/Makefile.am.
+#
+# check_charset() strdup()s a charset name into source_csname or dest_csname
+# without freeing the previous value (which may be a string literal, or still
+# referenced by locale_charset in confutil.c). This loses a few bytes once per
+# -s/-d option. See "Fix the charset name leak in check_charset()" in TODO.md.
+leak:check_charset

@@ -34,7 +34,7 @@ fi
 
 # Run xls2csv with -d mac-roman option
 # This tests that the tool doesn't crash and produces mac-roman encoded output
-# CHARSETPATH and ASAN_OPTIONS are set by AM_TESTS_ENVIRONMENT in Makefile.am
+# CHARSETPATH and LSAN_OPTIONS are set by AM_TESTS_ENVIRONMENT in Makefile.am
 if "$TOOL" -d mac-roman "$INPUTFILE" | diff -u --ignore-blank-lines --ignore-trailing-space "$EXPECTEDFILE" - >/dev/null 2>&1; then
     exit 0
 else

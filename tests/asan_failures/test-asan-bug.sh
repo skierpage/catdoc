@@ -62,9 +62,9 @@ fi
 # Run the tool on the POC file
 # If built with ASan and vulnerable, ASan will report errors to stderr
 # If fixed, the tool may reject invalid input (exit non-zero) but without ASan errors
-# Suppress LeakSanitizer since we're testing for specific bugs, not leaks
+# LeakSanitizer reports also match the pattern below, so a leak fails the test
 export CHARSETPATH
-OUTPUT=$(ASAN_OPTIONS=detect_leaks=0 "$TOOL_PATH" "${EXTRA_ARGS[@]}" "$POC_PATH" 2>&1) || true
+OUTPUT=$("$TOOL_PATH" "${EXTRA_ARGS[@]}" "$POC_PATH" 2>&1) || true
 
 # Check if ASan detected any errors (look for ASan error patterns in output)
 if echo "$OUTPUT" | grep -qE "(AddressSanitizer|SEGV|heap-buffer-overflow|global-buffer-overflow|stack-buffer-overflow|use-after-free|heap-use-after-free|stack-use-after-free)"; then

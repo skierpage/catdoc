@@ -35,7 +35,7 @@ trap "rm -rf $EMPTY_DIR" EXIT
 # Run xls2csv -l with empty charset directory
 # If vulnerable, this will crash with NULL pointer dereference
 # If fixed, it should just print "Available charsets: utf-8"
-if CHARSETPATH="$EMPTY_DIR" ASAN_OPTIONS=detect_leaks=0 "$XLS2CSV" -l >/dev/null 2>&1; then
+if CHARSETPATH="$EMPTY_DIR" "$XLS2CSV" -l >/dev/null 2>&1; then
     # Completed successfully
     exit 0
 else
