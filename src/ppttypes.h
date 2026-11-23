@@ -1,7 +1,7 @@
 /**
  * @file   ppttypes.h
  * @author Alex Ott <alexott@gmail.com>
- * @date   26 ��� 2004
+ * @date   Dec 26 2004
  * Version: $Id: ppttypes.h,v 1.1 2006-02-24 17:44:06 vitus Exp $
  * Copyright: Alex Ott
  * 

@@ -1,7 +1,7 @@
 /**
  * @file   ole.h
  * @author Alex Ott <ott@jet.msk.su>
- * @date   03 È¿Œ 2003
+ * @date   Jun 03 2003
  * Version: $Id: ole.h,v 1.1 2006-02-24 17:44:06 vitus Exp $
  * Copyright: Alex Ott, 2003, 
  * 

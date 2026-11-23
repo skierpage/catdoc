@@ -1,7 +1,7 @@
 /**
  * @file   ppt2text.c
  * @author Alex Ott <alexott@gmail.com>
- * @date   23 ��� 2004
+ * @date   Dec 23 2004
  * Version: $Id: catppt.c,v 1.2 2006-10-17 19:11:29 vitus Exp $
  * Copyright: Alex Ott 
  * 

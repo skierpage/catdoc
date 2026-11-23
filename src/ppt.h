@@ -1,7 +1,7 @@
 /**
  * @file   ppt.h
  * @author Alex Ott <alexott@gmail.com>
- * @date   23 ‰≈À 2004
+ * @date   Dec 23 2004
  * Version: $Id: ppt.h,v 1.1 2006-02-24 17:44:06 vitus Exp $
  * Copyright: Alex Ott
  * 
