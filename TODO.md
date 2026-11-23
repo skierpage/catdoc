@@ -41,16 +41,26 @@ The sample PowerPoint I found and used as a basic .ppt sample test file doesn't 
 
 ## CI
 
+### Run the Address Sanitizer tests in GitHub CI
+- [ ] Add a second GitHub CI workflow job that runs `./configure --enable-asan` and `make check`.
+  The current job in `.github/workflows/c-cpp.yml` uses a plain `./configure`, so the ASan tests
+  (tests/asan_failures and e.g. `tests/xls-uaf.test`) are skipped and the README's CI badge
+  reports "passing" without running them.
+
 ### Fedora RPM automation
-- [ ] Trigger Fedora package builds for skierpage/catdoc Copr once packit permissions are sorted.
-  - `trigger: release` in .packit.yaml targets `owner: skierpage, project: catdoc` but builds
-    never happen: the release shows up in the Packit dashboard under "Releases Handled" with no
-    build created, and https://copr.fedorainfracloud.org/coprs/skierpage/catdoc/builds/ stays empty.
-  - Packit is installed as a GitHub App (Settings > GitHub Actions > Packit-as-a-service).
-  - PR builds work fine (go to temporary `packit/skierpage-catdoc-N` Copr projects).
-  - Latest Packit docs focus on `dist-git` integration (submitting to Fedora proper); the Copr
-    release trigger workflow may need different configuration or explicit Copr permissions granted
-    to the Packit service account.
+- [ ] Check that the next release triggers the Copr build by itself. For v0.97.3 Packit never
+  handled the GitHub release event (no entry under "Releases Handled", cause unknown), and the
+  build only started after commenting `/packit build --release v0.97.3` on the tagged commit.
+  If it doesn't fire, ask the Packit team (https://github.com/packit/packit-service/issues).
+- Fixed in 0.97.3: release builds in https://copr.fedorainfracloud.org/coprs/skierpage/catdoc/
+  needed all of
+  - `github.com/skierpage/catdoc` in the Copr project's "Packit allowed forge projects" setting;
+  - the Copr project's chroots matching the `fedora-stable` target in .packit.yaml (currently
+    fedora-43, 44, 45 x86_64; add a new chroot by hand when a Fedora release appears, or grant
+    Packit `admin`);
+  - approving Packit's `builder` permission request on the Copr permissions page.
+- Pull request builds go to temporary `packit/skierpage-catdoc-N` Copr projects, not to
+  skierpage/catdoc, so only releases reach the `dnf copr enable skierpage/catdoc` repository.
 
 ## Test cleanup
 

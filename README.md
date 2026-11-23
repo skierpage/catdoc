@@ -1,4 +1,7 @@
-# catdoc version 0.97.3
+# catdoc
+
+[![C/C++ CI](https://github.com/skierpage/catdoc/actions/workflows/c-cpp.yml/badge.svg?branch=master)](https://github.com/skierpage/catdoc/actions/workflows/c-cpp.yml)
+[![Copr build status](https://copr.fedorainfracloud.org/coprs/skierpage/catdoc/package/catdoc/status_image/last_build.png)](https://copr.fedorainfracloud.org/coprs/skierpage/catdoc/package/catdoc/)
 
 `catdoc` is a program which reads MS-Office Word `.doc` files and prints their
 content as readable ASCII text to stdout.  It can also produce correct
@@ -12,11 +15,6 @@ The catdoc package also includes
   rows of comma-separated values.
 - `wordview`, which displays `catdoc` output in a window.
 
-See [INSTALL](INSTALL) for information about compiling and installing the
-catdoc programs on Linux and Mac OS.
-Several Linux distributions build the catdoc package, though as of
-December 2025 most build the old version 0.95.
-
 The KDE project's ["baloo"](https://community.kde.org/Baloo) file indexing and
 search framework uses these programs (via the KFileMetadata library) to index
 the text of old MS-Office files.
@@ -24,6 +22,26 @@ the text of old MS-Office files.
 `catdoc` features runtime configuration, proper charset handling,
 user-definable output formats and support for Word97 files, which contain
 UNICODE internally.
+
+## Installing
+
+Several Linux distributions ship the catdoc package, though as of
+December 2025 most build the old version 0.95.
+
+You can compile and install the catdoc programs yourself on Linux and Mac OS from the source in git
+or from a source tarball, see [INSTALL](INSTALL).
+
+In addition, RPM packages of recent releases for recent Fedora versions on the
+x86_64 architecture are built automatically in the
+[skierpage/catdoc Copr project](https://copr.fedorainfracloud.org/coprs/skierpage/catdoc/).
+These are not part of Fedora itself. To add the project as a DNF repository,
+install the package, and get upgrades to future releases:
+```
+sudo dnf copr enable skierpage/catdoc
+sudo dnf install catdoc
+sudo dnf upgrade catdoc
+```
+(The `wordview` GUI is in a separate Fedora package, `catdoc-wordview`.)
 
 ## version 0.97.3
 
