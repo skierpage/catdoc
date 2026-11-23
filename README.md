@@ -113,6 +113,50 @@ identified and addressed by the Cisco Talos team
 Some were detected by Address Sanitizer tools,
 see [tests/asan_failures/README.md](tests/asan_failures/README.md) for more details.
 
+## Sandboxing the binaries
+
+Since a malicious file might exploit a remaining bug (see above), it is prudent
+to run these programs in a sandbox, especially on files you don't trust.
+`catdoc`, `xls2csv` and `catppt` need very little access:
+- they read the input file(s) named on the command line (`catdoc` can also
+  read standard input)
+- they read the charset and character-substitution files in the catdoc data
+  directory (usually `/usr/share/catdoc`, or the directories in `$CHARSETPATH`)
+- they read the optional configuration files `/etc/catdocrc` and `~/.catdocrc`
+- they write only to standard output and standard error
+- `catdoc` creates a temporary file in `/tmp` only when its input is a pipe
+- they never use the network or run other programs.
+
+(This does not apply to `wordview`, a Tcl/Tk GUI that runs `catdoc`.)
+
+For example, [bubblewrap](https://github.com/containers/bubblewrap) can run
+a packaged `catdoc` on `untrusted.doc` so that it sees nothing but a read-only
+`/usr` and that one file:
+
+```sh
+bwrap --unshare-all --die-with-parent --new-session \
+      --ro-bind /usr /usr --symlink usr/lib /lib --symlink usr/lib64 /lib64 \
+      --ro-bind untrusted.doc /input \
+      /usr/bin/catdoc /input
+```
+
+- `--unshare-all` puts the program in new namespaces, so it has no network
+  access and cannot see other processes
+- `--die-with-parent` kills the program if the shell that started it exits
+- `--new-session` detaches the program from your terminal so it cannot inject
+  keystrokes into it
+- `--ro-bind /usr /usr` and the two `--symlink` options make the programs,
+  shared libraries, locale data and catdoc's data directory visible, read-only.
+  This assumes a distribution where `/lib` and `/lib64` are symbolic links into
+  `/usr`
+- `--ro-bind untrusted.doc /input` makes the file visible, read-only, as
+  `/input`. Nothing else, including your home directory and `/etc`, exists in
+  the sandbox, so the configuration files are not read.
+
+Use `/usr/bin/xls2csv` or `/usr/bin/catppt` the same way. To pipe a file into
+`catdoc` instead, drop the `--ro-bind untrusted.doc /input` line and the
+`/input` argument and add `--tmpfs /tmp` for its temporary file.
+
 ## Documentation, bugs, more information
 
 Catdoc is distributed under GNU Public License version 2 or above, see

@@ -2,6 +2,45 @@
 
 ## catdoc issues
 
+### Make the programs sandbox themselves with Landlock
+- [ ] The catdoc programs parse untrusted files in unsafe C, yet need very little access (see
+  "Sandboxing the binaries" in README.md). Running them under an external sandbox such as
+  `bwrap` protects the user, but every user or calling program has to set that up. Instead the
+  programs could restrict themselves, so that a hostile input file that exploits a parser bug
+  gains almost nothing, on by default and with nothing for users or distros to configure.
+
+  On Linux, use [Landlock](https://docs.kernel.org/userspace-api/landlock.html) (kernel 5.13+,
+  needs no privileges). After parsing options and before reading any input, `catdoc`,
+  `xls2csv` and `catppt` would call `landlock_create_ruleset()`, `landlock_add_rule()` and
+  `landlock_restrict_self()` to allow only:
+  - reading the input files named on the command line
+  - reading the charset directories. This has to be the directories, not already-open files,
+    because `rtfread.c` and `xlsparse.c` load a charset in mid-parse, once the file declares
+    its codepage
+  - creating the temporary file that `ole_init()` makes when the input is not seekable (or
+    create it before restricting)
+  - nothing else: no other file access, and with Landlock ABI 4 (kernel 6.7+) no TCP
+    networking.
+
+  The configuration files and the substitution maps are read before this point, so they
+  need no rule. Notes:
+  - detect `<linux/landlock.h>` in `configure.ac`, and carry on silently if the running kernel
+    lacks Landlock or supports only an older ABI
+  - put the code in one function shared by the three programs
+  - add a test that the restricted programs still produce the expected output, and that
+    reading a file outside the allowed set fails
+  - on OpenBSD, `pledge()` and `unveil()` would do the same job in a few lines
+  - this does not help someone who does not trust the catdoc binary itself; for that only
+    an external sandbox works, hence the `bwrap` example in README.md.
+
+### xls2csv and catppt crash reading from standard input
+- [ ] `xls2csv < file.xls` and `catppt < file.ppt` (no file name argument) die with a
+  segmentation fault. When there are no arguments, `main()` in `xls2csv.c` and `catppt.c`
+  calls `do_table(stdin,...)` or `do_ppt(stdin,...)` directly, without the `ole_init()` and
+  `set_ole_func()` calls that the loop over file names makes, so the `catdoc_read` etc.
+  function pointers are still NULL. `catdoc` reads standard input correctly.
+   - this was reported as https://bugzilla.altlinux.org/35505 (filed in what seems to be Russian), with a patch/pull request https://github.com/vbwagner/catdoc/pull/18. Evaluate that patch and incorporate it as closely as possible, crediting author https://github.com/vitlav and referencing the bug report and pull request.
+
 ### Fix compiler warnings
 - [ ] Fix the compiler warnings in the build (e.g. the `-Wdiscarded-qualifiers` warning in
   `fileutil.c`).
