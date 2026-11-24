@@ -153,6 +153,12 @@ bwrap --unshare-all --die-with-parent --new-session \
   `/input`. Nothing else, including your home directory and `/etc`, exists in
   the sandbox, so the configuration files are not read.
 
+The sandbox hides everything else. If you want the program to read a
+configuration file, or charset files outside `/usr` (directories named in
+`$CHARSETPATH`, or by `charset_path` or `map_path` in a configuration file),
+add a `--ro-bind` option for each such file or directory, otherwise the
+program cannot see it.
+
 Use `/usr/bin/xls2csv` or `/usr/bin/catppt` the same way. To pipe a file into
 the program instead, drop the `--ro-bind untrusted.doc /input` line and the
 `/input` argument and add `--tmpfs /tmp` for the temporary file. (Before

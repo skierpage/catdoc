@@ -50,6 +50,23 @@
   - a string FORMULA, then an INTEGER_CELL, BLANK or MULBLANK whose `alloc_cell()` call
     reallocs and moves the cell arrays, then a STRING record.
   These fixes are currently untested beyond reading the code.
+  `tests/asan_failures/make-xls-poc.py` makes an .xls file from BIFF records given in
+  hexadecimal.
+
+### xls2csv: limit the number of strings in the shared string table
+- [ ] An SST record can claim up to about 268 million strings (`INT_MAX / sizeof(char *)`), and
+  `parse_sst()` in `src/xlsparse.c` allocates and zeroes a pointer for each before reading any
+  of them, so a 20-byte record can make `xls2csv` use about 2 GB of memory. It is not a memory
+  access error. Each string takes at least 3 bytes, so the count could be capped by the size
+  of the table (`bufsize / 3`).
+
+### xls2csv: reject cell records that are too short
+- [ ] `do_table()` reads each record into the static `rec` buffer and `process_item()` then
+  reads fixed fields (row, column, format, value) without checking `reclen`, except in the RK,
+  MULRK and MULBLANK handlers. For a record that is too short, e.g. a NUMBER record of 4
+  bytes, the missing fields are bytes left over from the previous record. They are inside the
+  buffer, so this is not a memory access error, but the output is garbage. Each handler could
+  warn and skip the record, as RK does.
 
 ### Fix the charset name leak in check_charset()
 - [ ] `check_charset()` in `src/fileutil.c` `strdup()`s the charset name into `source_csname` or

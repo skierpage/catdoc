@@ -1,4 +1,6 @@
-Note: people listed in this file are listed in arbitrary order.
+Note: contributors since 2015 are listed in the order in which their work was
+added to this repository, newest last. Earlier contributors are listed in
+arbitrary order.
 
 Victor Wagner <vitus@wagner.pp.ru>
    Maintained catdoc project from at least 2006 to 2016.
@@ -6,17 +8,23 @@ Victor Wagner <vitus@wagner.pp.ru>
 
 Martina Ferrari <tina@tina.pm>
    Organized and maintained Debian patches fixing bugs
+Nick Bane <nick@enomem.co.uk>
+   amd64 fixes
+Robert Zavalczki <robert.zavalczki@gmail.com>
+   Fixed wrong charset conversion, memory read, and bad output in
+   xls2csv
+Bjarni Ingi Gislason <bjarniig@rhi.hi.is>
+   Formatting and language fixes to the man pages
 Ali Rizvi-Santiago from the Cisco Talos team
    Found and fixed the three CVE-2024 vulnerabilities
 Salvatore Bonaccorso from the Debian Security Team
    Help with the three CVE-2024 vulnerabilities
-Bjarni Ingi Gislason <bjarniig@rhi.hi.is>
-   Formatting and language fixes to the man pages
-Robert Zavalczki <robert.zavalczki@gmail.com>
-   Fixed wrong charset conversion, memory read, and bad output in
-   xls2csv
-Nick Bane <nick@enomem.co.uk>
-   amd64 fixes
+yangzao (GitHub user)
+   Reported eight memory access bugs in the vbwagner/catdoc repository
+   and provided test files, see tests/asan_failures/README.md
+Dean Pierce
+   Found many crashes by AFL fuzzing in 2015 and reported them to the
+   oss-sec mailing list, see tests/asan_failures/README.md
 DicksonWu654 (GitHub user)
    Found and fixed an endless loop on cyclic OLE sector chains and a
    use-after-free in xls2csv, and provided test files, in 2026
@@ -28,12 +36,6 @@ cetus (ALT Linux Bugzilla user)
 HaiND from the Post and Telecommunication Institute of Technology
    Found CVE-2026-111126 and CVE-2026-111127, out-of-bounds reads in
    xls2csv
-yangzao (GitHub user)
-   Reported eight memory access bugs in the vbwagner/catdoc repository
-   and provided test files, see tests/asan_failures/README.md
-Dean Pierce
-   Found many crashes by AFL fuzzing in 2015 and reported them to the
-   oss-sec mailing list, see tests/asan_failures/README.md
 
 Earlier contributors prior to 2006 or so:
 
